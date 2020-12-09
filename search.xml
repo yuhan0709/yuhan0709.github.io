@@ -147,225 +147,6 @@
       </tags>
   </entry>
   <entry>
-    <title>TCP和UDP</title>
-    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
-    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
-<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
-<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
-<li>超文本传输协议（HTTP）万维网基本协议</li>
-<li>文件传输协议（TFTP简单文件传输协议）</li>
-<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
-<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
-<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
-</ol>
-<a id="more"></a>
-
-<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
-<li>Internet协议（IP）；</li>
-<li>Internet控制信息协议（ICMP）；</li>
-<li>地址解析协议（ARP）；</li>
-<li>反向地址解析协议（RARP）。</li>
-</ol>
-<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
-<ul>
-<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
-</ul>
-<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
-<ul>
-<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
-</ul>
-<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
-<ul>
-<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
-</ul>
-<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
-<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
-<ul>
-<li>第一次挥手(FIN=1，seq=x)</li>
-</ul>
-<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
-<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
-<ul>
-<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
-</ul>
-<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
-<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
-<ul>
-<li>第三次挥手(FIN=1，seq=y)</li>
-</ul>
-<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
-<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
-<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
-<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
-<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
-<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
-<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
-<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
-<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
-<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
-<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
-<ul>
-<li>缩短超时（SYN Timeout）时间</li>
-<li>增加最大半连接数</li>
-<li>过滤网关防护</li>
-<li>SYN cookies技术</li>
-</ul>
-<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
-<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
-<ul>
-<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
-<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
-<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
-<li>UDP 支持多播和广播。（TCP不支持）</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis基础入门</title>
-    <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
-<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
-<li>KEYS[pattern]: 时间复杂度为O(n)，查询所有符合给定模式pattern的key。返回符合给定模式的key列表。</li>
-<li>DESIZE key: 返回当前数据库key的数量。计算时不是扫描整个表而是实时更新key总数。</li>
-<li>EXISTS key: 检查给定key是否存在。key存在返回1,否则返回0</li>
-<li>DEL key: 返回被删除的key的数量</li>
-<li>EXPIRE key seconds：为给定的key设置生存时间，当key过期会被自动删除。设置成功返回1，失败返回0。</li>
-<li>PERSIST key: 移除给定key，将这个key转换成持久的，当生存时间移除成功时，返回1。如果key不存在或者没有设置生存时间返回0。</li>
-<li>TTL key: 以秒为单位，给定返回key的剩余生存时间。当key不存在时，返回-2，当key存在但没有设置生存时间，返回-1.否则返回剩余生存时间。<a id="more"></a>
-<h2 id="五种数据结构"><a href="#五种数据结构" class="headerlink" title="五种数据结构"></a>五种数据结构</h2><h3 id="一、字符串：Redis中最基础的数据结构"><a href="#一、字符串：Redis中最基础的数据结构" class="headerlink" title="一、字符串：Redis中最基础的数据结构"></a>一、字符串：Redis中最基础的数据结构</h3>Redis中字符串类型最大只能保存512MB<h4 id="1-SET-key-value-EX-seconds-PX-millseconds-NX-XX"><a href="#1-SET-key-value-EX-seconds-PX-millseconds-NX-XX" class="headerlink" title="1. SET key value [EX seconds][PX millseconds] [NX|XX]"></a>1. SET key value [EX seconds][PX millseconds] [NX|XX]</h4></li>
-<li>将时间字符串value关联到key，如果key已持有其他值，set就覆写旧值，无视类型。</li>
-<li>当set命令对一个带有生存时间（TTL）键进行设置之后，该键原有的TTL将被清除。</li>
-<li>可选参数<ul>
-<li>EX seconds：将键过期时间设置为seconds秒，执行<code>SET key value EX seconds</code>的效果相当于执行<code>SETEX key seconds value</code></li>
-<li>PX milliseconds: 将键的过期时间设置为milliseconds毫秒。执行<code>SET key value PX milliseconds</code>的效果等同于执行<code>PSETEX key milliseconds value</code></li>
-<li>NX:只在键不存在时，才对键进行设置操作。执行<code>SET key value NX</code>的效果等同于执行<code>SETNX key value</code>。</li>
-<li>XX：只在键已经存在时，才对键进行设置操作。</li>
-</ul>
-</li>
-</ul>
-<h4 id="2-GET-key"><a href="#2-GET-key" class="headerlink" title="2. GET key"></a>2. GET key</h4><p>获取与键key相关联的字符串值。</p>
-<ul>
-<li>如果key不存在返会nil，否则返回key的值。</li>
-<li>如果key的值并非字符串类型，那么返回一个错误，GET命令只能用于字符串值</li>
-</ul>
-<h4 id="3-DEL-key-key…"><a href="#3-DEL-key-key…" class="headerlink" title="3. DEL key[key…]"></a>3. DEL key[key…]</h4><p>删除指定的一个或者多个key，不存在的key会被忽略。</p>
-<ul>
-<li>返回被删除的key的数量</li>
-</ul>
-<h4 id="4-MEST-key-value-key-value…"><a href="#4-MEST-key-value-key-value…" class="headerlink" title="4. MEST key value[key value…]"></a>4. MEST key value[key value…]</h4><p>同时为多个键设置值，如果某个给定键已经存在，用MEST将新值去覆盖旧值。</p>
-<ul>
-<li>总是返回OK<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; MSET date &quot;2012.3.30&quot; time &quot;11:00 a.m.&quot; weather &quot;sunny&quot;</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; MGET date time weather</span><br><span class="line">1) &quot;2012.3.30&quot;</span><br><span class="line">2) &quot;11:00 a.m.&quot;</span><br><span class="line">3) &quot;sunny&quot;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="5-MSETNX-key-value"><a href="#5-MSETNX-key-value" class="headerlink" title="5. MSETNX key value"></a>5. MSETNX key value</h4><p>当且仅当所有给定键都不存在时,为所有给定键设置值。即使只有一个给定键已经存在，MSETNX命令也会拒绝执行对所有键的设置操作。</p>
-<ul>
-<li>当所有给定键都设置成功，命令返回1，如果因为某个给定键已存在而导致未能执行成功，返回0</li>
-</ul>
-<h4 id="6-MGET-key-key…"><a href="#6-MGET-key-key…" class="headerlink" title="6. MGET key[key…]"></a>6. MGET key[key…]</h4><p>返回给定的一个或多个字符串键的值。如果给定的字符串键里面，有某个键不存在，那么这个键的值将以特殊值nil表示。</p>
-<h3 id="二、哈希"><a href="#二、哈希" class="headerlink" title="二、哈希"></a>二、哈希</h3><p>Redis的哈希是键值对的集合，是字符串字段和字符串值之间的映射。<br><img src="http://wx2.sinaimg.cn/large/e0e01e43gy1g04saqqy8ij20x00bj41k.jpg" alt="哈希"></p>
-<h4 id="1-HSET-key-field-value"><a href="#1-HSET-key-field-value" class="headerlink" title="1. HSET key field value"></a>1. HSET key field value</h4><p>将哈希表key中域field的值设置为value，如果给定的哈希表不存在，那么一个新的哈希表将被创建并执行HSET操作，如果域field已存在于哈希表中，那么它的旧值将被新值value覆盖。</p>
-<ul>
-<li>当新创建field域并成功为它设置值时,命令返回</li>
-<li>当域field已经存在于哈希表，并且HSET命令成功使用新值覆盖了它的旧值，那么命令返回0</li>
-</ul>
-<h4 id="2-HGET-key-field"><a href="#2-HGET-key-field" class="headerlink" title="2. HGET key field"></a>2. HGET key field</h4><ul>
-<li>返回给定域的值，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，那么命令返回nil。</li>
-</ul>
-<h4 id="3-HGETALL-key"><a href="#3-HGETALL-key" class="headerlink" title="3. HGETALL key"></a>3. HGETALL key</h4><p>以列表的形式返回哈希表的域和值</p>
-<ul>
-<li>以列表形式返回哈希表的域和域的值，若key不存在，返回空列表。</li>
-</ul>
-<h4 id="4-HDEL-key-field-field"><a href="#4-HDEL-key-field-field" class="headerlink" title="4. HDEL key field [field]"></a>4. HDEL key field [field]</h4><p>删除哈希表key中的一个或多个指定域，不存在的域将被忽略。</p>
-<ul>
-<li>被成功移除的域的数量，不包括被忽略的域。</li>
-</ul>
-<h4 id="5-HMSET-key-field-value-field-value-…"><a href="#5-HMSET-key-field-value-field-value-…" class="headerlink" title="5. HMSET key field value [field value …]"></a>5. HMSET key field value [field value …]</h4><p>同时将多个field-value(域-值)对设置到哈希表key中，此命令会覆盖哈希表中已存在的域，如果key不存在，一个空哈希表被创建并执行HMSET操作。</p>
-<ul>
-<li>如果命令执行成功，返回OK，当key不是哈希表(hash)类型时，返回一个错误。</li>
-</ul>
-<h4 id="6-HMGET-key-field-field…"><a href="#6-HMGET-key-field-field…" class="headerlink" title="6. HMGET key field[field…]"></a>6. HMGET key field[field…]</h4><p>返回哈希表key中，一个或多个给定域的值，如果给定的域不存在于哈希表，那么返回一个nil值</p>
-<ul>
-<li>返回一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; HMSET pet dog &quot;doudou&quot; cat &quot;nounou&quot;    #一次设置多个域</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; HMGET pet dog cat fake_pet             #返回值的顺序和传入参数的顺序一样</span><br><span class="line">1) &quot;doudou&quot;</span><br><span class="line">2) &quot;nounou&quot;</span><br><span class="line">3) (nil)                                      #不存在的域返回nil值</span><br></pre></td></tr></table></figure>
-<h3 id="三、列表"><a href="#三、列表" class="headerlink" title="三、列表"></a>三、列表</h3>列表用于存储多个有序的字符串，列表是一种比较灵活的数据结构，可以充当栈和队列的角色<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04u9xkllmj21bs0ijq7t.jpg" alt="列表结构"></li>
-</ul>
-<h4 id="1-LPUSH-key-value-value-…"><a href="#1-LPUSH-key-value-value-…" class="headerlink" title="1. LPUSH key value[value …]"></a>1. LPUSH key value[value …]</h4><p>将一个或多个值value插入到列表key的表头（最左边），如果有多个value值，那么各个value值按从左到右的顺序依次插入到表头</p>
-<ul>
-<li>返回执行命令后列表的长度</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; LPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-RPUSH-key-value-value-…"><a href="#2-RPUSH-key-value-value-…" class="headerlink" title="2. RPUSH key value [value …]"></a>2. RPUSH key value [value …]</h4><p>将一个或多个值value插入到列表key的表尾（最右边），如果有多个value值，那么各个value值按从左到右的顺序依次插入</p>
-<ul>
-<li>返回执行命令后列表的长度<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; RPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;c&quot;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="3-LPOP"><a href="#3-LPOP" class="headerlink" title="3. LPOP"></a>3. LPOP</h4><p>移除头元素并返回被弹出的元素</p>
-<h4 id="4-RPOP-key"><a href="#4-RPOP-key" class="headerlink" title="4. RPOP key"></a>4. RPOP key</h4><p>移除尾元素并返回被弹出的元素</p>
-<h4 id="5-LINDEX-key-index"><a href="#5-LINDEX-key-index" class="headerlink" title="5. LINDEX key index"></a>5. LINDEX key index</h4><p>返回列表key中，下标为index的元素</p>
-<ul>
-<li>如果index参数的值不在列表的区间范围内(out of range)，返回nil</li>
-</ul>
-<h4 id="6-LINSERT-key-BEFORE-AFTER-pivot-value"><a href="#6-LINSERT-key-BEFORE-AFTER-pivot-value" class="headerlink" title="6. LINSERT key BEFORE|AFTER pivot value"></a>6. LINSERT key BEFORE|AFTER pivot value</h4><p>将值value值插入到列表key当中，位于值pivot之前或之后，当pivot不存在于列表key时，不执行任何操作。</p>
-<ul>
-<li>命令执行成功，返回插入操作完成之后，列表的长度。</li>
-<li>如果没有找到pivot，返回-1。</li>
-<li>如果key不存在或为空列表，返回0。</li>
-</ul>
-<h4 id="7-LRANGE-key-start-stop"><a href="#7-LRANGE-key-start-stop" class="headerlink" title="7. LRANGE key start stop"></a>7. LRANGE key start stop</h4><p>获取列表指定范围内的元素</p>
-<h4 id="8-LREM-key-count-value"><a href="#8-LREM-key-count-value" class="headerlink" title="8. LREM key count value"></a>8. LREM key count value</h4><p>移除列表元素</p>
-<h4 id="9-LTRIM-key-start-stop"><a href="#9-LTRIM-key-start-stop" class="headerlink" title="9. LTRIM key start stop"></a>9. LTRIM key start stop</h4><p>对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。</p>
-<h3 id="四、集合"><a href="#四、集合" class="headerlink" title="四、集合"></a>四、集合</h3><p>Redis的Set是String类型的无序集合，集合成员都是唯一的。集合是通过hash表实现的。<br><img src="http://ws1.sinaimg.cn/large/e0e01e43gy1g04woe8h2dj20je093myh.jpg" alt="无序集合"></p>
-<h4 id="1-SADD-key-member-member-…"><a href="#1-SADD-key-member-member-…" class="headerlink" title="1. SADD key member [member …]"></a>1. SADD key member [member …]</h4><p>将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略，假如key不存在，则创建一个只包含member元素作成员的集合，当key不是集合类型时，返回一个错误。</p>
-<ul>
-<li>返回被添加到新集合中的元素，不包括被忽略的元素</li>
-</ul>
-<h4 id="2-SPOP-key-count"><a href="#2-SPOP-key-count" class="headerlink" title="2. SPOP key [count]"></a>2. SPOP key [count]</h4><p>随机移除count个元素并返回被移除的元素</p>
-<ul>
-<li>返回被移除的随机元素，当key不存在或key是空集时，返回nil。</li>
-</ul>
-<h4 id="3-SREM-key-member-member-…"><a href="#3-SREM-key-member-member-…" class="headerlink" title="3. SREM key member[member …]"></a>3. SREM key member[member …]</h4><p>移除集合key中的一个或多个member元素，不存在的member元素会被忽略，当key不是集合类型，返回一个错误。</p>
-<ul>
-<li>返回被成功移除的元素个数，不包括被忽略的元素</li>
-</ul>
-<h4 id="4-SMEMBERS-key"><a href="#4-SMEMBERS-key" class="headerlink" title="4. SMEMBERS key"></a>4. SMEMBERS key</h4><p>返回集合key中的所有成员，不存在的key被视为空集合。</p>
-<ul>
-<li>返回值： 集合中的所有成员。</li>
-</ul>
-<h3 id="五、有序集合"><a href="#五、有序集合" class="headerlink" title="五、有序集合"></a>五、有序集合</h3><p>Redis有序集合和集合一样也是String类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。有序集合的成员是唯一的,但分数(score)却可以重复。集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04y9o37y7j21810j644t.jpg" alt="有序集合"></p>
-<h4 id="1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…"><a href="#1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…" class="headerlink" title="1. ZADD key [NX|XX][CH][INCR] score member [score member …]"></a>1. ZADD key [NX|XX][CH][INCR] score member [score member …]</h4><p>将一个或多个member元素及其score值加入到有序集key当中。如果某个member已经是有序集的成员，那么更新这个member的score值，并通过重新插入这个member元素，来保证该member在正确的位置上。score值可以是整数值或双精度浮点数。如果key不存在，则创建一个空的有序集并执行ZADD操作。当key存在但不是有序集类型时，返回一个错误。</p>
-<ul>
-<li>NX: member必须不存在，才可以设置成功，用于添加</li>
-<li>XX: member必须存在，才可以设置成功，用于更新</li>
-<li>CH：返回此次操作后，有序集合元素和分数发生变化的个数</li>
-<li>INCR：对scroe做增加，相当于ZINCRBY</li>
-</ul>
-<h4 id="2-ZREM-key-member-member-…"><a href="#2-ZREM-key-member-member-…" class="headerlink" title="2. ZREM key member [member …]"></a>2. ZREM key member [member …]</h4><p>移除有序集key中的一个或多个成员，不存在的成员将被忽略，当key存在但不是有序集类型时，返回一个错误</p>
-<ul>
-<li>返回被成功移除的成员的数量，不包括被忽略的成员。</li>
-</ul>
-<h4 id="3-ZRANGE-key-start-stop-WITHSCORES"><a href="#3-ZRANGE-key-start-stop-WITHSCORES" class="headerlink" title="3. ZRANGE key start stop [WITHSCORES]"></a>3. ZRANGE key start stop [WITHSCORES]</h4><p>通过索引区间返回有序集合成指定区间内的成员</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://ddnd.cn/2019/02/13/redis-chapter-2/" target="_blank" rel="noopener">第二章 Redis API的使用 单线程介绍【Redis入门教程】</a></p>
-<p><a href="https://segmentfault.com/a/1190000004620779" target="_blank" rel="noopener">Redis简易入门教程</a></p>
-]]></content>
-      <categories>
-        <category>web后端</category>
-      </categories>
-      <tags>
-        <tag>后端</tag>
-        <tag>node</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Python数据类型</title>
     <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
@@ -562,6 +343,225 @@
       <tags>
         <tag>css基础</tag>
         <tag>Less</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis基础入门</title>
+    <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
+<li>KEYS[pattern]: 时间复杂度为O(n)，查询所有符合给定模式pattern的key。返回符合给定模式的key列表。</li>
+<li>DESIZE key: 返回当前数据库key的数量。计算时不是扫描整个表而是实时更新key总数。</li>
+<li>EXISTS key: 检查给定key是否存在。key存在返回1,否则返回0</li>
+<li>DEL key: 返回被删除的key的数量</li>
+<li>EXPIRE key seconds：为给定的key设置生存时间，当key过期会被自动删除。设置成功返回1，失败返回0。</li>
+<li>PERSIST key: 移除给定key，将这个key转换成持久的，当生存时间移除成功时，返回1。如果key不存在或者没有设置生存时间返回0。</li>
+<li>TTL key: 以秒为单位，给定返回key的剩余生存时间。当key不存在时，返回-2，当key存在但没有设置生存时间，返回-1.否则返回剩余生存时间。<a id="more"></a>
+<h2 id="五种数据结构"><a href="#五种数据结构" class="headerlink" title="五种数据结构"></a>五种数据结构</h2><h3 id="一、字符串：Redis中最基础的数据结构"><a href="#一、字符串：Redis中最基础的数据结构" class="headerlink" title="一、字符串：Redis中最基础的数据结构"></a>一、字符串：Redis中最基础的数据结构</h3>Redis中字符串类型最大只能保存512MB<h4 id="1-SET-key-value-EX-seconds-PX-millseconds-NX-XX"><a href="#1-SET-key-value-EX-seconds-PX-millseconds-NX-XX" class="headerlink" title="1. SET key value [EX seconds][PX millseconds] [NX|XX]"></a>1. SET key value [EX seconds][PX millseconds] [NX|XX]</h4></li>
+<li>将时间字符串value关联到key，如果key已持有其他值，set就覆写旧值，无视类型。</li>
+<li>当set命令对一个带有生存时间（TTL）键进行设置之后，该键原有的TTL将被清除。</li>
+<li>可选参数<ul>
+<li>EX seconds：将键过期时间设置为seconds秒，执行<code>SET key value EX seconds</code>的效果相当于执行<code>SETEX key seconds value</code></li>
+<li>PX milliseconds: 将键的过期时间设置为milliseconds毫秒。执行<code>SET key value PX milliseconds</code>的效果等同于执行<code>PSETEX key milliseconds value</code></li>
+<li>NX:只在键不存在时，才对键进行设置操作。执行<code>SET key value NX</code>的效果等同于执行<code>SETNX key value</code>。</li>
+<li>XX：只在键已经存在时，才对键进行设置操作。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-GET-key"><a href="#2-GET-key" class="headerlink" title="2. GET key"></a>2. GET key</h4><p>获取与键key相关联的字符串值。</p>
+<ul>
+<li>如果key不存在返会nil，否则返回key的值。</li>
+<li>如果key的值并非字符串类型，那么返回一个错误，GET命令只能用于字符串值</li>
+</ul>
+<h4 id="3-DEL-key-key…"><a href="#3-DEL-key-key…" class="headerlink" title="3. DEL key[key…]"></a>3. DEL key[key…]</h4><p>删除指定的一个或者多个key，不存在的key会被忽略。</p>
+<ul>
+<li>返回被删除的key的数量</li>
+</ul>
+<h4 id="4-MEST-key-value-key-value…"><a href="#4-MEST-key-value-key-value…" class="headerlink" title="4. MEST key value[key value…]"></a>4. MEST key value[key value…]</h4><p>同时为多个键设置值，如果某个给定键已经存在，用MEST将新值去覆盖旧值。</p>
+<ul>
+<li>总是返回OK<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; MSET date &quot;2012.3.30&quot; time &quot;11:00 a.m.&quot; weather &quot;sunny&quot;</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; MGET date time weather</span><br><span class="line">1) &quot;2012.3.30&quot;</span><br><span class="line">2) &quot;11:00 a.m.&quot;</span><br><span class="line">3) &quot;sunny&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="5-MSETNX-key-value"><a href="#5-MSETNX-key-value" class="headerlink" title="5. MSETNX key value"></a>5. MSETNX key value</h4><p>当且仅当所有给定键都不存在时,为所有给定键设置值。即使只有一个给定键已经存在，MSETNX命令也会拒绝执行对所有键的设置操作。</p>
+<ul>
+<li>当所有给定键都设置成功，命令返回1，如果因为某个给定键已存在而导致未能执行成功，返回0</li>
+</ul>
+<h4 id="6-MGET-key-key…"><a href="#6-MGET-key-key…" class="headerlink" title="6. MGET key[key…]"></a>6. MGET key[key…]</h4><p>返回给定的一个或多个字符串键的值。如果给定的字符串键里面，有某个键不存在，那么这个键的值将以特殊值nil表示。</p>
+<h3 id="二、哈希"><a href="#二、哈希" class="headerlink" title="二、哈希"></a>二、哈希</h3><p>Redis的哈希是键值对的集合，是字符串字段和字符串值之间的映射。<br><img src="http://wx2.sinaimg.cn/large/e0e01e43gy1g04saqqy8ij20x00bj41k.jpg" alt="哈希"></p>
+<h4 id="1-HSET-key-field-value"><a href="#1-HSET-key-field-value" class="headerlink" title="1. HSET key field value"></a>1. HSET key field value</h4><p>将哈希表key中域field的值设置为value，如果给定的哈希表不存在，那么一个新的哈希表将被创建并执行HSET操作，如果域field已存在于哈希表中，那么它的旧值将被新值value覆盖。</p>
+<ul>
+<li>当新创建field域并成功为它设置值时,命令返回</li>
+<li>当域field已经存在于哈希表，并且HSET命令成功使用新值覆盖了它的旧值，那么命令返回0</li>
+</ul>
+<h4 id="2-HGET-key-field"><a href="#2-HGET-key-field" class="headerlink" title="2. HGET key field"></a>2. HGET key field</h4><ul>
+<li>返回给定域的值，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，那么命令返回nil。</li>
+</ul>
+<h4 id="3-HGETALL-key"><a href="#3-HGETALL-key" class="headerlink" title="3. HGETALL key"></a>3. HGETALL key</h4><p>以列表的形式返回哈希表的域和值</p>
+<ul>
+<li>以列表形式返回哈希表的域和域的值，若key不存在，返回空列表。</li>
+</ul>
+<h4 id="4-HDEL-key-field-field"><a href="#4-HDEL-key-field-field" class="headerlink" title="4. HDEL key field [field]"></a>4. HDEL key field [field]</h4><p>删除哈希表key中的一个或多个指定域，不存在的域将被忽略。</p>
+<ul>
+<li>被成功移除的域的数量，不包括被忽略的域。</li>
+</ul>
+<h4 id="5-HMSET-key-field-value-field-value-…"><a href="#5-HMSET-key-field-value-field-value-…" class="headerlink" title="5. HMSET key field value [field value …]"></a>5. HMSET key field value [field value …]</h4><p>同时将多个field-value(域-值)对设置到哈希表key中，此命令会覆盖哈希表中已存在的域，如果key不存在，一个空哈希表被创建并执行HMSET操作。</p>
+<ul>
+<li>如果命令执行成功，返回OK，当key不是哈希表(hash)类型时，返回一个错误。</li>
+</ul>
+<h4 id="6-HMGET-key-field-field…"><a href="#6-HMGET-key-field-field…" class="headerlink" title="6. HMGET key field[field…]"></a>6. HMGET key field[field…]</h4><p>返回哈希表key中，一个或多个给定域的值，如果给定的域不存在于哈希表，那么返回一个nil值</p>
+<ul>
+<li>返回一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; HMSET pet dog &quot;doudou&quot; cat &quot;nounou&quot;    #一次设置多个域</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; HMGET pet dog cat fake_pet             #返回值的顺序和传入参数的顺序一样</span><br><span class="line">1) &quot;doudou&quot;</span><br><span class="line">2) &quot;nounou&quot;</span><br><span class="line">3) (nil)                                      #不存在的域返回nil值</span><br></pre></td></tr></table></figure>
+<h3 id="三、列表"><a href="#三、列表" class="headerlink" title="三、列表"></a>三、列表</h3>列表用于存储多个有序的字符串，列表是一种比较灵活的数据结构，可以充当栈和队列的角色<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04u9xkllmj21bs0ijq7t.jpg" alt="列表结构"></li>
+</ul>
+<h4 id="1-LPUSH-key-value-value-…"><a href="#1-LPUSH-key-value-value-…" class="headerlink" title="1. LPUSH key value[value …]"></a>1. LPUSH key value[value …]</h4><p>将一个或多个值value插入到列表key的表头（最左边），如果有多个value值，那么各个value值按从左到右的顺序依次插入到表头</p>
+<ul>
+<li>返回执行命令后列表的长度</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; LPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-RPUSH-key-value-value-…"><a href="#2-RPUSH-key-value-value-…" class="headerlink" title="2. RPUSH key value [value …]"></a>2. RPUSH key value [value …]</h4><p>将一个或多个值value插入到列表key的表尾（最右边），如果有多个value值，那么各个value值按从左到右的顺序依次插入</p>
+<ul>
+<li>返回执行命令后列表的长度<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; RPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;c&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3-LPOP"><a href="#3-LPOP" class="headerlink" title="3. LPOP"></a>3. LPOP</h4><p>移除头元素并返回被弹出的元素</p>
+<h4 id="4-RPOP-key"><a href="#4-RPOP-key" class="headerlink" title="4. RPOP key"></a>4. RPOP key</h4><p>移除尾元素并返回被弹出的元素</p>
+<h4 id="5-LINDEX-key-index"><a href="#5-LINDEX-key-index" class="headerlink" title="5. LINDEX key index"></a>5. LINDEX key index</h4><p>返回列表key中，下标为index的元素</p>
+<ul>
+<li>如果index参数的值不在列表的区间范围内(out of range)，返回nil</li>
+</ul>
+<h4 id="6-LINSERT-key-BEFORE-AFTER-pivot-value"><a href="#6-LINSERT-key-BEFORE-AFTER-pivot-value" class="headerlink" title="6. LINSERT key BEFORE|AFTER pivot value"></a>6. LINSERT key BEFORE|AFTER pivot value</h4><p>将值value值插入到列表key当中，位于值pivot之前或之后，当pivot不存在于列表key时，不执行任何操作。</p>
+<ul>
+<li>命令执行成功，返回插入操作完成之后，列表的长度。</li>
+<li>如果没有找到pivot，返回-1。</li>
+<li>如果key不存在或为空列表，返回0。</li>
+</ul>
+<h4 id="7-LRANGE-key-start-stop"><a href="#7-LRANGE-key-start-stop" class="headerlink" title="7. LRANGE key start stop"></a>7. LRANGE key start stop</h4><p>获取列表指定范围内的元素</p>
+<h4 id="8-LREM-key-count-value"><a href="#8-LREM-key-count-value" class="headerlink" title="8. LREM key count value"></a>8. LREM key count value</h4><p>移除列表元素</p>
+<h4 id="9-LTRIM-key-start-stop"><a href="#9-LTRIM-key-start-stop" class="headerlink" title="9. LTRIM key start stop"></a>9. LTRIM key start stop</h4><p>对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。</p>
+<h3 id="四、集合"><a href="#四、集合" class="headerlink" title="四、集合"></a>四、集合</h3><p>Redis的Set是String类型的无序集合，集合成员都是唯一的。集合是通过hash表实现的。<br><img src="http://ws1.sinaimg.cn/large/e0e01e43gy1g04woe8h2dj20je093myh.jpg" alt="无序集合"></p>
+<h4 id="1-SADD-key-member-member-…"><a href="#1-SADD-key-member-member-…" class="headerlink" title="1. SADD key member [member …]"></a>1. SADD key member [member …]</h4><p>将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略，假如key不存在，则创建一个只包含member元素作成员的集合，当key不是集合类型时，返回一个错误。</p>
+<ul>
+<li>返回被添加到新集合中的元素，不包括被忽略的元素</li>
+</ul>
+<h4 id="2-SPOP-key-count"><a href="#2-SPOP-key-count" class="headerlink" title="2. SPOP key [count]"></a>2. SPOP key [count]</h4><p>随机移除count个元素并返回被移除的元素</p>
+<ul>
+<li>返回被移除的随机元素，当key不存在或key是空集时，返回nil。</li>
+</ul>
+<h4 id="3-SREM-key-member-member-…"><a href="#3-SREM-key-member-member-…" class="headerlink" title="3. SREM key member[member …]"></a>3. SREM key member[member …]</h4><p>移除集合key中的一个或多个member元素，不存在的member元素会被忽略，当key不是集合类型，返回一个错误。</p>
+<ul>
+<li>返回被成功移除的元素个数，不包括被忽略的元素</li>
+</ul>
+<h4 id="4-SMEMBERS-key"><a href="#4-SMEMBERS-key" class="headerlink" title="4. SMEMBERS key"></a>4. SMEMBERS key</h4><p>返回集合key中的所有成员，不存在的key被视为空集合。</p>
+<ul>
+<li>返回值： 集合中的所有成员。</li>
+</ul>
+<h3 id="五、有序集合"><a href="#五、有序集合" class="headerlink" title="五、有序集合"></a>五、有序集合</h3><p>Redis有序集合和集合一样也是String类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。有序集合的成员是唯一的,但分数(score)却可以重复。集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04y9o37y7j21810j644t.jpg" alt="有序集合"></p>
+<h4 id="1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…"><a href="#1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…" class="headerlink" title="1. ZADD key [NX|XX][CH][INCR] score member [score member …]"></a>1. ZADD key [NX|XX][CH][INCR] score member [score member …]</h4><p>将一个或多个member元素及其score值加入到有序集key当中。如果某个member已经是有序集的成员，那么更新这个member的score值，并通过重新插入这个member元素，来保证该member在正确的位置上。score值可以是整数值或双精度浮点数。如果key不存在，则创建一个空的有序集并执行ZADD操作。当key存在但不是有序集类型时，返回一个错误。</p>
+<ul>
+<li>NX: member必须不存在，才可以设置成功，用于添加</li>
+<li>XX: member必须存在，才可以设置成功，用于更新</li>
+<li>CH：返回此次操作后，有序集合元素和分数发生变化的个数</li>
+<li>INCR：对scroe做增加，相当于ZINCRBY</li>
+</ul>
+<h4 id="2-ZREM-key-member-member-…"><a href="#2-ZREM-key-member-member-…" class="headerlink" title="2. ZREM key member [member …]"></a>2. ZREM key member [member …]</h4><p>移除有序集key中的一个或多个成员，不存在的成员将被忽略，当key存在但不是有序集类型时，返回一个错误</p>
+<ul>
+<li>返回被成功移除的成员的数量，不包括被忽略的成员。</li>
+</ul>
+<h4 id="3-ZRANGE-key-start-stop-WITHSCORES"><a href="#3-ZRANGE-key-start-stop-WITHSCORES" class="headerlink" title="3. ZRANGE key start stop [WITHSCORES]"></a>3. ZRANGE key start stop [WITHSCORES]</h4><p>通过索引区间返回有序集合成指定区间内的成员</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://ddnd.cn/2019/02/13/redis-chapter-2/" target="_blank" rel="noopener">第二章 Redis API的使用 单线程介绍【Redis入门教程】</a></p>
+<p><a href="https://segmentfault.com/a/1190000004620779" target="_blank" rel="noopener">Redis简易入门教程</a></p>
+]]></content>
+      <categories>
+        <category>web后端</category>
+      </categories>
+      <tags>
+        <tag>后端</tag>
+        <tag>node</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>TCP和UDP</title>
+    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
+    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
+<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
+<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
+<li>超文本传输协议（HTTP）万维网基本协议</li>
+<li>文件传输协议（TFTP简单文件传输协议）</li>
+<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
+<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
+<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
+<li>Internet协议（IP）；</li>
+<li>Internet控制信息协议（ICMP）；</li>
+<li>地址解析协议（ARP）；</li>
+<li>反向地址解析协议（RARP）。</li>
+</ol>
+<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
+<ul>
+<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
+<ul>
+<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
+</ul>
+<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
+<ul>
+<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
+<ul>
+<li>第一次挥手(FIN=1，seq=x)</li>
+</ul>
+<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
+<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
+<ul>
+<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
+</ul>
+<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
+<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
+<ul>
+<li>第三次挥手(FIN=1，seq=y)</li>
+</ul>
+<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
+<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
+<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
+<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
+<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
+<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
+<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
+<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
+<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
+<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
+<ul>
+<li>缩短超时（SYN Timeout）时间</li>
+<li>增加最大半连接数</li>
+<li>过滤网关防护</li>
+<li>SYN cookies技术</li>
+</ul>
+<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
+<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
+<ul>
+<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
+<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
+<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
+<li>UDP 支持多播和广播。（TCP不支持）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
@@ -957,59 +957,6 @@
       </tags>
   </entry>
   <entry>
-    <title>常见状态码</title>
-    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
-    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
-<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
-<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
-<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
-<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
-<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
-<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
-<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
-<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
-<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
-<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
-<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
-<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
-<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
-<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
-<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
-</ul>
-<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
-<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
-<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
-<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
-<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
-<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
-<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
-<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
-<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
-<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
-<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
-<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
-<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
-<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
-<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
-<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
-</ul>
-<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
-<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
-<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
-<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
-<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
-<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
-<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>再读React官方文档</title>
     <url>/2019/09/09/%E5%86%8D%E8%AF%BBReact%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/</url>
     <content><![CDATA[<h1 id="再读React"><a href="#再读React" class="headerlink" title="再读React"></a>再读React</h1><p>笔者最近空闲时间比较多，这也可能是笔者这未来人生中时间最自由的一个月。所以想抓紧时间巩固和学习一下新知识，在公司实习期间一直在写业务，所以自己学习的时间很少，为了追上同事的步伐，一定要抓紧这一个月又一个质的突破。</p>
@@ -1095,6 +1042,59 @@
       </categories>
       <tags>
         <tag>React基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常见状态码</title>
+    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
+<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
+<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
+<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
+<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
+<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
+<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
+<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
+<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
+<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
+<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
+<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
+<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
+<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
+<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
+<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
+</ul>
+<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
+<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
+<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
+<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
+<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
+<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
+<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
+<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
+<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
+<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
+<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
+<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
+<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
+<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
+<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
+<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
+</ul>
+<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
+<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
+<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
+<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
+<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
+<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
+<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
