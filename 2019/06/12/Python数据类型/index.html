@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="后端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/sun16x16.png?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="数据类型整数 0x表示16进制 整数除法 &#x2F;:运算结果是浮点数12&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335&gt;&gt;&gt; 9&#x2F;3     3.0 &#x2F;&#x2F;: 运算结果是整数1&gt;&gt;&gt; 10&#x2F;&#x2F;3   3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python数据类型">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Zora Yang">
+<meta property="og:description" content="数据类型整数 0x表示16进制 整数除法 &#x2F;:运算结果是浮点数12&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335&gt;&gt;&gt; 9&#x2F;3     3.0 &#x2F;&#x2F;: 运算结果是整数1&gt;&gt;&gt; 10&#x2F;&#x2F;3   3">
+<meta property="article:published_time" content="2019-06-12T03:57:16.000Z">
+<meta property="article:modified_time" content="2020-07-13T07:38:38.971Z">
+<meta property="article:author" content="Zora Yang">
+<meta property="article:tag" content="后端">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/Python数据类型/"/>
+
+
+
+
+
+  <title>Python数据类型 | Zora Yang</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zora Yang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">前端学习成长中...</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zora Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/QQ20200713-0.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zora Yang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python数据类型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-12T11:57:16+08:00">
+                2019-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<li>0x表示16进制</li>
+<li>整数除法<ul>
+<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
+<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
+</ul>
+</li>
+<li>浮点数就是小数</li>
+</ul>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
+<li>关于转义<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
+<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
+</ul>
+<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
+<ul>
+<li><code>and</code>运算，都为True才为True</li>
+<li><code>or</code>运算，有True就为True</li>
+<li><code>not</code>运算, 非运算</li>
+</ul>
+<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
+<ul>
+<li>变量本身类型不固定的语言称为==动态语言==</li>
+<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
+但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
+</ul>
+<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
+<ul>
+<li>ord()函数获取字符的整数表示</li>
+<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
+<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
+
+<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
+
+<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>替换内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%d</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制整数</td>
+</tr>
+</tbody></table>
+<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
+<ul>
+<li>append(elem) 向list中追加元素到末尾</li>
+<li>insert(i, elem) 把元素插入到指定位置</li>
+<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
+<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
+<li>if else</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>elif<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
+<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>break</code>退出循环</li>
+<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
+<ul>
+<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
+<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
+<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
+<ul>
+<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
+<li>remove(key) 可以删除元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%90%8E%E7%AB%AF/" rel="tag"><i class="fa fa-tag"></i> 后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/" rel="next" title="常见状态码">
+                <i class="fa fa-chevron-left"></i> 常见状态码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/09/Less%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/" rel="prev" title="Less常见用法">
+                Less常见用法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/QQ20200713-0.JPG"
+               alt="Zora Yang" />
+          <p class="site-author-name" itemprop="name">Zora Yang</p>
+           
+              <p class="site-description motion-element" itemprop="description">要把所有的夜归还给星河，所有的春光归还给疏疏篱落，把所有的慵懒沉迷与不前归还给过去的我，明日之我，胸中有丘壑，立马振山河</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据类型"><span class="nav-number">1.</span> <span class="nav-text">数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#整数"><span class="nav-number">1.1.</span> <span class="nav-text">整数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浮点数"><span class="nav-number">1.2.</span> <span class="nav-text">浮点数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串"><span class="nav-number">1.3.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布尔值"><span class="nav-number">1.4.</span> <span class="nav-text">布尔值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#空值"><span class="nav-number">1.5.</span> <span class="nav-text">空值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变量"><span class="nav-number">1.6.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量"><span class="nav-number">1.7.</span> <span class="nav-text">常量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python的字符串和编码"><span class="nav-number">1.8.</span> <span class="nav-text">Python的字符串和编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#格式化输出字符串"><span class="nav-number">1.8.1.</span> <span class="nav-text">格式化输出字符串</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#list"><span class="nav-number">1.9.</span> <span class="nav-text">list</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#tuple"><span class="nav-number">1.9.1.</span> <span class="nav-text">tuple</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#条件判断"><span class="nav-number">1.10.</span> <span class="nav-text">条件判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#input"><span class="nav-number">1.11.</span> <span class="nav-text">input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#循环"><span class="nav-number">1.12.</span> <span class="nav-text">循环</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dict字典"><span class="nav-number">1.13.</span> <span class="nav-text">dict字典</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#set"><span class="nav-number">1.14.</span> <span class="nav-text">set</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart" style="color:red"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zora Yang</span>
+</div>
+
+<div>
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+	  访问人数：<span id="busuanzi_value_site_uv"></span>
+	</span>&nbsp;|&nbsp;
+	
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_container_site_pv">
+	  总访问量：<span id="busuanzi_value_site_pv"></span>
+	</span>&nbsp;|&nbsp;
+	
+	<!-- 添加博客全站总字数统计-->
+	<i class="fa fa-pencil"></i>
+	<span class="post-count">博客全站共 20.4k 字</span>
+</div>
+	
+<!-- <div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div> -->
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="web后端," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/sun16x16.png?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="阿里云服务器部署mongodb需求背景：笔者最近在准备开始着手开发毕业设计，是跟另一个腾讯校招的同学一起合作开发一个 电商运营的数据分析全栈系统。所以涉及到一个合作共享数据库的这个需求，故使用远程mongodb数据库。 这篇文章主要会从下面点开始介绍  购买阿里云服务器 服务器配置node、mongodb等 mongodb数据库权限管理控制 koa+typescript连接mongodb数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从购买服务器到服务器部署mongodb">
+<meta property="og:url" content="http://yoursite.com/2020/04/08/%E4%BB%8E%E8%B4%AD%E4%B9%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2mongodb/index.html">
+<meta property="og:site_name" content="Zora Yang">
+<meta property="og:description" content="阿里云服务器部署mongodb需求背景：笔者最近在准备开始着手开发毕业设计，是跟另一个腾讯校招的同学一起合作开发一个 电商运营的数据分析全栈系统。所以涉及到一个合作共享数据库的这个需求，故使用远程mongodb数据库。 这篇文章主要会从下面点开始介绍  购买阿里云服务器 服务器配置node、mongodb等 mongodb数据库权限管理控制 koa+typescript连接mongodb数据库">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/1.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/2.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/3.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/4.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/5.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/6.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/7.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/8.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/10.png">
+<meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/11.png">
+<meta property="article:published_time" content="2020-04-08T05:38:29.000Z">
+<meta property="article:modified_time" content="2020-07-13T07:38:04.009Z">
+<meta property="article:author" content="Zora Yang">
+<meta property="article:tag" content="web后端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":true,"scrollpercent":true,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/04/08/从购买服务器到服务器部署mongodb/"/>
+
+
+
+
+
+  <title>从购买服务器到服务器部署mongodb | Zora Yang</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta custom-logo">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Zora Yang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">前端学习成长中...</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/08/%E4%BB%8E%E8%B4%AD%E4%B9%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2mongodb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zora Yang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/QQ20200713-0.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Zora Yang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从购买服务器到服务器部署mongodb</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-08T13:38:29+08:00">
+                2020-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E4%BB%8E0%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E5%85%A8%E6%A0%88%E5%B7%A5%E4%BD%9C%E6%B5%81/" itemprop="url" rel="index">
+                    <span itemprop="name">从0开始搭建全栈工作流</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1.9k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="阿里云服务器部署mongodb"><a href="#阿里云服务器部署mongodb" class="headerlink" title="阿里云服务器部署mongodb"></a>阿里云服务器部署mongodb</h1><p>需求背景：笔者最近在准备开始着手开发毕业设计，是跟另一个腾讯校招的同学一起合作开发一个 电商运营的数据分析全栈系统。所以涉及到一个合作共享数据库的这个需求，故使用远程<code>mongodb</code>数据库。</p>
+<p>这篇文章主要会从下面点开始介绍</p>
+<ul>
+<li>购买阿里云服务器</li>
+<li>服务器配置node、mongodb等</li>
+<li>mongodb数据库权限管理控制</li>
+<li>koa+typescript连接mongodb数据库</li>
+</ul>
+<p>其中最后一点<code>Koa</code>+<code>Typescript</code>搭建后台开发环境这个以后会再出一个博文进行详细讲解。</p>
+<a id="more"></a>
+
+<h2 id="一、购买阿里云服务器"><a href="#一、购买阿里云服务器" class="headerlink" title="一、购买阿里云服务器"></a>一、购买阿里云服务器</h2><ul>
+<li><p><a href="https://www.aliyun.com/product/ecs?spm=5176.8112568.h2v3icoap.14.48479ed5pFlbm6&aly_as=35H6vk33Q" target="_blank" rel="noopener">阿里云-云服务（ECS）器购买</a></p>
+</li>
+<li><p><a href="https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.13963510.J_9380346650.2.51482efbANBOph&aly_as=_z-Htat-I" target="_blank" rel="noopener">阿里云-学生服务器购买</a></p>
+</li>
+</ul>
+<p>这里我购买的就是学生服务器然后<code>Centos</code>操作系统<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/1.png" alt="购买学生服务器"></p>
+<h3 id="（一）进入控制台"><a href="#（一）进入控制台" class="headerlink" title="（一）进入控制台"></a>（一）进入控制台</h3><p><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/2.png" alt="进入控制台"></p>
+<h4 id="（1）重置实例密码"><a href="#（1）重置实例密码" class="headerlink" title="（1）重置实例密码"></a>（1）重置实例密码</h4><p>这一步是为了远程连接服务器的时候进行的一个校验，点击右侧<code>更多-密码/密钥-重置实例密码</code>即可<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/3.png" alt="重置实例密码"></p>
+<h4 id="（2）远程连接"><a href="#（2）远程连接" class="headerlink" title="（2）远程连接"></a>（2）远程连接</h4><p>先说复杂的方法</p>
+<ul>
+<li><p><code>Windows</code>系统可以下载像<code>Putty</code>、<code>XShell</code>远程连接的工具</p>
+</li>
+<li><p><code>Mac</code>玩家就可以直接通过终端 输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 公网ip</span><br><span class="line">ssh root@ip</span><br></pre></td></tr></table></figure>
+<p>现在阿里云已经很强大了！强大到可以直接通过阿里云进行远程连接，点击右侧远程连接按钮，就会进入到一个模拟的终端环境。<br>输入用户名、密码点击确认，就进入到你的远程服务器环境啦！<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/4.png" alt="进入远程连接"></p>
+</li>
+</ul>
+<h2 id="二、服务器配置node、mongodb等"><a href="#二、服务器配置node、mongodb等" class="headerlink" title="二、服务器配置node、mongodb等"></a>二、服务器配置node、mongodb等</h2><h3 id="（一）-安装node"><a href="#（一）-安装node" class="headerlink" title="（一） 安装node"></a>（一） 安装node</h3><ol>
+<li>首先检测有没有<code>node</code>，输入下面命令。一般来说第一次连接服务器。都是没有的…<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>既然没有～那我们就上手安装好啦！这里你可能要懂一些<code>linux</code>的常见命令～不懂也没关系，临时查一查也是可以的。</li>
+</ul>
+<p>输入下面命令来安装node与npm。通过<code>yum</code>安装即可</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y nodejs</span><br></pre></td></tr></table></figure>
+<p>这里的话<code>yum</code>是服务器自带的一个前端软件包管理器。虽然通过它安装的node版本较低，但在服务器上够用就好啦。</p>
+<p>这个时候再输入</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line"><span class="comment">// v6.17.1</span></span><br><span class="line"></span><br><span class="line">npm -v </span><br><span class="line"><span class="comment">// 3.10.10</span></span><br></pre></td></tr></table></figure>
+
+<p>因为本人还比较喜欢使用<code>yarn</code>所以再多一步安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g yarn</span><br></pre></td></tr></table></figure>
+
+<h3 id="（二）正式开始！-部署mongodb"><a href="#（二）正式开始！-部署mongodb" class="headerlink" title="（二）正式开始！ 部署mongodb"></a>（二）正式开始！ 部署<code>mongodb</code></h3><ul>
+<li>安装<code>mongodb</code></li>
+</ul>
+<ol>
+<li>创建<code>yum</code>源文件<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vim是linux或centos系统下常见命令，这里不做赘述。</span></span><br><span class="line">vim /etc/yum.repos.d/mongodb-org<span class="number">-3.4</span>.repo</span><br></pre></td></tr></table></figure></li>
+<li>并且添加以下内容(按<code>i</code>进入编辑模式)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name&#x3D;MongoDB Repository</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;repo.mongodb.org&#x2F;yum&#x2F;redhat&#x2F;$releasever&#x2F;mongodb-org&#x2F;3.4&#x2F;x86_64&#x2F;</span><br><span class="line">gpgcheck&#x3D;0</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;www.mongodb.org&#x2F;static&#x2F;pgp&#x2F;server-3.4.asc</span><br></pre></td></tr></table></figure></li>
+<li><code>esc</code>退出编辑模式。<code>wq</code>保存这里的<code>yum</code>源文件</li>
+</ol>
+<p><strong>当然：这里涉及到文件的读与写出甚至文件夹的读与写。强大的阿里云又给我们提供了可视化编辑的功能</strong></p>
+<p><strong>点击上方<code>视图-文件树</code>就可以查看当前系统下的所有文件</strong></p>
+<ul>
+<li>然后找到<code>yum.repos.d</code>文件夹，</li>
+<li>创建<code>mongodb-org-3.4.repo</code>文件</li>
+<li>添加上面同样内容</li>
+<li>保存～ 就可以起到跟上面两部一样的作用</li>
+</ul>
+<p><strong>阿里云真的是太懂小白的心～，表白一波阿里云的产品大神们！！！</strong></p>
+<ol start="4">
+<li>安装mongodb<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这里就是读取上面配置的源文件。</span></span><br><span class="line">yum -y install mongodb-org</span><br></pre></td></tr></table></figure></li>
+<li>设置开机启动<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl enable mongod.service</span><br></pre></td></tr></table></figure></li>
+<li>配置<code>mongodb</code>远程访问</li>
+</ol>
+<ul>
+<li>编辑<code>mongod.conf</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;mongod.conf</span><br></pre></td></tr></table></figure></li>
+<li>更改以下内容<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># network interfaces</span><br><span class="line">net:</span><br><span class="line">  port: 27017</span><br><span class="line">  # bindIp: 172.0.0.0  # 这里注视掉或者改为0.0.0.0就是允许所有ip访问</span><br><span class="line"></span><br><span class="line"># 添加这两行代码是为了访问控制。即后面会讲到的数据库权限问题。</span><br><span class="line">security:</span><br><span class="line">  authorization: enabled  # 权限认证</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>注意：这里还是可以用强大的可视化编辑方法～新建、编辑、保存、退出！</strong></p>
+<p>重启<code>mongodb</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart mongod.service</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>现在就来试一下<code>mongodb</code>能不能用了吧<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 启动mongo shell</span><br><span class="line">mongo</span><br></pre></td></tr></table></figure>
+学习过<code>mongodb</code>的人就知道呐～出现下面这样的<code>&gt;</code>就算安装成功啦</li>
+</ol>
+<p><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/5.png" alt="启动mongodb"></p>
+<h2 id="三、mongodb数据库权限管理控制"><a href="#三、mongodb数据库权限管理控制" class="headerlink" title="三、mongodb数据库权限管理控制"></a>三、<code>mongodb</code>数据库权限管理控制</h2><p>其实有了上面两步，就已经实现了数据库共享这个需求。但～共享就有一个很严重的问题。就是安全！安全！安全！</p>
+<p>上一步的配置<code>mongod.conf</code>的<code>security-authorization</code>开启后就是开启连接权限认证！</p>
+<p>这里就涉及到一个<code>mongodb</code>权限控制的问题。下面我就一一讲解吧～。<br>按下面顺序输入命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mongo  &#x2F;&#x2F; 进入 mongo shell</span><br><span class="line">show dbs &#x2F;&#x2F; 查看所有数据库</span><br><span class="line">use admin &#x2F;&#x2F; 进入admin数据库</span><br><span class="line">show collections &#x2F;&#x2F; 查看所有数据表（集合）</span><br></pre></td></tr></table></figure>
+<p>下面就是很关键的一步！！！ 创建用户角色（即创建权限）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.createUser( &#123;</span><br><span class="line">    user: <span class="string">"admin"</span>,     <span class="comment">// 用户名</span></span><br><span class="line">    pwd: <span class="string">"password"</span>,    <span class="comment">// 密码</span></span><br><span class="line">    customData: <span class="string">"管理员角色！"</span>    <span class="comment">// 为任意内容，例如可以为用户全名介绍</span></span><br><span class="line">    roles: [ &#123;  <span class="comment">// 指定用户的角色，可以用一个空数组给新用户设定空角色；</span></span><br><span class="line">        role: <span class="string">"userAdminAnyDatabase"</span>,   <span class="comment">// 权限</span></span><br><span class="line">        db: <span class="string">"admin"</span>,   <span class="comment">// 权限作用于哪个数据库</span></span><br><span class="line">    &#125; ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>mongodb</code>常见的几种权限（<a href="https://docs.mongodb.com/manual/reference/built-in-roles/" target="_blank" rel="noopener">内置角色</a>）</p>
+<ol>
+<li>数据库用户角色: <code>read</code>、<code>readWrite</code>;</li>
+<li>数据库管理角色：<code>dbAdmin</code>、<code>dbOwner</code>、<code>userAdmin</code>；</li>
+<li>集群管理角色：<code>clusterAdmin</code>、<code>clusterManager</code>、<code>clusterMonitor</code>、<code>hostManager</code>；</li>
+<li>备份恢复角色：<code>backup</code>、<code>restore</code>；</li>
+<li>所有数据库角色：<code>readAnyDatabase</code>、<code>readWriteAnyDatabase</code>、<code>userAdminAnyDatabase</code>、<code>dbAdminAnyDatabase</code>（只在<code>admin</code>数据库可用）</li>
+<li>超级用户角色：<code>root</code> </li>
+</ol>
+<h3 id="一个栗子～"><a href="#一个栗子～" class="headerlink" title="一个栗子～"></a>一个栗子～</h3><p>这回做毕业设计。所以应该有一个数据库！</p>
+<ol>
+<li><p>创建一个数据库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 创建GRADUATE数据库</span><br><span class="line">use GRADUATE</span><br><span class="line"></span><br><span class="line">show dbs</span><br><span class="line">&#x2F;&#x2F; 这时虽然创建了但由于GRADUATE里没有数据。所以不会显示</span><br></pre></td></tr></table></figure></li>
+<li><p>创建集合（即一个数据表）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use GRADUATE</span><br><span class="line">db.createCollection(&quot;tests&quot;);</span><br></pre></td></tr></table></figure></li>
+<li><p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.tests.insert(&#123;&quot;name&quot; : &quot;测试一下&quot;&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面三步～就创建了一个有数据的数据库</p>
+</li>
+<li><p>权限控制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">db.createUser( &#123;</span><br><span class="line">    user: &quot;graduate&quot;,   </span><br><span class="line">    pwd: &quot;graduate_password&quot;,   </span><br><span class="line">    customData: &quot;graduate读写角色&quot;  </span><br><span class="line">    roles: [ &#123; </span><br><span class="line">        role: &quot;readWrite&quot;,   </span><br><span class="line">        db: &quot;GRADUATE&quot;,   </span><br><span class="line">    &#125; ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>授权</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use GRADUATE</span><br><span class="line">db.auth(&quot;graduate&quot;,&quot;graduate_password&quot;);</span><br></pre></td></tr></table></figure>
+<p>经过5、6两步。就可以完成一次权限控制啦～</p>
+</li>
+</ol>
+<h3 id="验证一下"><a href="#验证一下" class="headerlink" title="验证一下"></a>验证一下</h3><ol>
+<li><code>command+C</code> 退出<code>mongo shell</code></li>
+<li>输入命令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">show dbs  &#x2F;&#x2F; 这个时候很可能会报错, 因为没有权限</span><br><span class="line">&#x2F;&#x2F; 授权！</span><br><span class="line">use admin</span><br><span class="line">db.auth(&quot;admin&quot;,&quot;password&quot;);  &#x2F;&#x2F; 管理员角色的权限</span><br><span class="line"></span><br><span class="line">show dbs &#x2F;&#x2F; 成功！</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="四-koa-typescript连接mongodb数据库"><a href="#四-koa-typescript连接mongodb数据库" class="headerlink" title="四 koa+typescript连接mongodb数据库"></a>四 koa+typescript连接mongodb数据库</h2><h3 id="（一）-安全组配置。"><a href="#（一）-安全组配置。" class="headerlink" title="（一） 安全组配置。"></a>（一） 安全组配置。</h3><p>为了让你可以访问到远程数据库～需要在控制台新增安全组配置。</p>
+<ol>
+<li><p>打开安全组配置<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/6.png" alt="安全组配置"></p>
+</li>
+<li><p>配置规则<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/7.png" alt="配置规则"></p>
+</li>
+<li><p>配置详情<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/8.png" alt="配置详情"></p>
+</li>
+</ol>
+<h3 id="（二）下面就是关键代码"><a href="#（二）下面就是关键代码" class="headerlink" title="（二）下面就是关键代码"></a>（二）下面就是关键代码</h3><p>远程连接地址是下面拼接的～基本公式是</p>
+<p><code>mongodb://${数据库用户名}:${数据库密码}:${数据库远程地址(公网ip:27017)}/${数据库名}</code></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> mongoose <span class="keyword">from</span> <span class="string">'mongoose'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据库用户名</span></span><br><span class="line"><span class="keyword">const</span> username = <span class="string">'graduate'</span>;</span><br><span class="line"><span class="comment">// 数据库密码</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">'graduate_password'</span>;</span><br><span class="line"><span class="comment">// 远程mongodb地址</span></span><br><span class="line"><span class="keyword">const</span> dbport = 你买的服务器公网ip;  </span><br><span class="line"><span class="comment">// 数据库名称</span></span><br><span class="line"><span class="keyword">const</span> dbcol = <span class="string">'GRADUATE'</span></span><br><span class="line"><span class="comment">// 远程连接地址</span></span><br><span class="line"><span class="keyword">const</span> DB_URL = <span class="string">`mongodb://<span class="subst">$&#123;username&#125;</span>:<span class="subst">$&#123;password&#125;</span>@<span class="subst">$&#123;dbport&#125;</span>/<span class="subst">$&#123;dbcol&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// mongodb数据库</span></span><br><span class="line">mongoose.connect(DB_URL, &#123; useNewUrlParser: <span class="literal">true</span>, useUnifiedTopology: <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>这里先贴上代码。等笔者有时间整理一套完成的<code>KOA</code> + <code>MongoDB</code> + <code>TypeScript</code>的基本框架出来。</p>
+<h3 id="（三）Rabo-3T"><a href="#（三）Rabo-3T" class="headerlink" title="（三）Rabo 3T"></a>（三）Rabo 3T</h3><p>推荐一个本地开发的可视化<code>mongodb</code>数据库连接工具</p>
+<p><a href="https://robomongo.org/" target="_blank" rel="noopener">Rabo 3T</a></p>
+<ol>
+<li>创建远程连接<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/10.png" alt="创建远程连接"></li>
+<li>视图<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/11.png" alt="远程连接视图"></li>
+</ol>
+<h2 id="五、更多"><a href="#五、更多" class="headerlink" title="五、更多"></a>五、更多</h2><ul>
+<li><a href="https://www.runoob.com/mongodb/mongodb-tutorial.html" target="_blank" rel="noopener">mongodb基本教程</a></li>
+<li><a href="http://billie66.github.io/TLCL/book/" target="_blank" rel="noopener">linux基本操作</a></li>
+<li><a href="https://docs.mongodb.com/manual/" target="_blank" rel="noopener">mongodb官方文档</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+      
+    </div>
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/web%E5%90%8E%E7%AB%AF/" rel="tag"><i class="fa fa-tag"></i> web后端</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/20/widthheighttopleft%E8%BE%A8%E6%9E%90/" rel="next" title="width\height\top\left辨析">
+                <i class="fa fa-chevron-left"></i> width\height\top\left辨析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/20/%E7%9F%A5%E8%AF%86%E7%9B%B2%E5%8C%BA%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="知识盲区（一）">
+                知识盲区（一） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/QQ20200713-0.JPG"
+               alt="Zora Yang" />
+          <p class="site-author-name" itemprop="name">Zora Yang</p>
+           
+              <p class="site-description motion-element" itemprop="description">要把所有的夜归还给星河，所有的春光归还给疏疏篱落，把所有的慵懒沉迷与不前归还给过去的我，明日之我，胸中有丘壑，立马振山河</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#阿里云服务器部署mongodb"><span class="nav-number">1.</span> <span class="nav-text">阿里云服务器部署mongodb</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、购买阿里云服务器"><span class="nav-number">1.1.</span> <span class="nav-text">一、购买阿里云服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（一）进入控制台"><span class="nav-number">1.1.1.</span> <span class="nav-text">（一）进入控制台</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#（1）重置实例密码"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">（1）重置实例密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#（2）远程连接"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">（2）远程连接</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、服务器配置node、mongodb等"><span class="nav-number">1.2.</span> <span class="nav-text">二、服务器配置node、mongodb等</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（一）-安装node"><span class="nav-number">1.2.1.</span> <span class="nav-text">（一） 安装node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（二）正式开始！-部署mongodb"><span class="nav-number">1.2.2.</span> <span class="nav-text">（二）正式开始！ 部署mongodb</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、mongodb数据库权限管理控制"><span class="nav-number">1.3.</span> <span class="nav-text">三、mongodb数据库权限管理控制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个栗子～"><span class="nav-number">1.3.1.</span> <span class="nav-text">一个栗子～</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证一下"><span class="nav-number">1.3.2.</span> <span class="nav-text">验证一下</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-koa-typescript连接mongodb数据库"><span class="nav-number">1.4.</span> <span class="nav-text">四 koa+typescript连接mongodb数据库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#（一）-安全组配置。"><span class="nav-number">1.4.1.</span> <span class="nav-text">（一） 安全组配置。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（二）下面就是关键代码"><span class="nav-number">1.4.2.</span> <span class="nav-text">（二）下面就是关键代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#（三）Rabo-3T"><span class="nav-number">1.4.3.</span> <span class="nav-text">（三）Rabo 3T</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、更多"><span class="nav-number">1.5.</span> <span class="nav-text">五、更多</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright" >
+  
+  &copy;  2019 - 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart" style="color:red"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zora Yang</span>
+</div>
+
+<div>
+	<i class="fa fa-user-md"></i>
+	<span id="busuanzi_container_site_uv">
+	  访问人数：<span id="busuanzi_value_site_uv"></span>
+	</span>&nbsp;|&nbsp;
+	
+	<i class="fa fa-eye"></i>
+	<span id="busuanzi_container_site_pv">
+	  总访问量：<span id="busuanzi_value_site_pv"></span>
+	</span>&nbsp;|&nbsp;
+	
+	<!-- 添加博客全站总字数统计-->
+	<i class="fa fa-pencil"></i>
+	<span class="post-count">博客全站共 20.4k 字</span>
+</div>
+	
+<!-- <div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="noopener">
+    NexT.Gemini
+  </a>
+</div> -->
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/canvas_sphere.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

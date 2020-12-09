@@ -1,0 +1,1236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Less常见用法</title>
+    <url>/2019/07/09/Less%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="less常见用法"><a href="#less常见用法" class="headerlink" title="less常见用法"></a>less常见用法</h2><p>最近在写组件库，对Less的用法感觉很多都生疏了，所以去看了下官方文档跟掘金～ 整理一篇笔记出来</p>
+<a id="more"></a>
+
+<h3 id="定义常量（只能定义一次，不能重复使用）"><a href="#定义常量（只能定义一次，不能重复使用）" class="headerlink" title="定义常量（只能定义一次，不能重复使用）"></a>定义常量（只能定义一次，不能重复使用）</h3><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="variable">@color:</span> <span class="number">#999</span>;</span><br><span class="line"><span class="variable">@bgColor:</span> skyblue</span><br><span class="line"><span class="variable">@width</span>: <span class="number">50%</span>;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">@bgColor</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择器变量（@&#123;&#125;使用）</span></span><br><span class="line"><span class="variable">@mySelector:</span> #wrap;</span><br><span class="line"><span class="variable">@Wrap:</span> wrap;</span><br><span class="line"></span><br><span class="line"><span class="variable">@&#123;mySelector&#125;</span>&#123;  <span class="comment">// 变量名必须使用打括号包裹起来</span></span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">@bgColor</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 属性变量 （直接使用）</span></span><br><span class="line"><span class="variable">@borderStyle:</span> border-style;</span><br><span class="line"><span class="variable">@Solid:</span> solid;</span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line"> <span class="attribute">@&#123;borderStyle&#125;</span>: <span class="variable">@Solid</span>;  <span class="comment">// 变量名 必须使用大括号包裹 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// url变量（@&#123;&#125;）</span></span><br><span class="line"><span class="variable">@images:</span> <span class="string">'../img/dog.png'</span></span><br><span class="line">body&#123;</span><br><span class="line">    <span class="attribute">background</span>: url(<span class="string">"@&#123;images&#125;"</span>);   <span class="comment">// 大括号包裹</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明变量</span></span><br><span class="line"><span class="comment">// 结构 @name&#123;属性: 值&#125;;</span></span><br><span class="line"><span class="comment">// 使用 @name();</span></span><br><span class="line"><span class="variable">@background</span>:&#123;<span class="attribute">background</span>:red;&#125;;</span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="variable">@background</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="变量运算"><a href="#变量运算" class="headerlink" title="变量运算"></a>变量运算</h4><ul>
+<li>加减法时，以第一个数据的单位为基准</li>
+<li>乘除法时 注意单位一定要统一单位统一</li>
+</ul>
+<h3 id="嵌套用法"><a href="#嵌套用法" class="headerlink" title="嵌套用法"></a>嵌套用法</h3><p>&amp;：代表上一层选择器的名字</p>
+<h4 id="媒体查询"><a href="#媒体查询" class="headerlink" title="媒体查询"></a>媒体查询</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span> &#123;</span><br><span class="line">    <span class="keyword">@media</span> screen&#123;</span><br><span class="line">        <span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>)&#123;</span><br><span class="line">            <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@media</span> tv&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">2000px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的css</span></span><br><span class="line"><span class="keyword">@media</span> screen and (<span class="attribute">maxwidth</span>: <span class="number">768px</span>)&#123;</span><br><span class="line">    <span class="selector-id">#main</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> tv&#123;</span><br><span class="line">    <span class="selector-id">#main</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">2000px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="默认参数写法"><a href="#默认参数写法" class="headerlink" title="默认参数写法"></a>默认参数写法</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.border</span>(<span class="variable">@a</span>:<span class="number">10px</span>,<span class="variable">@b</span>:<span class="number">50px</span>,<span class="variable">@c</span>:<span class="number">30px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="variable">@argumengts</span>;    <span class="comment">// 指代全部参数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span> &#123;</span><br><span class="line">    <span class="selector-class">.border</span>(<span class="number">0px</span>,<span class="number">5px</span>,<span class="number">30px</span>,red);   <span class="comment">// 必须带着单位</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span> &#123;</span><br><span class="line">    <span class="selector-class">.border</span>(<span class="number">0px</span>);    </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#content</span>&#123;<span class="selector-tag">0</span></span><br><span class="line">    <span class="selector-class">.border</span>;    <span class="comment">// 等价于 .border();</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 数量不定参数</span></span><br><span class="line"><span class="selector-class">.boxShadow</span>(...)&#123;  </span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="variable">@arguments</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法匹配模式"><a href="#方法匹配模式" class="headerlink" title="方法匹配模式"></a>方法匹配模式</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.triangle</span>(top,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent  transparent <span class="variable">@color</span> transparent ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(right,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent <span class="variable">@color</span> transparent  transparent ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.triangle</span>(bottom,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:<span class="variable">@color</span> transparent  transparent  transparent ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(left,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent  transparent  transparent <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(<span class="variable">@_</span>,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-style</span>: solid;</span><br><span class="line">    <span class="attribute">border-width</span>: <span class="variable">@width</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="selector-class">.triangle</span>(left, <span class="number">50px</span>, <span class="number">#999</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 匹配规则</span></span><br><span class="line"><span class="comment">// 第一个参数left要会找到方法中匹配程度最高的，如果匹配程度相同则将全部选择，并存在着样式覆盖替换</span></span><br><span class="line"><span class="comment">// 如果匹配的参数是变量，则将会匹配如@_.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成的 CSS */</span></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">  <span class="attribute">border-color</span>:transparent  transparent  transparent <span class="number">#999</span>;</span><br><span class="line">  <span class="attribute">border-style</span>: solid;</span><br><span class="line">  <span class="attribute">border-width</span>: <span class="number">50px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法的条件筛选"><a href="#方法的条件筛选" class="headerlink" title="方法的条件筛选"></a>方法的条件筛选</h4><p>Less没有if和else，可是他有when</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#card</span>&#123;</span><br><span class="line">    <span class="comment">// and运算符，相当于 与运算&amp;&amp;，必须条件全部符合才会执行</span></span><br><span class="line">    <span class="selector-class">.border</span>(<span class="variable">@width</span>,<span class="variable">@color</span>,<span class="variable">@style</span>) <span class="keyword">when</span> (<span class="variable">@width</span>&gt;<span class="number">100px</span>) <span class="keyword">and</span>(<span class="variable">@color</span>=<span class="number">#999</span>)&#123;</span><br><span class="line">        <span class="attribute">border</span>: <span class="variable">@style</span> <span class="variable">@color</span> <span class="variable">@width</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// not运算符，相当于非运算！，条件为 不符合才会执行</span></span><br><span class="line">    <span class="selector-class">.background</span>(<span class="variable">@color</span>) <span class="keyword">when</span> <span class="keyword">not</span>(<span class="variable">@color</span>&gt;=<span class="number">#222</span>)&#123;</span><br><span class="line">        <span class="attribute">background</span>: <span class="variable">@color</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ,逗号分隔符：相当于 || ，只要有一个符合条件就会执行</span></span><br><span class="line">    <span class="selector-class">.font</span>(<span class="variable">@size</span>:<span class="number">20px</span>) <span class="keyword">when</span> (<span class="variable">@size</span>&gt;<span class="number">50px</span>),(<span class="variable">@size</span>&lt;<span class="number">100px</span>)&#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="variable">@size</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法使用-important-会给属性都加上-important。"><a href="#方法使用-important-会给属性都加上-important。" class="headerlink" title="方法使用!important 会给属性都加上!important。"></a>方法使用!important 会给属性都加上!important。</h4><h4 id="循环方法"><a href="#循环方法" class="headerlink" title="循环方法"></a>循环方法</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">Less</span>栅格系统</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.generate-columns</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.generate-columns</span>(<span class="variable">@n</span>, <span class="variable">@i</span>:<span class="number">1</span>) <span class="keyword">when</span> (<span class="variable">@i</span> =&lt; <span class="variable">@n</span>)&#123;</span><br><span class="line">    <span class="selector-class">.column-</span><span class="variable">@&#123;i&#125;</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: (<span class="variable">@i</span> * <span class="number">100%</span> / <span class="variable">@n</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.generate-columns</span>(<span class="variable">@n</span>.(<span class="variable">@i</span>+<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"><span class="selector-class">.column-1</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">25%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-2</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-3</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">75%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-4</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="属性拼接方法"><a href="#属性拼接方法" class="headerlink" title="属性拼接方法"></a>属性拼接方法</h4><p>+_代表的是空格，+ 代表的是逗号</p>
+<ul>
+<li><p>逗号</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.boxShadow</span>() &#123;</span><br><span class="line">    <span class="selector-tag">box-shadow</span>+: <span class="selector-tag">inset</span> <span class="selector-tag">0</span> <span class="selector-tag">0</span> <span class="selector-tag">10px</span> <span class="selector-id">#555</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="selector-class">.boxShadow</span>();</span><br><span class="line">  <span class="selector-tag">box-shadow</span>+: <span class="selector-tag">0</span> <span class="selector-tag">0</span> <span class="selector-tag">20px</span> <span class="selector-tag">black</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">box-shadow</span>: inset <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="number">#555</span>, <span class="number">0</span> <span class="number">0</span> <span class="number">20px</span> black;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>空格</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.Animation</span>() &#123;</span><br><span class="line">  <span class="selector-tag">transform</span>+<span class="selector-tag">_</span>: <span class="selector-tag">scale</span>(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="selector-class">.Animation</span>();</span><br><span class="line">  <span class="selector-tag">transform</span>+<span class="selector-tag">_</span>: <span class="selector-tag">rotate</span>(<span class="number">15deg</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成的 CSS */</span></span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">transform</span>: scale(<span class="number">2</span>) rotate(<span class="number">15deg</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>extend 是 Less的一个伪类。它可以继承所匹配声明中的全部样式</p>
+<h4 id="extends-关键字使用"><a href="#extends-关键字使用" class="headerlink" title="extends 关键字使用"></a>extends 关键字使用</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.animation</span>&#123;</span><br><span class="line">    <span class="attribute">transition</span>: all .<span class="number">3s</span> ease-out;</span><br><span class="line">    <span class="selector-class">.hide</span>&#123;</span><br><span class="line">        <span class="attribute">transform</span>: scale(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:extend(.animation)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#con</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:extend(.animation</span> <span class="selector-class">.hide</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="selector-class">.animation</span>,<span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">0.3s</span> ease-out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.animation</span> <span class="selector-class">.hide</span>, <span class="selector-id">#con</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: scale(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="all全局搜索替换"><a href="#all全局搜索替换" class="headerlink" title="all全局搜索替换"></a>all全局搜索替换</h4><p>使用选择器匹配到的全部声明</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mian</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">        <span class="attribute">content</span>: <span class="string">'Less is good!'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span><span class="selector-pseudo">:extends(</span><span class="selector-id">#main</span> <span class="keyword">all</span>)&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*生成的CSS */</span></span><br><span class="line"><span class="selector-id">#main</span>,<span class="selector-id">#wrap</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span><span class="selector-pseudo">:after</span>, <span class="selector-id">#wrap</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">'Less is good!'</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><ol>
+<li>省略文件后缀<figure class="highlight"><table><tr><td class="code"><pre><span class="line">import 'main';    // import 'main.less'</span><br></pre></td></tr></table></figure></li>
+<li>@import 的位置可以随意放置<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@import</span> <span class="string">'style'</span></span><br></pre></td></tr></table></figure></li>
+<li>reference 引入外部文件，但不会把导入的文件编译到最终输出中，只引用<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@import</span> (reference) <span class="string">'bootstrap.less'</span>;</span><br></pre></td></tr></table></figure></li>
+<li>once @import语句的默认行为。表明相同文件只会被导入一次，而随后的导入文件重复的代码都不会被重复解析<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@import</span> (once) <span class="string">"foo.less"</span>;</span><br><span class="line"><span class="keyword">@import</span> (once) <span class="string">"foo.less"</span>;      <span class="comment">// 不会被重复解析</span></span><br></pre></td></tr></table></figure></li>
+<li>multiple 使用@import(multiple)允许导入多个同名文件<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.a</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: green;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@import</span> (multiple) <span class="string">'foo.less'</span>;</span><br><span class="line"><span class="keyword">@import</span> (multiple) <span class="string">'foo.less'</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="避免编译"><a href="#避免编译" class="headerlink" title="避免编译"></a>避免编译</h3><p>结构 ~’ 值 ‘</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="string">~'calc(300px-30px)'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的css</span></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: calc(<span class="number">300px</span>-<span class="number">30px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量拼串"><a href="#变量拼串" class="headerlink" title="变量拼串"></a>变量拼串</h3><p>在下面例子中， 实现了不同的 transtion-delay、animation、@keyframes；</p>
+<p>结构： ~’字符@{变量}字符’</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.judge</span>(<span class="variable">@i</span>) <span class="keyword">when</span>(<span class="variable">@i</span>=<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="variable">@size:</span><span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.judge</span>(<span class="variable">@i</span>) <span class="keyword">when</span>(<span class="variable">@i</span>&gt;<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="variable">@size:</span><span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.loopAnimation</span>(<span class="variable">@i</span>) <span class="keyword">when</span> (<span class="variable">@i</span>&lt;<span class="number">16</span>) &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="selector-class">.circle</span><span class="selector-pseudo">:nth-child(</span><span class="variable">@&#123;i&#125;</span>)&#123;</span><br><span class="line">      <span class="selector-class">.judeg</span>(<span class="variable">@i</span>);</span><br><span class="line">      <span class="attribute">border-radius</span>:<span class="variable">@size</span> <span class="variable">@size</span> <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">      <span class="attribute">animation</span>: <span class="string">~"circle-@&#123;i&#125;"</span> <span class="variable">@duration</span> infinite <span class="variable">@ease</span>;</span><br><span class="line">      <span class="attribute">transition-delay</span>:<span class="string">~"@&#123;i&#125;ms"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">@keyframes</span> <span class="string">~"circle-@&#123;i&#125;"</span> &#123;</span><br><span class="line">      <span class="comment">// do something...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.loopAnimation</span>(<span class="variable">@i</span> + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用JS"><a href="#使用JS" class="headerlink" title="使用JS"></a>使用JS</h3><p>Less是由JS编写的</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="variable">@content:</span><span class="built_in">`"aaa".toUpperCase()`</span>;</span><br><span class="line"><span class="selector-id">#randomColor</span>&#123;</span><br><span class="line">  <span class="variable">@randomColor:</span> <span class="string">~"rgb(`Math.round(Math.random() * 256)`,`Math.round(Math.random() * 256)`,`Math.round(Math.random() * 256)`)"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="string">~"`Math.round(Math.random() * 100)`px"</span>;</span><br><span class="line">  <span class="selector-tag">&amp;</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">      <span class="attribute">content</span>:<span class="variable">@content</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="attribute">height</span>: <span class="string">~"`window.innerHeight`px"</span>;</span><br><span class="line">  <span class="attribute">alert</span>:<span class="string">~"`alert(1)`"</span>;</span><br><span class="line">  <span class="selector-id">#randomColor</span>();</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="variable">@randomColor</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 弹出 1</span></span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: 随机值（<span class="number">0</span>~<span class="number">100</span>）px;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">743px</span>;<span class="comment">//由电脑而异</span></span><br><span class="line">  <span class="attribute">background</span>: 随机颜色;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span><span class="selector-pseudo">::after</span>&#123;</span><br><span class="line">  <span class="attribute">content</span>:<span class="string">"AAA"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>CSS大乱炖</category>
+      </categories>
+      <tags>
+        <tag>css基础</tag>
+        <tag>Less</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jest+Enzyme前端自动化测试</title>
+    <url>/2019/08/11/Jest-Enzyme%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<h1 id="jest测试"><a href="#jest测试" class="headerlink" title="jest测试"></a>jest测试</h1><p>笔者接触组件库开发已经几月了，目前组件库越做越大，越做越好，但随之而来接入的业务方提的bug也越来越多，这显得前端自动化测试格外重要，此文主要是讲测试入门以及一些思想，具体怎么配置笔者觉得没有必要花心思去整理，网上一搜一大堆。</p>
+<a id="more"></a>
+
+<h2 id="测试类型"><a href="#测试类型" class="headerlink" title="测试类型"></a>测试类型</h2><ul>
+<li>单元测试：又称模块测试，对一个模块、类、函数等进行正确性检验工作。目标是隔离程序部件并证明这些单个部件是正确的。一个单元测试提供了代码片断需要满足的严密的书面规约。因此，单元测试带来了一些益处。 单元测试在软件开发过程的早期就能发现问题。</li>
+<li>功能测试：又称黑盒测试，是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。</li>
+<li>集成测试：在单元测试的基础上，将所有模块按照设计要求组装成子系统或者系统，进行测试</li>
+<li>冒烟测试： 在正式全面的测试之前，对主要功能进行的与测试，确认主要功能是否满足需要，软件是否能正常运行</li>
+</ul>
+<h2 id="jest匹配器"><a href="#jest匹配器" class="headerlink" title="jest匹配器"></a>jest匹配器</h2><ul>
+<li>toBe  (===)</li>
+<li>toEqual</li>
+<li>toBeNull</li>
+<li>toBeTrusty</li>
+<li>toBeFalsy</li>
+<li>toBeGreaterThan(number)</li>
+<li>toBeGreaterThanOrEqual(number)</li>
+<li>toBeLessThan(number)</li>
+<li>toBeLessThanOrEqual(number)</li>
+<li>toBeCloseTo(number);   // 近似</li>
+<li>toContainer</li>
+<li>toMatch可以检查字符串是否与正则表达式匹配</li>
+</ul>
+<p>++jest –watchAll(类似热加载)++</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//toBe 失败</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">one</span>: <span class="number">1</span>&#125;</span><br><span class="line">expect(a).toBe(&#123;<span class="attr">one</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p>异步函数的测试</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fecthData = <span class="function">(<span class="params">fn</span>) =&gt;</span> &#123;</span><br><span class="line">    axios.get(<span class="string">"http://www.dell-lee.com/react/api/demo.json"</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        fn(res)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//回调类型</span></span><br><span class="line"><span class="keyword">import</span> fetchData <span class="keyword">from</span> <span class="string">'./index.js'</span></span><br><span class="line">test(<span class="string">'fetchData 返回结果为&#123; success:true &#125;'</span>,(done) =&gt; &#123;</span><br><span class="line">    fetchData(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toEqual(&#123;</span><br><span class="line">            success: <span class="literal">true</span></span><br><span class="line">        &#125;);</span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>expect.assertions(1);   //至少要执行一个expect语法,expect.assertions,来测试一定数量的断言被调用，否则fulfilled态promise不会让测试失败</p>
+<h2 id="jest-globals-API"><a href="#jest-globals-API" class="headerlink" title="jest globals API"></a>jest globals API</h2><ul>
+<li>discribe(name,func): 块，一个测试单元的所用果能测试用例可组合为一个块</li>
+<li>it(name,func,timeout): 测试用例，一般一个测试用例测试一个单一功能</li>
+</ul>
+<h3 id="beforeEach和afterEach"><a href="#beforeEach和afterEach" class="headerlink" title="beforeEach和afterEach"></a>beforeEach和afterEach</h3><p>需要为多次测试重复设置的工作，可以使用breforeEach和afterEach。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    initializeCityDatabase();     <span class="comment">//每次测试前都要初始化citybase</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    clearCityDatabase();<span class="comment">// 每次测试之后要清空citybase</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="beforeAll和afterAll"><a href="#beforeAll和afterAll" class="headerlink" title="beforeAll和afterAll"></a>beforeAll和afterAll</h3><p>例如，如果 initializeCityDatabase 和 clearCityDatabase 都返回了 promise ，城市数据库可以在测试中重用，我们就能把我们的测试代码改成这样</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> initializeCityDatabase();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> clearCityDatabase(); </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>全局和describe都拥有上面四个生命周期。</p>
+<ul>
+<li>但describe的after函数优先级<strong>高于</strong>全局after函数</li>
+<li>describe的before函数优先级要<strong>低于</strong>全局的before函数</li>
+</ul>
+<h2 id="mock函数"><a href="#mock函数" class="headerlink" title="mock函数"></a>mock函数</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();   <span class="comment">// mock函数，捕获函数的调用</span></span><br><span class="line">func.mockReturnValueOnce(<span class="string">'Dell'</span>);  <span class="comment">// mock函数第一次调用的返回值</span></span><br><span class="line"><span class="comment">// func.mock.instance mock函数每次被调用this指向</span></span><br></pre></td></tr></table></figure>
+<p>mock函数中的作用</p>
+<ul>
+<li>捕获函数的调用和返回结果，以及this和调用顺序（func.mock)</li>
+<li>自由设置返回结 func.mockReturnValueOnce();</li>
+<li>改变内部函数的实现</li>
+</ul>
+<p>通过mock函数来测试异步函数</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> getData = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    axios.get(<span class="string">"/api"</span>).then(<span class="function"><span class="params">res</span>=&gt;</span>res.data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line">jest.mock(<span class="string">"axios"</span>);   <span class="comment">// 用jest来模拟ajax请求</span></span><br><span class="line"></span><br><span class="line">test(<span class="string">"test getData"</span>, <span class="keyword">async</span>()=&gt;&#123;</span><br><span class="line">    axios.get.mockReturnValue(<span class="string">"hello"</span>);   <span class="comment">// 把axios的get请求都返回hello</span></span><br><span class="line">    <span class="keyword">await</span> getData().then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">        expect(data).toBe(<span class="string">"hello"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();</span><br><span class="line">func.mockReturnValue(<span class="string">"hello"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">const</span> func = jest.fn(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line">func.mockImplementation(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func.mockReturnThis();   <span class="comment">//undefined;</span></span><br><span class="line">expect(func.mock.calls[<span class="number">0</span>]).toEqual([<span class="string">'abc'</span>]);    <span class="comment">// 第一次调用这个函数的参数是abc</span></span><br><span class="line">expect(func.toBeCalledWidth(<span class="string">'abc'</span>));  <span class="comment">// 每次调用这个函数的参数都是abc</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">jest.mock(<span class="string">'./demo'</span>);</span><br><span class="line"><span class="keyword">import</span> &#123; fetchData &#125; <span class="keyword">from</span> <span class="string">'./demo'</span>;    <span class="comment">// 这个是从__mocks__中引入的模拟的函数</span></span><br><span class="line"><span class="keyword">const</span> &#123; getNumber &#125; = jest.requireActual(<span class="string">'./demo'</span>);   <span class="comment">// 这个是从真实文件夹中引入的函数。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="spyOn"><a href="#spyOn" class="headerlink" title="spyOn"></a>spyOn</h2><p><code>jest.spuOn()</code>同样创建一个mock函数,但他比jest.fn()或jest.mock()；更厉害的是，他还会执行被mock的原函数。例如</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"1234567"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> jestfn = jest.mock(fn);   <span class="comment">// 如果执行，不会打印任何东西</span></span><br><span class="line"><span class="keyword">const</span> jestspy = jest.spyOn(fn);   <span class="comment">// 如果执行，会打印出1234567</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="snapshot-快照测试"><a href="#snapshot-快照测试" class="headerlink" title="snapshot 快照测试"></a>snapshot 快照测试</h2><p>就是看你生成的快照测试跟原来一不一样，如果原来文件更改，测试会失败，也就是让你确定你是不是要更改原来的文件。</p>
+<p>例如对一个React组件而言，传入相同的props，希望得到相同的输出。这样就可以通过快照测试来完成。</p>
+<p>按 <code>u</code>可以 upadte<br>按 <code>i</code> 可以交互的更新快照</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">expect <span class="keyword">const</span> config = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">        url: <span class="string">"http://localhost"</span>,</span><br><span class="line">        port: <span class="string">"8000"</span>,</span><br><span class="line">        time: <span class="keyword">new</span> <span class="built_in">Date</span>()      <span class="comment">// time是时间类型，会一直改变，所以快照是一直通不过的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试config</span></span><br><span class="line">test(<span class="string">"测试config"</span>,()=&gt;&#123;</span><br><span class="line">    expect(config()).toMatchSnapshot(&#123;</span><br><span class="line">        time: expect.any(<span class="built_in">Date</span>)   <span class="comment">// 这是说希望time只要是时间类型就好</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="行内snapshot和普通snapshot的区别"><a href="#行内snapshot和普通snapshot的区别" class="headerlink" title="行内snapshot和普通snapshot的区别"></a>行内snapshot和普通snapshot的区别</h2><ul>
+<li>普通: <code>toMacthSnapshot()</code>会把生成的快照存到一个新文件里</li>
+<li>行内: <code>toMatchInlineSnapshot()</code>会把生成的快照作为<code>toMatchInlineSnapshot()</code>的参数</li>
+</ul>
+<h3 id="mock-timer"><a href="#mock-timer" class="headerlink" title="mock timer"></a>mock timer</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> timer = <span class="function">(<span class="params">callback</span>)=&gt;</span>&#123;</span><br><span class="line">    setTimerout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">    &#125;,<span class="number">3000</span>)</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line">    timer(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        expect(<span class="number">1</span>).toBe(<span class="number">1</span>);   <span class="comment">// 等3秒后触发</span></span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用假的timer模拟</span></span><br><span class="line">jest.useFakeTimers();</span><br><span class="line"></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line"><span class="keyword">const</span> fn = jest.fn();</span><br><span class="line">    timer(fn);</span><br><span class="line">   </span><br><span class="line">    jest.runOnlyPendingTimers();  <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line">    只执行已经在队列中的timers，不会执行还未被创建的timers</span><br><span class="line">   </span><br><span class="line">    jest.runAllTimers();    <span class="comment">// 避免所有的等待时间（所有的时间函数都会被触发）</span></span><br><span class="line">    </span><br><span class="line">    jest.advanceTimersByTime(<span class="number">6000</span>);   <span class="comment">// 快进时间</span></span><br><span class="line">    </span><br><span class="line">    expect(fn).toHaveBeenCalledTimers(<span class="number">1</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了避免advanceTimersByTime()对其他测试用例的影响，可以用</span></span><br><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    jest.useFakeTimers();    <span class="comment">// 每次测试前都初始化一个实力对象。</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="mock-类"><a href="#mock-类" class="headerlink" title="mock 类"></a>mock 类</h2><ul>
+<li>使用<code>jest.mock(moduleName,factory,options)</code>自动mock模块，jest会自动帮我们mock指定模块中的函数，<code>factory</code>和<code>option</code>参数是可选的。<code>factory</code><h3 id="jest来测试ES6中的类"><a href="#jest来测试ES6中的类" class="headerlink" title="jest来测试ES6中的类"></a>jest来测试ES6中的类</h3>如果引入的文件是一个类的话，jest会默认把这个类里面的构造方法和类方法用jest.fn()代替。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 源文件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Util</span></span>&#123;</span><br><span class="line">    init() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    a() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    c() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Util;</span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">"./util"</span>);     <span class="comment">// 引入类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line"><span class="keyword">const</span> Util = jest.fn();</span><br><span class="line">Util.a = jest.fn();</span><br><span class="line">Util.c = jest.fn();</span><br></pre></td></tr></table></figure>
+
+<h2 id="TDD-（Test-Driven-Development-测试驱动开发"><a href="#TDD-（Test-Driven-Development-测试驱动开发" class="headerlink" title="TDD （Test Driven Development)  测试驱动开发"></a>TDD （Test Driven Development)  测试驱动开发</h2><ol>
+<li>编写测试用例</li>
+<li>运行测试，测试用例无法通过测试</li>
+<li>编写代码，使测试用例通过测试</li>
+<li>优化代码完成开发</li>
+<li>新功能则重复上述步骤</li>
+</ol>
+<h3 id="TDD优势"><a href="#TDD优势" class="headerlink" title="TDD优势"></a>TDD优势</h3><ol>
+<li>长期减少回归bug：当改变项目代码，所有测试用例会重新运行，一旦测试用例出错，就会发现原来的代码因为回归产生了bug</li>
+<li>代码质量更高（在写测试的时候对代码有了比较完善的思考）</li>
+<li>测试覆盖率高</li>
+</ol>
+<h2 id="BDD-Behavior-Driven-Development-行为驱动开发"><a href="#BDD-Behavior-Driven-Development-行为驱动开发" class="headerlink" title="BDD(Behavior Driven Development) 行为驱动开发"></a>BDD(Behavior Driven Development) 行为驱动开发</h2><p>通过与利益相关者的讨论取得对预期的软件行为的清醒认识。它通过用自然语言书写非程序员可读的测试用例扩展了测试驱动开发方法。行为驱动开发人员使用混合了领域中统一的语言的母语语言来描述他们的代码的目的。这让开发者得以把精力集中在代码应该怎么写，而不是技术细节上，而且也最大程度的减少了将代码编写者的技术语言与商业客户、用户、利益相关者、项目管理者等的领域语言之间来回翻译的代价。</p>
+<h2 id="DDD-Domain-Drive-Design-领域驱动开发"><a href="#DDD-Domain-Drive-Design-领域驱动开发" class="headerlink" title="DDD(Domain Drive Design) 领域驱动开发"></a>DDD(Domain Drive Design) 领域驱动开发</h2><p>核心：</p>
+<ul>
+<li>统一语言(软件的开发人员/使用人员都使用同一套语言，即对某个概念，名词的认知是统一的）</li>
+<li>面向领域（以领域去思考问题，而不是模块）</li>
+</ul>
+<h3 id="DDD优势"><a href="#DDD优势" class="headerlink" title="DDD优势"></a>DDD优势</h3><ol>
+<li>使用统一的一套通用语言，沟通成本会大大减小。</li>
+<li>对使用产品的用户有好处，他能在产品不断更新过程中，有一套统一流畅的体验。用户不用在每次软件更新时都要抱怨为什么之前的一个数据保存后没有用到了</li>
+<li>面向领域去开发产品有助于我们深入分析产品的内在逻辑，专注于解决当前产品的核心问题，而不是冗余的做很多功能模块。</li>
+</ol>
+<h1 id="Enzyme"><a href="#Enzyme" class="headerlink" title="Enzyme"></a>Enzyme</h1><p>对ReactDOM.render进行包装</p>
+<h2 id="三种渲染方式"><a href="#三种渲染方式" class="headerlink" title="三种渲染方式"></a>三种渲染方式</h2><ul>
+<li><code>shallow</code> 浅渲染（浅复制）,仅对当前jsx结构内的顶级组件进行渲染，而不对这些组件内部嵌套的子组件进行渲染，因此行能很快</li>
+<li><code>mount</code> 会进行完全渲染，而且完全依赖DOM API, 也就是说mount渲染结果跟浏览器结果一样, 结合jsdom这个工具，可以对上面提到的有内部子组件实现复杂交互功能的组件进行测试</li>
+<li><code>render</code>也会进行完整渲染，但不依赖DOM API, 而是渲染成HTML结构。</li>
+</ul>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li>simulate(event,mock): 用来触发事件，但一定注意在原组件要注册这个事件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> mockChange = jest.fn()</span><br><span class="line">wrapper = mount(<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;mockChange&#125;/</span>&gt;</span></span>)</span><br><span class="line">wrapper.simulate(<span class="string">'change'</span>,&#123;<span class="attr">target</span>: &#123;<span class="attr">value</span>: <span class="string">'1'</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>instance() =&gt; ReactComponent|DOMComponent ：返回组件的实例。在React 16，无状态组件会返回null（即不是以class创建的组件）</li>
+<li>find(selector): 查找节点，参数可以是css选择器、组件内部构造函数、组件类名等</li>
+<li>at(index): 返回一个数组对象的第几个元素</li>
+<li>contains(nodeOrNodes)：当前对象是否包含参数重点 node，参数类型为react对象或对象数组</li>
+<li>text()：返回当前组件的文本内容</li>
+<li>html()：返回当前组件的HTML代码形式</li>
+<li>props()：返回根组件所有属性</li>
+<li>prop(key)：返回根组件指定属性</li>
+<li>state()：返回根组件的状态</li>
+<li>setState(nextState)：设置根组件的状态</li>
+<li>setProps(nextProps)：设置根组件的属性</li>
+<li>debug(): 会打印出测试实际渲染出的内容字符串</li>
+<li>first()：返回节点数组的第一个元素</li>
+<li>last()：返回节点数组的最后一个节点</li>
+</ul>
+<h1 id="好文分享"><a href="#好文分享" class="headerlink" title="好文分享"></a>好文分享</h1><ul>
+<li><a href="https://juejin.im/post/59b5e79f6fb9a00a600f4216" target="_blank" rel="noopener">Jest模拟函数、timer、类</a></li>
+<li><a href="https://segmentfault.com/a/1190000016717356" target="_blank" rel="noopener">Jest fn、mock、spyOn</a></li>
+<li><a href="http://iceiceice.top/2018/12/29/introduce-jest/#jest.mock%20and%20jest.spyOn" target="_blank" rel="noopener">Jest 入门</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis基础入门</title>
+    <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
+<li>KEYS[pattern]: 时间复杂度为O(n)，查询所有符合给定模式pattern的key。返回符合给定模式的key列表。</li>
+<li>DESIZE key: 返回当前数据库key的数量。计算时不是扫描整个表而是实时更新key总数。</li>
+<li>EXISTS key: 检查给定key是否存在。key存在返回1,否则返回0</li>
+<li>DEL key: 返回被删除的key的数量</li>
+<li>EXPIRE key seconds：为给定的key设置生存时间，当key过期会被自动删除。设置成功返回1，失败返回0。</li>
+<li>PERSIST key: 移除给定key，将这个key转换成持久的，当生存时间移除成功时，返回1。如果key不存在或者没有设置生存时间返回0。</li>
+<li>TTL key: 以秒为单位，给定返回key的剩余生存时间。当key不存在时，返回-2，当key存在但没有设置生存时间，返回-1.否则返回剩余生存时间。<a id="more"></a>
+<h2 id="五种数据结构"><a href="#五种数据结构" class="headerlink" title="五种数据结构"></a>五种数据结构</h2><h3 id="一、字符串：Redis中最基础的数据结构"><a href="#一、字符串：Redis中最基础的数据结构" class="headerlink" title="一、字符串：Redis中最基础的数据结构"></a>一、字符串：Redis中最基础的数据结构</h3>Redis中字符串类型最大只能保存512MB<h4 id="1-SET-key-value-EX-seconds-PX-millseconds-NX-XX"><a href="#1-SET-key-value-EX-seconds-PX-millseconds-NX-XX" class="headerlink" title="1. SET key value [EX seconds][PX millseconds] [NX|XX]"></a>1. SET key value [EX seconds][PX millseconds] [NX|XX]</h4></li>
+<li>将时间字符串value关联到key，如果key已持有其他值，set就覆写旧值，无视类型。</li>
+<li>当set命令对一个带有生存时间（TTL）键进行设置之后，该键原有的TTL将被清除。</li>
+<li>可选参数<ul>
+<li>EX seconds：将键过期时间设置为seconds秒，执行<code>SET key value EX seconds</code>的效果相当于执行<code>SETEX key seconds value</code></li>
+<li>PX milliseconds: 将键的过期时间设置为milliseconds毫秒。执行<code>SET key value PX milliseconds</code>的效果等同于执行<code>PSETEX key milliseconds value</code></li>
+<li>NX:只在键不存在时，才对键进行设置操作。执行<code>SET key value NX</code>的效果等同于执行<code>SETNX key value</code>。</li>
+<li>XX：只在键已经存在时，才对键进行设置操作。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-GET-key"><a href="#2-GET-key" class="headerlink" title="2. GET key"></a>2. GET key</h4><p>获取与键key相关联的字符串值。</p>
+<ul>
+<li>如果key不存在返会nil，否则返回key的值。</li>
+<li>如果key的值并非字符串类型，那么返回一个错误，GET命令只能用于字符串值</li>
+</ul>
+<h4 id="3-DEL-key-key…"><a href="#3-DEL-key-key…" class="headerlink" title="3. DEL key[key…]"></a>3. DEL key[key…]</h4><p>删除指定的一个或者多个key，不存在的key会被忽略。</p>
+<ul>
+<li>返回被删除的key的数量</li>
+</ul>
+<h4 id="4-MEST-key-value-key-value…"><a href="#4-MEST-key-value-key-value…" class="headerlink" title="4. MEST key value[key value…]"></a>4. MEST key value[key value…]</h4><p>同时为多个键设置值，如果某个给定键已经存在，用MEST将新值去覆盖旧值。</p>
+<ul>
+<li>总是返回OK<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; MSET date &quot;2012.3.30&quot; time &quot;11:00 a.m.&quot; weather &quot;sunny&quot;</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; MGET date time weather</span><br><span class="line">1) &quot;2012.3.30&quot;</span><br><span class="line">2) &quot;11:00 a.m.&quot;</span><br><span class="line">3) &quot;sunny&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="5-MSETNX-key-value"><a href="#5-MSETNX-key-value" class="headerlink" title="5. MSETNX key value"></a>5. MSETNX key value</h4><p>当且仅当所有给定键都不存在时,为所有给定键设置值。即使只有一个给定键已经存在，MSETNX命令也会拒绝执行对所有键的设置操作。</p>
+<ul>
+<li>当所有给定键都设置成功，命令返回1，如果因为某个给定键已存在而导致未能执行成功，返回0</li>
+</ul>
+<h4 id="6-MGET-key-key…"><a href="#6-MGET-key-key…" class="headerlink" title="6. MGET key[key…]"></a>6. MGET key[key…]</h4><p>返回给定的一个或多个字符串键的值。如果给定的字符串键里面，有某个键不存在，那么这个键的值将以特殊值nil表示。</p>
+<h3 id="二、哈希"><a href="#二、哈希" class="headerlink" title="二、哈希"></a>二、哈希</h3><p>Redis的哈希是键值对的集合，是字符串字段和字符串值之间的映射。<br><img src="http://wx2.sinaimg.cn/large/e0e01e43gy1g04saqqy8ij20x00bj41k.jpg" alt="哈希"></p>
+<h4 id="1-HSET-key-field-value"><a href="#1-HSET-key-field-value" class="headerlink" title="1. HSET key field value"></a>1. HSET key field value</h4><p>将哈希表key中域field的值设置为value，如果给定的哈希表不存在，那么一个新的哈希表将被创建并执行HSET操作，如果域field已存在于哈希表中，那么它的旧值将被新值value覆盖。</p>
+<ul>
+<li>当新创建field域并成功为它设置值时,命令返回</li>
+<li>当域field已经存在于哈希表，并且HSET命令成功使用新值覆盖了它的旧值，那么命令返回0</li>
+</ul>
+<h4 id="2-HGET-key-field"><a href="#2-HGET-key-field" class="headerlink" title="2. HGET key field"></a>2. HGET key field</h4><ul>
+<li>返回给定域的值，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，那么命令返回nil。</li>
+</ul>
+<h4 id="3-HGETALL-key"><a href="#3-HGETALL-key" class="headerlink" title="3. HGETALL key"></a>3. HGETALL key</h4><p>以列表的形式返回哈希表的域和值</p>
+<ul>
+<li>以列表形式返回哈希表的域和域的值，若key不存在，返回空列表。</li>
+</ul>
+<h4 id="4-HDEL-key-field-field"><a href="#4-HDEL-key-field-field" class="headerlink" title="4. HDEL key field [field]"></a>4. HDEL key field [field]</h4><p>删除哈希表key中的一个或多个指定域，不存在的域将被忽略。</p>
+<ul>
+<li>被成功移除的域的数量，不包括被忽略的域。</li>
+</ul>
+<h4 id="5-HMSET-key-field-value-field-value-…"><a href="#5-HMSET-key-field-value-field-value-…" class="headerlink" title="5. HMSET key field value [field value …]"></a>5. HMSET key field value [field value …]</h4><p>同时将多个field-value(域-值)对设置到哈希表key中，此命令会覆盖哈希表中已存在的域，如果key不存在，一个空哈希表被创建并执行HMSET操作。</p>
+<ul>
+<li>如果命令执行成功，返回OK，当key不是哈希表(hash)类型时，返回一个错误。</li>
+</ul>
+<h4 id="6-HMGET-key-field-field…"><a href="#6-HMGET-key-field-field…" class="headerlink" title="6. HMGET key field[field…]"></a>6. HMGET key field[field…]</h4><p>返回哈希表key中，一个或多个给定域的值，如果给定的域不存在于哈希表，那么返回一个nil值</p>
+<ul>
+<li>返回一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; HMSET pet dog &quot;doudou&quot; cat &quot;nounou&quot;    #一次设置多个域</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; HMGET pet dog cat fake_pet             #返回值的顺序和传入参数的顺序一样</span><br><span class="line">1) &quot;doudou&quot;</span><br><span class="line">2) &quot;nounou&quot;</span><br><span class="line">3) (nil)                                      #不存在的域返回nil值</span><br></pre></td></tr></table></figure>
+<h3 id="三、列表"><a href="#三、列表" class="headerlink" title="三、列表"></a>三、列表</h3>列表用于存储多个有序的字符串，列表是一种比较灵活的数据结构，可以充当栈和队列的角色<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04u9xkllmj21bs0ijq7t.jpg" alt="列表结构"></li>
+</ul>
+<h4 id="1-LPUSH-key-value-value-…"><a href="#1-LPUSH-key-value-value-…" class="headerlink" title="1. LPUSH key value[value …]"></a>1. LPUSH key value[value …]</h4><p>将一个或多个值value插入到列表key的表头（最左边），如果有多个value值，那么各个value值按从左到右的顺序依次插入到表头</p>
+<ul>
+<li>返回执行命令后列表的长度</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; LPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-RPUSH-key-value-value-…"><a href="#2-RPUSH-key-value-value-…" class="headerlink" title="2. RPUSH key value [value …]"></a>2. RPUSH key value [value …]</h4><p>将一个或多个值value插入到列表key的表尾（最右边），如果有多个value值，那么各个value值按从左到右的顺序依次插入</p>
+<ul>
+<li>返回执行命令后列表的长度<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; RPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;c&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3-LPOP"><a href="#3-LPOP" class="headerlink" title="3. LPOP"></a>3. LPOP</h4><p>移除头元素并返回被弹出的元素</p>
+<h4 id="4-RPOP-key"><a href="#4-RPOP-key" class="headerlink" title="4. RPOP key"></a>4. RPOP key</h4><p>移除尾元素并返回被弹出的元素</p>
+<h4 id="5-LINDEX-key-index"><a href="#5-LINDEX-key-index" class="headerlink" title="5. LINDEX key index"></a>5. LINDEX key index</h4><p>返回列表key中，下标为index的元素</p>
+<ul>
+<li>如果index参数的值不在列表的区间范围内(out of range)，返回nil</li>
+</ul>
+<h4 id="6-LINSERT-key-BEFORE-AFTER-pivot-value"><a href="#6-LINSERT-key-BEFORE-AFTER-pivot-value" class="headerlink" title="6. LINSERT key BEFORE|AFTER pivot value"></a>6. LINSERT key BEFORE|AFTER pivot value</h4><p>将值value值插入到列表key当中，位于值pivot之前或之后，当pivot不存在于列表key时，不执行任何操作。</p>
+<ul>
+<li>命令执行成功，返回插入操作完成之后，列表的长度。</li>
+<li>如果没有找到pivot，返回-1。</li>
+<li>如果key不存在或为空列表，返回0。</li>
+</ul>
+<h4 id="7-LRANGE-key-start-stop"><a href="#7-LRANGE-key-start-stop" class="headerlink" title="7. LRANGE key start stop"></a>7. LRANGE key start stop</h4><p>获取列表指定范围内的元素</p>
+<h4 id="8-LREM-key-count-value"><a href="#8-LREM-key-count-value" class="headerlink" title="8. LREM key count value"></a>8. LREM key count value</h4><p>移除列表元素</p>
+<h4 id="9-LTRIM-key-start-stop"><a href="#9-LTRIM-key-start-stop" class="headerlink" title="9. LTRIM key start stop"></a>9. LTRIM key start stop</h4><p>对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。</p>
+<h3 id="四、集合"><a href="#四、集合" class="headerlink" title="四、集合"></a>四、集合</h3><p>Redis的Set是String类型的无序集合，集合成员都是唯一的。集合是通过hash表实现的。<br><img src="http://ws1.sinaimg.cn/large/e0e01e43gy1g04woe8h2dj20je093myh.jpg" alt="无序集合"></p>
+<h4 id="1-SADD-key-member-member-…"><a href="#1-SADD-key-member-member-…" class="headerlink" title="1. SADD key member [member …]"></a>1. SADD key member [member …]</h4><p>将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略，假如key不存在，则创建一个只包含member元素作成员的集合，当key不是集合类型时，返回一个错误。</p>
+<ul>
+<li>返回被添加到新集合中的元素，不包括被忽略的元素</li>
+</ul>
+<h4 id="2-SPOP-key-count"><a href="#2-SPOP-key-count" class="headerlink" title="2. SPOP key [count]"></a>2. SPOP key [count]</h4><p>随机移除count个元素并返回被移除的元素</p>
+<ul>
+<li>返回被移除的随机元素，当key不存在或key是空集时，返回nil。</li>
+</ul>
+<h4 id="3-SREM-key-member-member-…"><a href="#3-SREM-key-member-member-…" class="headerlink" title="3. SREM key member[member …]"></a>3. SREM key member[member …]</h4><p>移除集合key中的一个或多个member元素，不存在的member元素会被忽略，当key不是集合类型，返回一个错误。</p>
+<ul>
+<li>返回被成功移除的元素个数，不包括被忽略的元素</li>
+</ul>
+<h4 id="4-SMEMBERS-key"><a href="#4-SMEMBERS-key" class="headerlink" title="4. SMEMBERS key"></a>4. SMEMBERS key</h4><p>返回集合key中的所有成员，不存在的key被视为空集合。</p>
+<ul>
+<li>返回值： 集合中的所有成员。</li>
+</ul>
+<h3 id="五、有序集合"><a href="#五、有序集合" class="headerlink" title="五、有序集合"></a>五、有序集合</h3><p>Redis有序集合和集合一样也是String类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。有序集合的成员是唯一的,但分数(score)却可以重复。集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04y9o37y7j21810j644t.jpg" alt="有序集合"></p>
+<h4 id="1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…"><a href="#1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…" class="headerlink" title="1. ZADD key [NX|XX][CH][INCR] score member [score member …]"></a>1. ZADD key [NX|XX][CH][INCR] score member [score member …]</h4><p>将一个或多个member元素及其score值加入到有序集key当中。如果某个member已经是有序集的成员，那么更新这个member的score值，并通过重新插入这个member元素，来保证该member在正确的位置上。score值可以是整数值或双精度浮点数。如果key不存在，则创建一个空的有序集并执行ZADD操作。当key存在但不是有序集类型时，返回一个错误。</p>
+<ul>
+<li>NX: member必须不存在，才可以设置成功，用于添加</li>
+<li>XX: member必须存在，才可以设置成功，用于更新</li>
+<li>CH：返回此次操作后，有序集合元素和分数发生变化的个数</li>
+<li>INCR：对scroe做增加，相当于ZINCRBY</li>
+</ul>
+<h4 id="2-ZREM-key-member-member-…"><a href="#2-ZREM-key-member-member-…" class="headerlink" title="2. ZREM key member [member …]"></a>2. ZREM key member [member …]</h4><p>移除有序集key中的一个或多个成员，不存在的成员将被忽略，当key存在但不是有序集类型时，返回一个错误</p>
+<ul>
+<li>返回被成功移除的成员的数量，不包括被忽略的成员。</li>
+</ul>
+<h4 id="3-ZRANGE-key-start-stop-WITHSCORES"><a href="#3-ZRANGE-key-start-stop-WITHSCORES" class="headerlink" title="3. ZRANGE key start stop [WITHSCORES]"></a>3. ZRANGE key start stop [WITHSCORES]</h4><p>通过索引区间返回有序集合成指定区间内的成员</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://ddnd.cn/2019/02/13/redis-chapter-2/" target="_blank" rel="noopener">第二章 Redis API的使用 单线程介绍【Redis入门教程】</a></p>
+<p><a href="https://segmentfault.com/a/1190000004620779" target="_blank" rel="noopener">Redis简易入门教程</a></p>
+]]></content>
+      <categories>
+        <category>web后端</category>
+      </categories>
+      <tags>
+        <tag>后端</tag>
+        <tag>node</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>TCP和UDP</title>
+    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
+    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
+<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
+<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
+<li>超文本传输协议（HTTP）万维网基本协议</li>
+<li>文件传输协议（TFTP简单文件传输协议）</li>
+<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
+<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
+<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
+<li>Internet协议（IP）；</li>
+<li>Internet控制信息协议（ICMP）；</li>
+<li>地址解析协议（ARP）；</li>
+<li>反向地址解析协议（RARP）。</li>
+</ol>
+<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
+<ul>
+<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
+<ul>
+<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
+</ul>
+<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
+<ul>
+<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
+<ul>
+<li>第一次挥手(FIN=1，seq=x)</li>
+</ul>
+<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
+<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
+<ul>
+<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
+</ul>
+<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
+<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
+<ul>
+<li>第三次挥手(FIN=1，seq=y)</li>
+</ul>
+<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
+<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
+<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
+<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
+<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
+<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
+<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
+<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
+<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
+<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
+<ul>
+<li>缩短超时（SYN Timeout）时间</li>
+<li>增加最大半连接数</li>
+<li>过滤网关防护</li>
+<li>SYN cookies技术</li>
+</ul>
+<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
+<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
+<ul>
+<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
+<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
+<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
+<li>UDP 支持多播和广播。（TCP不支持）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python数据类型</title>
+    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<li>0x表示16进制</li>
+<li>整数除法<ul>
+<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
+<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
+</ul>
+</li>
+<li>浮点数就是小数</li>
+</ul>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
+<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
+<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
+</ul>
+<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
+<ul>
+<li><code>and</code>运算，都为True才为True</li>
+<li><code>or</code>运算，有True就为True</li>
+<li><code>not</code>运算, 非运算</li>
+</ul>
+<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
+<ul>
+<li>变量本身类型不固定的语言称为==动态语言==</li>
+<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
+但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
+</ul>
+<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
+<ul>
+<li>ord()函数获取字符的整数表示</li>
+<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
+<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
+
+<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
+
+<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>替换内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%d</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制整数</td>
+</tr>
+</tbody></table>
+<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
+<ul>
+<li>append(elem) 向list中追加元素到末尾</li>
+<li>insert(i, elem) 把元素插入到指定位置</li>
+<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
+<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
+<li>if else</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
+<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>break</code>退出循环</li>
+<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
+<ul>
+<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
+<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
+<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
+<ul>
+<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
+<li>remove(key) 可以删除元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cookie 和 Session比较</title>
+    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
+    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
+<a id="more"></a>
+
+<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
+<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
+<p><strong>express中读取还是设置都是在req中</strong>。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react hook</title>
+    <url>/2019/09/09/hook/</url>
+    <content><![CDATA[<h1 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h1><p>可以让你在不编写class的情况下使用state以及其他React特性</p>
+<p>Hook的作用就是让你的函数组件中可以使用class中的一些生命周期和state等。</p>
+<a id="more"></a>
+
+<h2 id="Hook规则"><a href="#Hook规则" class="headerlink" title="Hook规则"></a>Hook规则</h2><p>Hook就是JavaScript函数，但是使用它们会有两个额外的规则</p>
+<ul>
+<li>只能在<strong>函数最外层</strong>调用Hook，不要在循环、条件判断或子函数中调用</li>
+<li>只能在<strong>React的函数组件</strong>中调用Hook。（除了自定义Hook外）</li>
+</ul>
+<h2 id="useState方法"><a href="#useState方法" class="headerlink" title="useState方法"></a>useState方法</h2><h3 id="基本例子"><a href="#基本例子" class="headerlink" title="基本例子"></a>基本例子</h3><ul>
+<li>useState会返回一对值：<code>当前状态</code>和一个让你<code>更新它的函数</code>。<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 声明一个叫 “count” 的 state 变量。</span></span><br><span class="line">  <span class="comment">// 这个变量的初始值是0, 即useState里的初始值</span></span><br><span class="line">  <span class="comment">// 更新这个变量的函数就是setCount</span></span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h2><h3 id="基本例子-1"><a href="#基本例子-1" class="headerlink" title="基本例子"></a>基本例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Similar to componentDidMount and componentDidUpdate:</span></span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// Update the document title using the browser API</span></span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>useEffect</code>默认在第一次渲染后和每次更新之后都会执行。 React保证了每次渲染effect的同时DOM都已经更新完毕。</li>
+<li>与<code>componentDidMount</code>和<code>componentDidUpdate</code>不同的是，使用<code>useEffect</code>调度的<code>effect</code>不会阻塞浏览器更新屏幕，这让你的应用看起来响应更快。</li>
+</ul>
+<h3 id="清除effect"><a href="#清除effect" class="headerlink" title="清除effect"></a>清除effect</h3><p>当<code>useEffect</code>返回一个函数时，react将会在执行清除操作时调用它。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"> useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">      setIsOnline(status.isOnline);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个函数，清除时调用。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="仅在state更改是更新。"><a href="#仅在state更改是更新。" class="headerlink" title="仅在state更改是更新。"></a>仅在state更改是更新。</h3><p>使<code>Hook</code>在<code>count</code>更改时更新</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.title=<span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span></span><br><span class="line">&#125;,[count])</span><br></pre></td></tr></table></figure>
+
+<p>仅在 props.friend.id 发生变化时，重新订阅</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">    setIsOnline(status.isOnline);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.friend.id]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./mycontext;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> MyContext = React.createContext(&#123;<span class="attr">count</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在组件中使用</span></span><br><span class="line"><span class="keyword">import</span> &#123; MyContext &#125; <span class="keyword">from</span> <span class="string">'./mycontext'</span>;</span><br><span class="line"><span class="keyword">const</span> value = useContext(MyContext);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原来this.context.count;</span></span><br><span class="line"><span class="comment">// 相当于value.count</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer"></a>useReducer</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState, init);</span><br><span class="line"><span class="comment">// reducer： 形如(state，action) =&gt; newState;</span></span><br><span class="line"><span class="comment">// initialState：初始化的State</span></span><br><span class="line"><span class="comment">// init：惰性创建 state</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="基础例子"><a href="#基础例子" class="headerlink" title="基础例子"></a>基础例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params">initialCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">count</span>: initialCount&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'increment'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'decrement'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'reset'</span>:</span><br><span class="line">      <span class="keyword">return</span> init(action.payload);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialCount, init);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button</span><br><span class="line">        onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'reset'</span>, <span class="attr">payload</span>: initialCount&#125;)&#125;&gt;</span><br><span class="line"></span><br><span class="line">        Reset</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;type: 'increment'&#125;)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'decrement'</span>&#125;)&#125;&gt;-&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="useRef"><a href="#useRef" class="headerlink" title="useRef"></a>useRef</h2><p>useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。</p>
+<p>返回的 ref 对象在组件的整个生命周期内保持不变。</p>
+<p>useRef不仅可以取代原来的<code>ref</code>属性，还可以用于保存<code>Hook</code>属性的实例变量。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于普通ref</span></span><br><span class="line"><span class="keyword">const</span> domRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    domRef.current.focus();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render()&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">            &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于保存一个实例变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> staticRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> id = setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里staticRef就是用于保存变量的</span></span><br><span class="line">    staticRef.current = id;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      clearInterval(staticRef.current);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义Hook"><a href="#自定义Hook" class="headerlink" title="自定义Hook"></a>自定义Hook</h2><p>自定义Hook是一个函数，其名称以<code>use</code>开头，函数内部可以调用其他Hook。</p>
+<ul>
+<li>两个组件中使用相同的Hook不会共享state，因为自定义 Hook 是一种重用状态逻辑的机制(例如设置为订阅并存储当前值)，所以每次使用自定义 Hook 时，其中的所有<code>state</code> 和<code>effect</code>都是完全隔离的。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(count + <span class="number">1</span>)&#125;&gt;+&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>http和https</title>
+    <url>/2019/09/12/http%E5%92%8Chttps/</url>
+    <content><![CDATA[<h1 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h1><p>影响HTTP网络请求的两个因素：带宽和延迟</p>
+<ul>
+<li>延迟：<ul>
+<li>浏览器阻塞（HOL blocking）：如果请求超过浏览器所支持的最大连接数就会造成阻塞。</li>
+<li>DNS 查询（DNS Lookup）：将域名解析成IP地址靠的就是DNS查询，期间可能会有延迟。</li>
+<li>建立连接（Initial connection）：HTTP 是基于 TCP 协议的，浏览器最快也要在第三次握手时才能捎带 HTTP 请求报文，达到真正的建立连接，但是这些连接无法复用会导致每次请求都经历三次握手和慢启动。三次握手在高延迟的场景下影响较明显，慢启动则对文件类大请求影响较大。<a id="more"></a>
+
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="HTTP1-0-和-HTTP1-1-的区别"><a href="#HTTP1-0-和-HTTP1-1-的区别" class="headerlink" title="HTTP1.0 和 HTTP1.1 的区别"></a>HTTP1.0 和 HTTP1.1 的区别</h2><h3 id="缓存处理："><a href="#缓存处理：" class="headerlink" title="缓存处理："></a>缓存处理：</h3><p>在HTTP1.0中主要使用<code>header</code>里的<code>If-Modified-Since</code>,<code>Expires</code>来做为缓存判断的标准，HTTP1.1则引入了更多的缓存控制策略例如<code>Entity tag</code>，<code>If-Unmodified-Since</code>, <code>If-Match</code>, <code>If-None-Match</code>等更多可供选择的缓存头来控制缓存策略。</p>
+<h3 id="带宽优化及网络连接的使用"><a href="#带宽优化及网络连接的使用" class="headerlink" title="带宽优化及网络连接的使用:"></a>带宽优化及网络连接的使用:</h3><p>HTTP1.1在请求头中引入了<code>range</code>这个字段，它允许只请求资源的某个部分，即返回码是<code>206（Partial Content）</code>，这样就方便了开发者自由的选择以便于充分利用带宽和连接。</p>
+<h3 id="错误反馈："><a href="#错误反馈：" class="headerlink" title="错误反馈："></a>错误反馈：</h3><p>在HTTP1.1中新增了24个错误状态响应码，如<code>409（Conflict）</code>表示请求的资源与资源的当前状态发生冲突；<code>410（Gone）</code>表示服务器上的某个资源被永久性的删除。</p>
+<h3 id="Host头处理："><a href="#Host头处理：" class="headerlink" title="Host头处理："></a>Host头处理：</h3><p>在HTTP1.0中认为每台服务器都绑定一个唯一的IP地址，因此，请求消息中的URL并没有传递主机名（hostname）。但随着虚拟主机技术的发展，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。</p>
+<p>HTTP1.1的请求消息和响应消息都应支持Host头域，且请求消息中如果没有Host头域会报告一个错误（400 Bad Request）。</p>
+<h3 id="长连接："><a href="#长连接：" class="headerlink" title="长连接："></a>长连接：</h3><p>HTTP 1.1支持长连接<code>（PersistentConnection）</code>和请求的流水线<code>（Pipelining）</code>处理，在一个TCP连接上可以传送多个HTTP请求和响应，减少了建立和关闭连接的消耗和延迟，在HTTP1.1中默认开启<code>Connection： keep-alive</code>，一定程度上弥补了HTTP1.0每次请求都要创建连接的缺点。</p>
+<h2 id="HTTP2-0"><a href="#HTTP2-0" class="headerlink" title="HTTP2.0"></a>HTTP2.0</h2><h3 id="多路复用-Multiplexing-："><a href="#多路复用-Multiplexing-：" class="headerlink" title="多路复用 (Multiplexing)："></a>多路复用 (Multiplexing)：</h3><p>多路复用允许同时通过单一的 HTTP/2 连接发起多重的请求-响应消息。</p>
+<p>在 HTTP/1.1 协议中浏览器客户端在同一时间，针对同一域名下的请求有一定数量限制。超过限制数目的请求会被阻塞。</p>
+<h3 id="二进制分帧"><a href="#二进制分帧" class="headerlink" title="二进制分帧"></a>二进制分帧</h3><p>在二进制分帧层中， HTTP/2 会将所有传输的信息分割为更小的消息和帧（frame）,并对它们采用二进制格式的编码 ，其中 HTTP1.x 的首部信息会被封装到 HEADER frame，而相应的 Request Body 则封装到 DATA frame 里面。</p>
+<h3 id="首部压缩"><a href="#首部压缩" class="headerlink" title="首部压缩"></a>首部压缩</h3><h3 id="服务端推送"><a href="#服务端推送" class="headerlink" title="服务端推送"></a>服务端推送</h3><p>会针对客户端的一个请求，返回多个响应。例如客户端需要index.html，服务端会将他所依赖的 css、js文件也会返回给他</p>
+<h2 id="HTTP不足之处"><a href="#HTTP不足之处" class="headerlink" title="HTTP不足之处"></a>HTTP不足之处</h2><ul>
+<li>通信内容使用明文——内容可能被窃听。</li>
+<li>不验证通信方的身份——可能遭遇伪装</li>
+<li>无法验证报文的完整性——报文有可能遭篡改。</li>
+</ul>
+<h1 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h1><p>是以安全为目标的HTTP通道，在HTTP下加入SSL/TLS层，HTTPS的安全基础是SSL/TSL，因此加密的详细内容需要SSL/TLS。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-54ff04e1b0cc698f08f76d6356f59fac_hd.png" alt="区别"></p>
+<h2 id="SSL（Secure-Socket-Layer，安全套接字层）"><a href="#SSL（Secure-Socket-Layer，安全套接字层）" class="headerlink" title="SSL（Secure Socket Layer，安全套接字层）"></a>SSL（Secure Socket Layer，安全套接字层）</h2><p>位于TCP/IP协议与各种应用层协议之间，为数据通讯提供安全支持。</p>
+<h3 id="TLS（Transport-Layer-Security，传输层安全）"><a href="#TLS（Transport-Layer-Security，传输层安全）" class="headerlink" title="TLS（Transport Layer Security，传输层安全）"></a>TLS（Transport Layer Security，传输层安全）</h3><p>前身是SSL，应用不广泛。</p>
+<ul>
+<li>对称加密: 有流式和分组两种，<code>加密</code>和<code>解密</code>都使用的同一个密钥。</li>
+<li>非对称加密：加密使用的密钥和解密使用的密钥是不相同的，分别称为：公钥、私钥，公钥和算法都是公开的，私钥是保密的。非对称加密算法性能较低，但是安全性超强，由于其加密特性，非对称加密算法能加密的数据长度也是有限的。</li>
+<li>哈希算法：将任意长度的信息转换为较短的固定长度的值，通常其长度要比信息小得多，且算法不可逆。</li>
+<li>数字签名：签名就是在信息的后面再加上一段内容（信息经过hash后的值），可以证明信息没有被修改过。hash值一般都会加密后（也就是签名）再和信息一起发送，以保证这个hash值不被修改。</li>
+</ul>
+<h2 id="常用的加密的算法。"><a href="#常用的加密的算法。" class="headerlink" title="常用的加密的算法。"></a>常用的加密的算法。</h2><ul>
+<li>客服端发起请求</li>
+<li>服务端响应SSL证书供客户端校验（SSL证书中会有公钥）</li>
+<li>校验成功后，客户端会产生一个随机数（其实就是密钥），并用公钥加密，发送给服务端</li>
+<li>服务端采用私钥解密后，就可以得到这个密钥</li>
+<li>后续的加解密会用这个密钥完成。</li>
+</ul>
+<p>即用非对称加密传递密钥，再用这个密钥的对称加密算法传递信息。</p>
+<h2 id="HTTP和HTTPS的区别"><a href="#HTTP和HTTPS的区别" class="headerlink" title="HTTP和HTTPS的区别"></a>HTTP和HTTPS的区别</h2><ul>
+<li><p>https协议需要到ca申请证书，一般免费证书较少，因而需要一定费用。</p>
+</li>
+<li><p>http是超文本传输协议，信息是明文传输，https则是具有安全性的ssl加密传输协议。</p>
+</li>
+<li><p>http和https使用的是完全不同的连接方式，用的端口也不一样，前者是80，后者是443。</p>
+</li>
+<li><p>http的连接很简单，是无状态的；HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，比http协议安全。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>width\height\top\left辨析</title>
+    <url>/2019/12/20/widthheighttopleft%E8%BE%A8%E6%9E%90/</url>
+    <content><![CDATA[<p>笔者最近在重构组件库的时候，学习大佬们的代码，表示很迷茫，主要是感觉这个XXHeight才在这里见到，然后又出现了另一个XXHeight。感觉有点混淆，所以简单的辨析一下这个几个Height和Width顺便再辨析一下Top和Left。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th><code>offset</code></th>
+<th><code>client</code></th>
+<th><code>scroll</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>offsetWidth</code></td>
+<td><code>clientWidth</code></td>
+<td><code>scrollWidth</code></td>
+</tr>
+<tr>
+<td><code>offsetHeight</code></td>
+<td><code>clientHeight</code></td>
+<td><code>scrollHeight</code></td>
+</tr>
+<tr>
+<td><code>offsetLeft</code></td>
+<td><code>clientLeft</code></td>
+<td><code>scrollLeft</code></td>
+</tr>
+<tr>
+<td><code>offsetTop</code></td>
+<td><code>clientTop</code></td>
+<td><code>scrollTop</code></td>
+</tr>
+</tbody></table>
+<h2 id="Offset相关"><a href="#Offset相关" class="headerlink" title="Offset相关"></a><code>Offset相关</code></h2><ul>
+<li><code>offsetTop</code>：子元素距离已定位的父容器的上边距离，不包括子元素与父元素的border</li>
+<li><code>offsetLeft</code>：子元素距离已定位的父容器的左边距离，不包括子元素与父元素的border</li>
+<li><code>offsetWidth</code>：元素外尺寸的宽度，是元素内容宽度+内边距+边框，不包括外边距与滚动条</li>
+<li><code>offsetHeight</code>：元素外尺寸的高度，是元素内容高度+内边距边框，不包括外边距与滚动条。</li>
+</ul>
+<h2 id="Client相关"><a href="#Client相关" class="headerlink" title="Client相关"></a><code>Client相关</code></h2><ul>
+<li><code>clientTop</code>：元素的内边距外边缘和边框外边缘的距离，实际就是上边框的厚度。</li>
+<li><code>clientLeft</code>：元素的内边距外边缘和边框外边缘的距离，实际上是左边框的厚度。</li>
+<li><code>clientWidth</code>：元素尺寸宽度，仅仅表示元素内容宽度，包括内边距，不包括边框。</li>
+<li><code>clientHeight</code>：元素尺寸高度，仅仅表示元素内容高度，包括内边距，不包括边框。</li>
+</ul>
+<h2 id="Scroll相关"><a href="#Scroll相关" class="headerlink" title="Scroll相关"></a><code>Scroll相关</code></h2><ul>
+<li><code>scrollTop</code>：元素滚动条上边已经滚动的高度</li>
+<li><code>scrollLeft</code>：元素滚动条左边已经滚动的乱度</li>
+<li><code>scrollWidth</code>：内容区域加内边距加上溢出的尺寸</li>
+<li><code>scrollHeight</code>：内容区域加内边距加上溢出的尺寸</li>
+</ul>
+]]></content>
+      <categories>
+        <category>CSS大乱炖</category>
+      </categories>
+      <tags>
+        <tag>CSS基础</tag>
+        <tag>朝花夕拾</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你不知道的JSON.stringify</title>
+    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
+    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
+<a id="more"></a>
+<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
+<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
+</ul>
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
+<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
+
+<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
+<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
+<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
+<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>朝花夕拾</tag>
+        <tag>JS基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从购买服务器到服务器部署mongodb</title>
+    <url>/2020/04/08/%E4%BB%8E%E8%B4%AD%E4%B9%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2mongodb/</url>
+    <content><![CDATA[<h1 id="阿里云服务器部署mongodb"><a href="#阿里云服务器部署mongodb" class="headerlink" title="阿里云服务器部署mongodb"></a>阿里云服务器部署mongodb</h1><p>需求背景：笔者最近在准备开始着手开发毕业设计，是跟另一个腾讯校招的同学一起合作开发一个 电商运营的数据分析全栈系统。所以涉及到一个合作共享数据库的这个需求，故使用远程<code>mongodb</code>数据库。</p>
+<p>这篇文章主要会从下面点开始介绍</p>
+<ul>
+<li>购买阿里云服务器</li>
+<li>服务器配置node、mongodb等</li>
+<li>mongodb数据库权限管理控制</li>
+<li>koa+typescript连接mongodb数据库</li>
+</ul>
+<p>其中最后一点<code>Koa</code>+<code>Typescript</code>搭建后台开发环境这个以后会再出一个博文进行详细讲解。</p>
+<a id="more"></a>
+
+<h2 id="一、购买阿里云服务器"><a href="#一、购买阿里云服务器" class="headerlink" title="一、购买阿里云服务器"></a>一、购买阿里云服务器</h2><ul>
+<li><p><a href="https://www.aliyun.com/product/ecs?spm=5176.8112568.h2v3icoap.14.48479ed5pFlbm6&aly_as=35H6vk33Q" target="_blank" rel="noopener">阿里云-云服务（ECS）器购买</a></p>
+</li>
+<li><p><a href="https://promotion.aliyun.com/ntms/act/campus2018.html?spm=5176.13963510.J_9380346650.2.51482efbANBOph&aly_as=_z-Htat-I" target="_blank" rel="noopener">阿里云-学生服务器购买</a></p>
+</li>
+</ul>
+<p>这里我购买的就是学生服务器然后<code>Centos</code>操作系统<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/1.png" alt="购买学生服务器"></p>
+<h3 id="（一）进入控制台"><a href="#（一）进入控制台" class="headerlink" title="（一）进入控制台"></a>（一）进入控制台</h3><p><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/2.png" alt="进入控制台"></p>
+<h4 id="（1）重置实例密码"><a href="#（1）重置实例密码" class="headerlink" title="（1）重置实例密码"></a>（1）重置实例密码</h4><p>这一步是为了远程连接服务器的时候进行的一个校验，点击右侧<code>更多-密码/密钥-重置实例密码</code>即可<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/3.png" alt="重置实例密码"></p>
+<h4 id="（2）远程连接"><a href="#（2）远程连接" class="headerlink" title="（2）远程连接"></a>（2）远程连接</h4><p>先说复杂的方法</p>
+<ul>
+<li><p><code>Windows</code>系统可以下载像<code>Putty</code>、<code>XShell</code>远程连接的工具</p>
+</li>
+<li><p><code>Mac</code>玩家就可以直接通过终端 输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 公网ip</span><br><span class="line">ssh root@ip</span><br></pre></td></tr></table></figure>
+<p>现在阿里云已经很强大了！强大到可以直接通过阿里云进行远程连接，点击右侧远程连接按钮，就会进入到一个模拟的终端环境。<br>输入用户名、密码点击确认，就进入到你的远程服务器环境啦！<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/4.png" alt="进入远程连接"></p>
+</li>
+</ul>
+<h2 id="二、服务器配置node、mongodb等"><a href="#二、服务器配置node、mongodb等" class="headerlink" title="二、服务器配置node、mongodb等"></a>二、服务器配置node、mongodb等</h2><h3 id="（一）-安装node"><a href="#（一）-安装node" class="headerlink" title="（一） 安装node"></a>（一） 安装node</h3><ol>
+<li>首先检测有没有<code>node</code>，输入下面命令。一般来说第一次连接服务器。都是没有的…<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>既然没有～那我们就上手安装好啦！这里你可能要懂一些<code>linux</code>的常见命令～不懂也没关系，临时查一查也是可以的。</li>
+</ul>
+<p>输入下面命令来安装node与npm。通过<code>yum</code>安装即可</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">yum install -y nodejs</span><br></pre></td></tr></table></figure>
+<p>这里的话<code>yum</code>是服务器自带的一个前端软件包管理器。虽然通过它安装的node版本较低，但在服务器上够用就好啦。</p>
+<p>这个时候再输入</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line"><span class="comment">// v6.17.1</span></span><br><span class="line"></span><br><span class="line">npm -v </span><br><span class="line"><span class="comment">// 3.10.10</span></span><br></pre></td></tr></table></figure>
+
+<p>因为本人还比较喜欢使用<code>yarn</code>所以再多一步安装</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">npm install -g yarn</span><br></pre></td></tr></table></figure>
+
+<h3 id="（二）正式开始！-部署mongodb"><a href="#（二）正式开始！-部署mongodb" class="headerlink" title="（二）正式开始！ 部署mongodb"></a>（二）正式开始！ 部署<code>mongodb</code></h3><ul>
+<li>安装<code>mongodb</code></li>
+</ul>
+<ol>
+<li>创建<code>yum</code>源文件<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// vim是linux或centos系统下常见命令，这里不做赘述。</span></span><br><span class="line">vim /etc/yum.repos.d/mongodb-org<span class="number">-3.4</span>.repo</span><br></pre></td></tr></table></figure></li>
+<li>并且添加以下内容(按<code>i</code>进入编辑模式)<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">name&#x3D;MongoDB Repository</span><br><span class="line">baseurl&#x3D;https:&#x2F;&#x2F;repo.mongodb.org&#x2F;yum&#x2F;redhat&#x2F;$releasever&#x2F;mongodb-org&#x2F;3.4&#x2F;x86_64&#x2F;</span><br><span class="line">gpgcheck&#x3D;0</span><br><span class="line">enabled&#x3D;1</span><br><span class="line">gpgkey&#x3D;https:&#x2F;&#x2F;www.mongodb.org&#x2F;static&#x2F;pgp&#x2F;server-3.4.asc</span><br></pre></td></tr></table></figure></li>
+<li><code>esc</code>退出编辑模式。<code>wq</code>保存这里的<code>yum</code>源文件</li>
+</ol>
+<p><strong>当然：这里涉及到文件的读与写出甚至文件夹的读与写。强大的阿里云又给我们提供了可视化编辑的功能</strong></p>
+<p><strong>点击上方<code>视图-文件树</code>就可以查看当前系统下的所有文件</strong></p>
+<ul>
+<li>然后找到<code>yum.repos.d</code>文件夹，</li>
+<li>创建<code>mongodb-org-3.4.repo</code>文件</li>
+<li>添加上面同样内容</li>
+<li>保存～ 就可以起到跟上面两部一样的作用</li>
+</ul>
+<p><strong>阿里云真的是太懂小白的心～，表白一波阿里云的产品大神们！！！</strong></p>
+<ol start="4">
+<li>安装mongodb<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 这里就是读取上面配置的源文件。</span></span><br><span class="line">yum -y install mongodb-org</span><br></pre></td></tr></table></figure></li>
+<li>设置开机启动<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl enable mongod.service</span><br></pre></td></tr></table></figure></li>
+<li>配置<code>mongodb</code>远程访问</li>
+</ol>
+<ul>
+<li>编辑<code>mongod.conf</code><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;mongod.conf</span><br></pre></td></tr></table></figure></li>
+<li>更改以下内容<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># network interfaces</span><br><span class="line">net:</span><br><span class="line">  port: 27017</span><br><span class="line">  # bindIp: 172.0.0.0  # 这里注视掉或者改为0.0.0.0就是允许所有ip访问</span><br><span class="line"></span><br><span class="line"># 添加这两行代码是为了访问控制。即后面会讲到的数据库权限问题。</span><br><span class="line">security:</span><br><span class="line">  authorization: enabled  # 权限认证</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>注意：这里还是可以用强大的可视化编辑方法～新建、编辑、保存、退出！</strong></p>
+<p>重启<code>mongodb</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">systemctl restart mongod.service</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>现在就来试一下<code>mongodb</code>能不能用了吧<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 启动mongo shell</span><br><span class="line">mongo</span><br></pre></td></tr></table></figure>
+学习过<code>mongodb</code>的人就知道呐～出现下面这样的<code>&gt;</code>就算安装成功啦</li>
+</ol>
+<p><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/5.png" alt="启动mongodb"></p>
+<h2 id="三、mongodb数据库权限管理控制"><a href="#三、mongodb数据库权限管理控制" class="headerlink" title="三、mongodb数据库权限管理控制"></a>三、<code>mongodb</code>数据库权限管理控制</h2><p>其实有了上面两步，就已经实现了数据库共享这个需求。但～共享就有一个很严重的问题。就是安全！安全！安全！</p>
+<p>上一步的配置<code>mongod.conf</code>的<code>security-authorization</code>开启后就是开启连接权限认证！</p>
+<p>这里就涉及到一个<code>mongodb</code>权限控制的问题。下面我就一一讲解吧～。<br>按下面顺序输入命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mongo  &#x2F;&#x2F; 进入 mongo shell</span><br><span class="line">show dbs &#x2F;&#x2F; 查看所有数据库</span><br><span class="line">use admin &#x2F;&#x2F; 进入admin数据库</span><br><span class="line">show collections &#x2F;&#x2F; 查看所有数据表（集合）</span><br></pre></td></tr></table></figure>
+<p>下面就是很关键的一步！！！ 创建用户角色（即创建权限）</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">db.createUser( &#123;</span><br><span class="line">    user: <span class="string">"admin"</span>,     <span class="comment">// 用户名</span></span><br><span class="line">    pwd: <span class="string">"password"</span>,    <span class="comment">// 密码</span></span><br><span class="line">    customData: <span class="string">"管理员角色！"</span>    <span class="comment">// 为任意内容，例如可以为用户全名介绍</span></span><br><span class="line">    roles: [ &#123;  <span class="comment">// 指定用户的角色，可以用一个空数组给新用户设定空角色；</span></span><br><span class="line">        role: <span class="string">"userAdminAnyDatabase"</span>,   <span class="comment">// 权限</span></span><br><span class="line">        db: <span class="string">"admin"</span>,   <span class="comment">// 权限作用于哪个数据库</span></span><br><span class="line">    &#125; ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><code>mongodb</code>常见的几种权限（<a href="https://docs.mongodb.com/manual/reference/built-in-roles/" target="_blank" rel="noopener">内置角色</a>）</p>
+<ol>
+<li>数据库用户角色: <code>read</code>、<code>readWrite</code>;</li>
+<li>数据库管理角色：<code>dbAdmin</code>、<code>dbOwner</code>、<code>userAdmin</code>；</li>
+<li>集群管理角色：<code>clusterAdmin</code>、<code>clusterManager</code>、<code>clusterMonitor</code>、<code>hostManager</code>；</li>
+<li>备份恢复角色：<code>backup</code>、<code>restore</code>；</li>
+<li>所有数据库角色：<code>readAnyDatabase</code>、<code>readWriteAnyDatabase</code>、<code>userAdminAnyDatabase</code>、<code>dbAdminAnyDatabase</code>（只在<code>admin</code>数据库可用）</li>
+<li>超级用户角色：<code>root</code> </li>
+</ol>
+<h3 id="一个栗子～"><a href="#一个栗子～" class="headerlink" title="一个栗子～"></a>一个栗子～</h3><p>这回做毕业设计。所以应该有一个数据库！</p>
+<ol>
+<li><p>创建一个数据库</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 创建GRADUATE数据库</span><br><span class="line">use GRADUATE</span><br><span class="line"></span><br><span class="line">show dbs</span><br><span class="line">&#x2F;&#x2F; 这时虽然创建了但由于GRADUATE里没有数据。所以不会显示</span><br></pre></td></tr></table></figure></li>
+<li><p>创建集合（即一个数据表）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">use GRADUATE</span><br><span class="line">db.createCollection(&quot;tests&quot;);</span><br></pre></td></tr></table></figure></li>
+<li><p>插入数据</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">db.tests.insert(&#123;&quot;name&quot; : &quot;测试一下&quot;&#125;)</span><br></pre></td></tr></table></figure>
+<p>上面三步～就创建了一个有数据的数据库</p>
+</li>
+<li><p>权限控制</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">db.createUser( &#123;</span><br><span class="line">    user: &quot;graduate&quot;,   </span><br><span class="line">    pwd: &quot;graduate_password&quot;,   </span><br><span class="line">    customData: &quot;graduate读写角色&quot;  </span><br><span class="line">    roles: [ &#123; </span><br><span class="line">        role: &quot;readWrite&quot;,   </span><br><span class="line">        db: &quot;GRADUATE&quot;,   </span><br><span class="line">    &#125; ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
+<li><p>授权</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">use GRADUATE</span><br><span class="line">db.auth(&quot;graduate&quot;,&quot;graduate_password&quot;);</span><br></pre></td></tr></table></figure>
+<p>经过5、6两步。就可以完成一次权限控制啦～</p>
+</li>
+</ol>
+<h3 id="验证一下"><a href="#验证一下" class="headerlink" title="验证一下"></a>验证一下</h3><ol>
+<li><code>command+C</code> 退出<code>mongo shell</code></li>
+<li>输入命令<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">show dbs  &#x2F;&#x2F; 这个时候很可能会报错, 因为没有权限</span><br><span class="line">&#x2F;&#x2F; 授权！</span><br><span class="line">use admin</span><br><span class="line">db.auth(&quot;admin&quot;,&quot;password&quot;);  &#x2F;&#x2F; 管理员角色的权限</span><br><span class="line"></span><br><span class="line">show dbs &#x2F;&#x2F; 成功！</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="四-koa-typescript连接mongodb数据库"><a href="#四-koa-typescript连接mongodb数据库" class="headerlink" title="四 koa+typescript连接mongodb数据库"></a>四 koa+typescript连接mongodb数据库</h2><h3 id="（一）-安全组配置。"><a href="#（一）-安全组配置。" class="headerlink" title="（一） 安全组配置。"></a>（一） 安全组配置。</h3><p>为了让你可以访问到远程数据库～需要在控制台新增安全组配置。</p>
+<ol>
+<li><p>打开安全组配置<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/6.png" alt="安全组配置"></p>
+</li>
+<li><p>配置规则<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/7.png" alt="配置规则"></p>
+</li>
+<li><p>配置详情<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/8.png" alt="配置详情"></p>
+</li>
+</ol>
+<h3 id="（二）下面就是关键代码"><a href="#（二）下面就是关键代码" class="headerlink" title="（二）下面就是关键代码"></a>（二）下面就是关键代码</h3><p>远程连接地址是下面拼接的～基本公式是</p>
+<p><code>mongodb://${数据库用户名}:${数据库密码}:${数据库远程地址(公网ip:27017)}/${数据库名}</code></p>
+<figure class="highlight ts"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> mongoose <span class="keyword">from</span> <span class="string">'mongoose'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 数据库用户名</span></span><br><span class="line"><span class="keyword">const</span> username = <span class="string">'graduate'</span>;</span><br><span class="line"><span class="comment">// 数据库密码</span></span><br><span class="line"><span class="keyword">const</span> password = <span class="string">'graduate_password'</span>;</span><br><span class="line"><span class="comment">// 远程mongodb地址</span></span><br><span class="line"><span class="keyword">const</span> dbport = 你买的服务器公网ip;  </span><br><span class="line"><span class="comment">// 数据库名称</span></span><br><span class="line"><span class="keyword">const</span> dbcol = <span class="string">'GRADUATE'</span></span><br><span class="line"><span class="comment">// 远程连接地址</span></span><br><span class="line"><span class="keyword">const</span> DB_URL = <span class="string">`mongodb://<span class="subst">$&#123;username&#125;</span>:<span class="subst">$&#123;password&#125;</span>@<span class="subst">$&#123;dbport&#125;</span>/<span class="subst">$&#123;dbcol&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// mongodb数据库</span></span><br><span class="line">mongoose.connect(DB_URL, &#123; useNewUrlParser: <span class="literal">true</span>, useUnifiedTopology: <span class="literal">true</span> &#125;);</span><br></pre></td></tr></table></figure>
+<p>这里先贴上代码。等笔者有时间整理一套完成的<code>KOA</code> + <code>MongoDB</code> + <code>TypeScript</code>的基本框架出来。</p>
+<h3 id="（三）Rabo-3T"><a href="#（三）Rabo-3T" class="headerlink" title="（三）Rabo 3T"></a>（三）Rabo 3T</h3><p>推荐一个本地开发的可视化<code>mongodb</code>数据库连接工具</p>
+<p><a href="https://robomongo.org/" target="_blank" rel="noopener">Rabo 3T</a></p>
+<ol>
+<li>创建远程连接<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/10.png" alt="创建远程连接"></li>
+<li>视图<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/11.png" alt="远程连接视图"></li>
+</ol>
+<h2 id="五、更多"><a href="#五、更多" class="headerlink" title="五、更多"></a>五、更多</h2><ul>
+<li><a href="https://www.runoob.com/mongodb/mongodb-tutorial.html" target="_blank" rel="noopener">mongodb基本教程</a></li>
+<li><a href="http://billie66.github.io/TLCL/book/" target="_blank" rel="noopener">linux基本操作</a></li>
+<li><a href="https://docs.mongodb.com/manual/" target="_blank" rel="noopener">mongodb官方文档</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>从0开始搭建全栈工作流</category>
+      </categories>
+      <tags>
+        <tag>web后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>再读React官方文档</title>
+    <url>/2019/09/09/%E5%86%8D%E8%AF%BBReact%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/</url>
+    <content><![CDATA[<h1 id="再读React"><a href="#再读React" class="headerlink" title="再读React"></a>再读React</h1><p>笔者最近空闲时间比较多，这也可能是笔者这未来人生中时间最自由的一个月。所以想抓紧时间巩固和学习一下新知识，在公司实习期间一直在写业务，所以自己学习的时间很少，为了追上同事的步伐，一定要抓紧这一个月又一个质的突破。</p>
+<p>这篇文章就是记录我再读文档的时候一些知识盲区</p>
+<a id="more"></a>
+
+<h2 id="关于生命周期"><a href="#关于生命周期" class="headerlink" title="关于生命周期"></a>关于生命周期</h2><h3 id="组件挂载"><a href="#组件挂载" class="headerlink" title="组件挂载"></a>组件挂载</h3><p>当组件实例被创建，并插入到DOM中，其生命周期调用顺序为</p>
+<ul>
+<li>constructor()<ul>
+<li>通过设置this.state来初始化State</li>
+<li>为事件处理函数绑定实例 <code>this.handleClick = this.handleClick.bind(this)</code></li>
+</ul>
+</li>
+<li>static getDerivedStateFromProps()</li>
+<li>render()</li>
+<li>componentDidMount()</li>
+</ul>
+<h3 id="组件更新"><a href="#组件更新" class="headerlink" title="组件更新"></a>组件更新</h3><ul>
+<li>static getDerivedStateFromProps()</li>
+<li>shouldComponentUpdate()：返回值，判断 React 组件的输出是否受当前 state 或 props 更改的影响（可使用<code>PureComponent</code>）</li>
+<li>render()</li>
+<li>getSnapshotBeforeUpdate():  在最近一次渲染输出（提交到 DOM 节点）之前调用。它使得组件能在发生更改之前从 DOM中捕获一些信息（例如，滚动位置）</li>
+<li>componentDidUpdate(prevProps, prevState, snapshot): 会在更新后立即调用，首次渲染不会调用。第三个参数是<code>getSnapshotBeforeUpdate</code>的返回值</li>
+</ul>
+<h2 id="关于API"><a href="#关于API" class="headerlink" title="关于API"></a>关于API</h2><h3 id="setState"><a href="#setState" class="headerlink" title="setState"></a>setState</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">this.setState((state,props)&#x3D;&gt;&#123;</span><br><span class="line">    return &#123;counter: state.counter + props.step&#125;    </span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 或</span><br><span class="line">this.setState(&#123;</span><br><span class="line">    counter: this.state.counter + this.props.step;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="forceUpdate"><a href="#forceUpdate" class="headerlink" title="forceUpdate"></a>forceUpdate</h3><p>默认情况下当props或者states发生变化时，就会触发<code>render()</code>函数。当组件还依赖于其他变量时，可以使用<code>forceUpdate()</code>强制更新。</p>
+<h2 id="React-lazy"><a href="#React-lazy" class="headerlink" title="React.lazy"></a>React.lazy</h2><p><code>React.lazy</code>函数能够让你像渲染常规组件一样处理动态引入的组件</p>
+<h3 id="用法如下"><a href="#用法如下" class="headerlink" title="用法如下"></a>用法如下</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> OtherComponent = React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./OtherComponent'</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;OtherComponent /&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="React-Suspense"><a href="#React-Suspense" class="headerlink" title="React.Suspense"></a>React.Suspense</h2><p><code>Suspense</code>直译为中文就是悬念的意思。可以用<code>React.Suspense</code>组件为组件添加<code>loading</code>状态，以作优雅降级。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Suspense&#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">const</span> OtherComponent = React.lazy(<span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./OtherComponent'</span>));</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;Suspense fallback=&#123;&lt;div&gt;<span class="string">'loading....'</span>&lt;<span class="regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div&gt;</span></span><br><span class="line"><span class="regexp">          &lt;OtherComponent /</span>&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>Suspense&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>==注意：Lazy、Suspense暂不支持服务端渲染。==</p>
+<h2 id="React-memo"><a href="#React-memo" class="headerlink" title="React.memo"></a>React.memo</h2><p>适用于<strong>函数式组件</strong>而不适用于class组件。类似于<code>PureComponent</code>,通过记忆组件渲染结果的方式来提高组件的性能表现。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> MyComponentMemo = React.memo(<span class="function"><span class="keyword">function</span> <span class="title">MyComponents</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span> &#123;props.name&#125; <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下只会对复杂对象进行<code>浅层对比</code>, 可自定义比较函数来控制对比过程。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params">props</span>) </span>&#123;</span><br><span class="line">  <span class="comment">/* 使用 props 渲染 */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">areEqual</span>(<span class="params">prevProps, nextProps</span>) </span>&#123;</span><br><span class="line">  <span class="comment">/*</span></span><br><span class="line"><span class="comment">  如果把 nextProps 传入 render 方法的返回结果与</span></span><br><span class="line"><span class="comment">  将 prevProps 传入 render 方法的返回结果一致则返回 true，</span></span><br><span class="line"><span class="comment">  否则返回 false</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> React.memo(MyComponent, areEqual);</span><br></pre></td></tr></table></figure>
+
+<h2 id="错误边界"><a href="#错误边界" class="headerlink" title="错误边界"></a>错误边界</h2><p>错误边界是一种React组件，该组件可以捕获并打印发生在其子组件树任何位置的JavaScript错误，并且他会渲染出备用UI，而不是那些错误的子组件树。错误边界在渲染期间、生命周期方法和整个组件树中的方法捕获错误。但<strong>错误边界无法捕获下列情况</strong></p>
+<ul>
+<li>事件处理（<code>try</code>，<code>catch</code>）</li>
+<li>异步函数（如<code>setTimeOut</code>和<code>requestAnimationFrame</code>的回调函数）</li>
+<li>服务端渲染</li>
+<li>错误边界组件自身抛出的错误</li>
+</ul>
+<h3 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h3><p>如果一个class定义了<code>getDerivedStateFromError()</code>或<code>componentDidCatch()</code>这两个生命周期的一个或两个，它就变成了一个错误边界组件。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ErrorBoundary</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="keyword">super</span>(props);</span><br><span class="line">    <span class="keyword">this</span>.state = &#123; <span class="attr">hasError</span>: <span class="literal">false</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> getDerivedStateFromError(error) &#123;</span><br><span class="line">    <span class="comment">// 更新 state 使下一次渲染能够显示降级后的 UI</span></span><br><span class="line">    <span class="keyword">return</span> &#123; <span class="attr">hasError</span>: <span class="literal">true</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidCatch(error, errorInfo) &#123;</span><br><span class="line">    <span class="comment">// 你同样可以将错误日志上报给服务器</span></span><br><span class="line">    logErrorToMyService(error, errorInfo);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.state.hasError) &#123;</span><br><span class="line">      <span class="comment">// 你可以自定义降级后的 UI 并渲染</span></span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Something went wrong.<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.props.children; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Refs转发"><a href="#Refs转发" class="headerlink" title="Refs转发"></a>Refs转发</h3><p>将<code>ref</code>自动的通过组件传递到其子组件。</p>
+<p>在下面的示例中，FancyButton 使用 React.forwardRef 来获取传递给它的 ref，然后转发到它渲染的 DOM button；</p>
+<p>当ref挂载完成，将<code>ref.current</code>将指向<code>Button</code>的<code>DOM</code>;</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> FancyButton = React.forwradRef(<span class="function">(<span class="params">props,ref</span>)=&gt;</span>(</span><br><span class="line">    &lt;Button ref=&#123;ref&#125;&gt;</span><br><span class="line">        &#123;props.children&#125;</span><br><span class="line">    &lt;<span class="regexp">/Button&gt;</span></span><br><span class="line"><span class="regexp">))</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">const ref = React.createRef();</span></span><br><span class="line"><span class="regexp">return &lt;FancyButton ref=&#123;ref&#125;&gt;</span></span><br><span class="line"><span class="regexp">    转发refs</span></span><br><span class="line"><span class="regexp">&lt;/</span>FancyButton&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="在高阶组件中转发refs"><a href="#在高阶组件中转发refs" class="headerlink" title="在高阶组件中转发refs"></a>在高阶组件中转发<code>refs</code></h4><ul>
+<li><p>定义一个高阶组件<code>LogProps</code>,它的作用只是将组件的props输出到控制台;</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">Component</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(preProps)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"preProps: "</span>+preProps);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"props: "</span>+<span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line">    render()&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Component</span> &#123;<span class="attr">...this.props</span>&#125; /&gt;</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> LogProps;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>定义一个组件<code>FancyButton</code>。实际上导出的是<code>LogProps</code>这个高阶组件。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FancyButton</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  focus() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们导出 LogProps，而不是 FancyButton。</span></span><br><span class="line"><span class="comment">// 虽然它也会渲染一个 FancyButton。</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> logProps(FancyButton);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>FancyButton</code>组件。实际上ref是挂载到LogProps上的</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> FancyButton <span class="keyword">from</span> <span class="string">'./FancyButton'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> ref = React.createRef();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我们导入的 FancyButton 组件是高阶组件（HOC）LogProps。</span></span><br><span class="line"><span class="comment">// 尽管渲染结果将是一样的，</span></span><br><span class="line"><span class="comment">// 但我们的 ref 将指向 LogProps 而不是内部的 FancyButton 组件！</span></span><br><span class="line"><span class="comment">// 这意味着我们不能调用例如 ref.current.focus() 这样的方法</span></span><br><span class="line">&lt;FancyButton</span><br><span class="line">  label=<span class="string">"Click Me"</span></span><br><span class="line">  handleClick=&#123;handleClick&#125;</span><br><span class="line">  ref=&#123;ref&#125;</span><br><span class="line">/&gt;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>转发<code>refs</code>。 修改一下<code>logProps</code>高阶组件</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">logProps</span>(<span class="params">Component</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">LogProps</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    componentDidUpdate(preProps)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"preProps: "</span>+preProps);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"props: "</span>+<span class="keyword">this</span>.props);</span><br><span class="line">    &#125;</span><br><span class="line">    render()&#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;forwradRefs, ...rest&#125; = <span class="keyword">this</span>.props;</span><br><span class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Component</span> <span class="attr">refs</span>=<span class="string">&#123;forwardRefs&#125;</span> &#123;<span class="attr">...rest</span>&#125; /&gt;</span></span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> React.forwardRefs(<span class="function">(<span class="params">props,refs</span>)=&gt;</span>(</span><br><span class="line">  <span class="comment">// 给logProps组件传递一个forwardRefs的属性</span></span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">LogProps</span> <span class="attr">forwradRefs</span>=<span class="string">&#123;refs&#125;</span> &#123;<span class="attr">...props</span>&#125; /&gt;</span></span></span><br><span class="line">  ));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>注意：</strong> 高阶组件转发refs时，在React-DevTools调试中，可能会造成不便，可<strong>设置displayName</strong>来解决</p>
+<p><a href="https://zh-hans.reactjs.org/docs/forwarding-refs.html" target="_blank" rel="noopener">在 DevTools 中显示自定义名称</a></p>
+<h2 id="深入JSX"><a href="#深入JSX" class="headerlink" title="深入JSX"></a>深入JSX</h2><p>JSX只是<code>React.createElement(component,props,children)</code>的语法糖。</p>
+<ul>
+<li>自定义``</li>
+<li><code>JSX</code>类型不能是一个表达式。但<code>JSX</code>类型可以是一个由大写字母开头的变量。</li>
+</ul>
+<h2 id="Portals"><a href="#Portals" class="headerlink" title="Portals"></a>Portals</h2><p>Portal 提供了一种将子节点渲染到存在于父组件以外的 DOM 节点的优秀的方案。</p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 把子元素渲染到domNode中。domNode是一个在任何位置的有效DOM节点。</span></span><br><span class="line"><span class="keyword">return</span> ReactDOM.createProtal</span><br><span class="line">    <span class="keyword">this</span>.props.children,</span><br><span class="line">    domNode</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Portals中的时间捕获与冒泡"><a href="#Portals中的时间捕获与冒泡" class="headerlink" title="Portals中的时间捕获与冒泡"></a>Portals中的时间捕获与冒泡</h3><p>使用portal，虽然会操作DOM树，但由于portal仍存在于React树，且与DOM树中的位置无关。所以portal中的事件，仍会冒泡到React树中的父组件。context等的效果也是跟普通的组件无异的。</p>
+<p>在父组件里捕获一个来自 portal 冒泡上来的事件，使之能够在开发时具有不完全依赖于 <code>portal</code> 的更为灵活的抽象。例如，如果你在渲染一个 <code>&lt;Modal /&gt;</code> 组件，无论其是否采用 <code>portal</code> 实现，父组件都能够捕获其事件。</p>
+<h2 id="create-react-class"><a href="#create-react-class" class="headerlink" title="create-react-class"></a>create-react-class</h2><p>除了class创建一个组件，和函数式组件，还可以通过<code>create-react-class</code>来新建一个组件。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> createReactClass = <span class="built_in">require</span>(<span class="string">'create-react-class'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Greeting = createReactClass(&#123;</span><br><span class="line"><span class="comment">// 生命周期</span></span><br><span class="line">    componentDidMount: <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 初始化props</span></span><br><span class="line">    getDefaultProps: <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">             name: <span class="string">'Mary'</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 初始化state</span></span><br><span class="line">    getInitialState: <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line"><span class="comment">// 方法</span></span><br><span class="line">    handleClick: <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"!!!!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    render:<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">onClick</span>=<span class="string">&#123;this.handleClick&#125;</span>&gt;</span>1234<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>常见状态码</title>
+    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
+<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
+<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
+<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
+<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
+<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
+<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
+<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
+<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
+<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
+<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
+<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
+<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
+<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
+<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
+<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
+</ul>
+<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
+<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
+<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
+<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
+<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
+<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
+<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
+<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
+<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
+<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
+<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
+<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
+<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
+<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
+<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
+<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
+</ul>
+<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
+<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
+<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
+<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
+<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
+<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
+<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>知识盲区（一）</title>
+    <url>/2020/04/20/%E7%9F%A5%E8%AF%86%E7%9B%B2%E5%8C%BA%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[<p>工作闲暇的期间，会读一些博文，更多的是刷面筋，虽然已经工作稳定。但还是偶尔需要有危机感，去看看现在企业喜欢问什么问题。其实大部分面筋问题都还不是很会。会把知识盲区记录下来，然后整理成博文</p>
+<p>这次差不多有<code>Css超出省略</code>、<code>企业SSO的实现原理</code>、<code>自写Promis</code></p>
+<a id="more"></a>
+
+<h3 id="css超出省略"><a href="#css超出省略" class="headerlink" title="css超出省略"></a>css超出省略</h3><h4 id="css单行超出省略"><a href="#css单行超出省略" class="headerlink" title="css单行超出省略"></a>css单行超出省略</h4><figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">width</span>: 100<span class="selector-tag">px</span>;</span><br><span class="line"><span class="selector-tag">overflow</span>: <span class="selector-tag">hidden</span>;</span><br><span class="line"><span class="selector-tag">white-space</span>: <span class="selector-tag">no-wrap</span>;</span><br><span class="line"><span class="selector-tag">text-overflow</span>: <span class="selector-tag">ellipsis</span>;</span><br><span class="line"><span class="selector-tag">-o-text-overflow</span>: <span class="selector-tag">ellipsis</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="css多行超出省略"><a href="#css多行超出省略" class="headerlink" title="css多行超出省略"></a>css多行超出省略</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">overflow: hidden;</span><br><span class="line">text-overflow: ellipsis;</span><br><span class="line">display: -webkit-box;</span><br><span class="line">-webkit-line-clamp: 3;</span><br><span class="line">-webkit-box-orient: vertical</span><br></pre></td></tr></table></figure>
+
+<h3 id="企业sso（单点登陆的实现）"><a href="#企业sso（单点登陆的实现）" class="headerlink" title="企业sso（单点登陆的实现）"></a>企业sso（单点登陆的实现）</h3><h4 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sso单点登录，我理解的就是，在一个专门登陆的系统登录后，此后所有类似的系统都不用再写登陆页登陆。</span><br></pre></td></tr></table></figure>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. 用户进入某应用（未登陆）</span><br><span class="line">2. 跳转到sso登陆页，登陆成功</span><br><span class="line">3. 后台server端会存储一个唯一的session，同时浏览器端会存储一个cookie</span><br><span class="line">4. 每次用户下次在访问这个应用时，请求中会带上这个cookie，服务端会根据这个cookie找到唯一的session，判断是否登陆</span><br></pre></td></tr></table></figure>
+
+<h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><ol>
+<li>若<code>应用</code>与<code>sso登陆</code>是在同域，</li>
+</ol>
+<ul>
+<li>cookie不能跨域</li>
+<li>应用与sso后台的session也不能共享<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; sso登陆： sso.xxx.com;</span><br><span class="line">&#x2F;&#x2F; 应用： app.xxx.com</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; cookie存储在顶域： xxx.com</span><br><span class="line">&#x2F;&#x2F; 多个系统session共享，如common session</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ol start="2">
+<li>若<code>应用</code>与<code>sso登陆</code>不是在同一个域.<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1. 用户访问app系统</span><br><span class="line">2. 跳转到cas server sso登陆页</span><br><span class="line">3. 登陆成功，session存储在sso的后台中，浏览器中写入sso所在域的cookie</span><br><span class="line">4. sso登陆系统完成后会生成一个service tickets，相当于一个门票。然后跳转到app页面，同时将这个门票作为参数。</span><br><span class="line">5. app系统拿到这个门票后，从后台向sso发送请求（不会有跨域问题），判断这个门票是否有效</span><br><span class="line">6. 通过验证后，就会在app所在域里也写入这个cookie，这样下次打开就不用再登陆。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h4 id="自写promise"><a href="#自写promise" class="headerlink" title="自写promise"></a>自写<code>promise</code></h4><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 主体函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Promise</span>(<span class="params">executor</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> self = <span class="keyword">this</span>;</span><br><span class="line">    self.status=<span class="string">"pending"</span>;</span><br><span class="line">    self.value = <span class="literal">null</span>;</span><br><span class="line">    self.reson = <span class="literal">null</span>;</span><br><span class="line">    self.onResolveCallback = [];</span><br><span class="line">    self.onRejectCallback=[];</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">resolve</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(self.status === <span class="string">"pending"</span>)&#123;</span><br><span class="line">            self.status = <span class="string">"resolved"</span>;</span><br><span class="line">            self.value = value;</span><br><span class="line">            </span><br><span class="line">            self.onResolveCallback.forEach(<span class="function">(<span class="params">fn</span>)=&gt;</span>&#123;</span><br><span class="line">                fn();</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">reject</span>(<span class="params">reason</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(self.status === <span class="string">"pending"</span>)&#123;</span><br><span class="line">            self.status = <span class="string">"rejected"</span>;</span><br><span class="line">            self.season = reason;</span><br><span class="line">            </span><br><span class="line">            self.onRejectCallback.forEach(<span class="function">(<span class="params">fn</span>)=&gt;</span>&#123;</span><br><span class="line">                fn();</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        executor(resolve,reject);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">        <span class="keyword">throw</span>(err)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolvePromise</span>(<span class="params">promise2, x, resolve, reject</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(promise2 === x) &#123;</span><br><span class="line">        <span class="keyword">return</span> reject(<span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">"循环引用"</span>))</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> called = <span class="literal">false</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(x!==<span class="literal">null</span> &amp;&amp; (<span class="keyword">typeof</span> x===<span class="string">"object"</span> || <span class="keyword">typeof</span> x === <span class="string">"function"</span>))&#123;</span><br><span class="line">       <span class="keyword">try</span>&#123;</span><br><span class="line">           <span class="keyword">const</span> then = x.then;</span><br><span class="line">            <span class="keyword">if</span>(<span class="keyword">typeof</span> then === <span class="string">"function"</span>)&#123;</span><br><span class="line">                <span class="keyword">const</span> resolveFunc = <span class="function">(<span class="params">y</span>)=&gt;</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(called) <span class="keyword">return</span>;</span><br><span class="line">                    called = <span class="literal">true</span>;</span><br><span class="line">                    resolvePromise(promise2,y,resolve,reject)</span><br><span class="line">                &#125;;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">const</span> rejectFunc = <span class="function">(<span class="params">error</span>)=&gt;</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(called) <span class="keyword">return</span>;</span><br><span class="line">                    called = <span class="literal">true</span>;</span><br><span class="line">                    reject(error);</span><br><span class="line">                &#125;</span><br><span class="line">                then.call(x,resolveFunc,rejecFunc)</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">// 如果是对象或函数，没有thenable，则直接返回</span></span><br><span class="line">                resolve(x)</span><br><span class="line">            &#125;</span><br><span class="line">       &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">           <span class="keyword">if</span>(called) <span class="keyword">return</span>;</span><br><span class="line">           called = truel</span><br><span class="line">           reject(error);</span><br><span class="line">       &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">// x是普通的值，也直接resolve</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>then 方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="built_in">Promise</span>.prototype.then = <span class="function"><span class="keyword">function</span>(<span class="params">onFuifilled, onRejected</span>)</span>&#123;</span><br><span class="line">    onFuifilled = <span class="keyword">typeof</span> onFuifilled === <span class="string">"function"</span> ? onFuifilled : <span class="function">(<span class="params">value</span>)=&gt;</span>&#123; <span class="keyword">return</span> value &#125;;</span><br><span class="line">    onReject = <span class="keyword">typeof</span> onReject === <span class="string">"function"</span> ? onReject : <span class="function">(<span class="params">error</span>)=&gt;</span>&#123; <span class="keyword">throw</span> error &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> self = <span class="keyword">this</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> promise2 = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(self.status === <span class="string">"pending"</span>)&#123;</span><br><span class="line">            self.onResolveCallback.push(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123; </span><br><span class="line">                        <span class="keyword">let</span> x = onFuifilled(self.value);</span><br><span class="line">                        resolvePromise(promise2, x, resolve, reject);</span><br><span class="line">                    &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">                        reject(err)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,<span class="number">0</span>)</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">            self.onRejectCallback.push(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">let</span> x = onRejected(self.reason);</span><br><span class="line">                        resolvePromise(promise2, x, resolve, reject);</span><br><span class="line">                    &#125;<span class="keyword">catch</span>(err)&#123;</span><br><span class="line">                        reject(err);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,<span class="number">0</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(self.status === <span class="string">"resolved"</span>)&#123;</span><br><span class="line">            setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">let</span> x = onFuifilled(self.value);</span><br><span class="line">                    resolvePromise(promise2, x, resolve, reject);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;, <span class="number">0</span>)</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(self.status === <span class="string">"rejected"</span>)&#123;</span><br><span class="line">            setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">let</span> x = onRejected(self.reason);</span><br><span class="line">                    resolvePromise(promise2, x, resolve, reject);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,<span class="number">0</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> promise2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>catch 方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.prototype.catch = <span class="function">(<span class="params">onRejected</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.then(<span class="literal">null</span>,onRejected);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>finanlly 方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.prototype.finanlly = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">        setTimeout(fn, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">    &#125;,(reason)=&gt;&#123;</span><br><span class="line">        setTimeout(fn, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">throw</span> reason</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>done 方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.prototype.down = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.catch(<span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">throw</span>(err)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>all 方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.prototype.all = <span class="function"><span class="keyword">function</span>(<span class="params">promiseArray</span>)</span>&#123;</span><br><span class="line">    reutrn <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> results = [];</span><br><span class="line">        <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">let</span> i=<span class="number">0</span>; i&lt;promiseArray.length; i++)&#123;</span><br><span class="line">            promiseArray[i].then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">                results[i] = data;</span><br><span class="line">                count++;</span><br><span class="line">                <span class="keyword">if</span>(count === promiseArray.length)&#123;</span><br><span class="line">                    resolve(results)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,reject)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>race方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.race = <span class="function"><span class="keyword">function</span>(<span class="params">promiseArr</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; promiseArr.length; i++) &#123;</span><br><span class="line">      promiseArr[i].then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        resolve(data);</span><br><span class="line">      &#125;, reject)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>resolve方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.resolve = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">        resolvePromise(promise,value,resolve,reject);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>reject方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.reject = <span class="function"><span class="keyword">function</span>(<span class="params">reason</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve,reject</span>)=&gt;</span>&#123;</span><br><span class="line">        reject(reason)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>defer方法</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.defer = <span class="built_in">Promise</span>.deferred = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">   <span class="keyword">let</span> dfd = &#123;&#125;;</span><br><span class="line">  dfd.promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    dfd.resolve = resolve;</span><br><span class="line">    dfd.reject = reject;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> dfd;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>知识盲区</category>
+      </categories>
+      <tags>
+        <tag>行业常识</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>高阶函数</title>
+    <url>/2020/12/09/%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h2 id="1-高阶函数"><a href="#1-高阶函数" class="headerlink" title="1. 高阶函数"></a>1. 高阶函数</h2><h3 id="定义："><a href="#定义：" class="headerlink" title="定义："></a>定义：</h3><p>高阶函数至少满足下列一个条件</p>
+<ol>
+<li>接受一个或多个函数作为输入</li>
+<li>返回一个函数<a id="more"></a>
+</li>
+</ol>
+<ul>
+<li>常见的高阶函数</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Array.prototype.map 接受一个函数作为参数。</span></span><br><span class="line"><span class="keyword">const</span> newArr = arr.map(<span class="function">(<span class="params">item,index</span>)=&gt;</span>item+index));</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-函数组合"><a href="#2-函数组合" class="headerlink" title="2. 函数组合"></a>2. 函数组合</h2><h3 id="定义：-1"><a href="#定义：-1" class="headerlink" title="定义："></a>定义：</h3><p>将多个函数组合生成一个新函数的过程</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compose</span>(<span class="params">g,f</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> g(f(x));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ol>
+<li>eg: 对输入进行多次格式化或者变形，得到一个新的输出</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 返回string小写</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">lowerCase</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> input &amp;&amp; <span class="keyword">typeof</span> input === <span class="string">"string"</span> ? input.toLowerCase() : input;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回string大写</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">upperCase</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> input &amp;&amp; <span class="keyword">typeof</span> input === <span class="string">"string"</span> ? input.toUpperCase() : input;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 去掉前后空格</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">trim</span>(<span class="params">input</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> input === <span class="string">"string"</span> ? input.trim() : input;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 变为数组</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">split</span>(<span class="params">input, delimiter = <span class="string">","</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">typeof</span> input === <span class="string">"string"</span> ? input.split(delimiter) : input;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> beforeParams = <span class="string">' a,b,c,D            '</span>;</span><br><span class="line"><span class="keyword">const</span> formatParams = compose(split(trim(lowerCase(beforeParams))));</span><br><span class="line"></span><br><span class="line"><span class="comment">// ['a','b','c','d']</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="compose的实现"><a href="#compose的实现" class="headerlink" title="compose的实现"></a><code>compose</code>的实现</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">compose</span>(<span class="params">...funcs</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</span><br><span class="line">       <span class="keyword">return</span> funcs.reduce(<span class="function">(<span class="params">arg,fn</span>)=&gt;</span>fn(arg),x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-函数柯里化"><a href="#3-函数柯里化" class="headerlink" title="3. 函数柯里化"></a>3. 函数柯里化</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>在数学和计算机中，柯里化是一种将使用多个参数的一个函数转化成一系列使用一个参数的函数的技术。</p>
+<p>一个函数（多个参数）—&gt; 一个函数（一个参数）</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> abc = <span class="function"><span class="keyword">function</span>(<span class="params">a,b,c</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> [a,b,c];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> curried = curry(abc);</span><br><span class="line">curried(a)(b)(c); <span class="comment">// [a,b,c];</span></span><br><span class="line">curried(a,b)(c);  <span class="comment">// [a,b,c];</span></span><br><span class="line">curried(a,b,c);   <span class="comment">// [a,b,c];</span></span><br></pre></td></tr></table></figure>
+
+<p>从上面的例子可以看出，<code>curried</code>这个函数，可能会返回一个函数，可能返回一个结果。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">curry</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> <span class="title">curried</span>(<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(args.length &gt;= fn.length)&#123;</span><br><span class="line">            <span class="keyword">return</span> fn.apply(<span class="keyword">this</span>,args);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params">...args2</span>)</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> curried.apply(<span class="keyword">this</span>,args.concat(args2))</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-偏函数"><a href="#4-偏函数" class="headerlink" title="4. 偏函数"></a>4. 偏函数</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>偏函数是指，固定一个函数的某些参数，返回一个更小元的函数。元的意思就是参数，如一个参数的函数也叫一元函数。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildUri</span>(<span class="params">scheme, domain, path</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">`<span class="subst">$&#123;scheme&#125;</span>://<span class="subst">$&#123;domain&#125;</span>/<span class="subst">$&#123;path&#125;</span>`</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myGithubPath = _.partial(buildUri, <span class="string">"https"</span>, <span class="string">"github.com"</span>); </span><br><span class="line"></span><br><span class="line"><span class="comment">// https://github.com/semlinker/semlinke</span></span><br><span class="line"><span class="keyword">const</span> profilePath = myGithubPath(<span class="string">"semlinker/semlinker"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// https://github.com/semlinker/awesome-typescript</span></span><br><span class="line"><span class="keyword">const</span> awesomeTsPath = myGithubPath(<span class="string">"semlinker/awesome-typescript"</span>);</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">partial</span>(<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> args = [].slice.call(<span class="built_in">arguments</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> newFunc()&#123;</span><br><span class="line">        <span class="keyword">const</span> newArgs = args.concat([].slice.call(<span class="built_in">arguments</span>));</span><br><span class="line">        <span class="keyword">return</span> fn.apply(<span class="keyword">this</span>, newArgs);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="偏函数与柯里化的区别"><a href="#偏函数与柯里化的区别" class="headerlink" title="偏函数与柯里化的区别"></a>偏函数与柯里化的区别</h3><ul>
+<li>偏函数应用是固定一个函数的一个或者多个参数，并返回一个可以接收剩余参数的函数。</li>
+<li>柯里化将函数转化为多个嵌套的一元函数，也就是每个函数只接受一个参数。</li>
+</ul>
+<h3 id="5-惰性函数"><a href="#5-惰性函数" class="headerlink" title="5. 惰性函数"></a>5. 惰性函数</h3><h3 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h3><p>惰性函数是指，当第一次根据条件执行函数后，在第2次调用函数时，就不再检测条件，直接执行函数。</p>
+<h4 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h4><ol>
+<li>原始写法。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandler</span>(<span class="params">element,type,handler</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(element.addEventListener)&#123;</span><br><span class="line">        element.addEventListener(type,handler,<span class="literal">false</span>)</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(element.addEvent)&#123;</span><br><span class="line">        element.attachEvent(<span class="string">'on'</span>+type,handler);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        element.</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>惰性函数写法1</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addHandler</span>(<span class="params">element,type,handler</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.addEventListener) &#123;</span><br><span class="line">        addHandler = <span class="function">(<span class="params">element, type, handler</span>)=&gt;</span> &#123;</span><br><span class="line">            element.addEventListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (element.attachEvent) &#123;</span><br><span class="line">        addHandler =<span class="function">(<span class="params">element, type, handler</span>) =&gt;</span> &#123;</span><br><span class="line">            element.attachEvent(<span class="string">'on'</span> + type, handler);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        addHandler = <span class="function">(<span class="params">element, type, handler</span>) =&gt;</span> &#123;</span><br><span class="line">            element[<span class="string">'on'</span> + type] = handler;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> addHandler(element, type, handler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>惰性函数写法2</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> addHandler = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.addEventListener) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">element, type, handler</span>)=&gt;</span> &#123;</span><br><span class="line">            element.addEventListener(type, handler, <span class="literal">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (element.attachEvent) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">element, type, handler</span>) =&gt;</span> &#123;</span><br><span class="line">            element.attachEvent(<span class="string">'on'</span> + type, handler);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="function">(<span class="params">element, type, handler</span>) =&gt;</span> &#123;</span><br><span class="line">        element[<span class="string">'on'</span> + type] = handler;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-缓存函数"><a href="#6-缓存函数" class="headerlink" title="6. 缓存函数"></a>6. 缓存函数</h3><p>缓存函数将函数的计结果存储起来，当下次以同样参数调用该函数时，直接返回已缓存的结果，无需再次执行函数。这是常见的一种空间换时间的优化方式。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">memorized</span> = (<span class="params">fn</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> cache = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">...args</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">const</span> _args = <span class="built_in">JSON</span>.stringify(args);</span><br><span class="line">        <span class="keyword">return</span> cache[_args] || (cache[_args] = fn.apply(fn, args))</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>朝花夕拾</tag>
+        <tag>JS基础</tag>
+      </tags>
+  </entry>
+</search>
