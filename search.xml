@@ -1,444 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Less常见用法</title>
-    <url>/2019/07/09/Less%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="less常见用法"><a href="#less常见用法" class="headerlink" title="less常见用法"></a>less常见用法</h2><p>最近在写组件库，对Less的用法感觉很多都生疏了，所以去看了下官方文档跟掘金～ 整理一篇笔记出来</p>
-<a id="more"></a>
-
-<h3 id="定义常量（只能定义一次，不能重复使用）"><a href="#定义常量（只能定义一次，不能重复使用）" class="headerlink" title="定义常量（只能定义一次，不能重复使用）"></a>定义常量（只能定义一次，不能重复使用）</h3><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="variable">@color:</span> <span class="number">#999</span>;</span><br><span class="line"><span class="variable">@bgColor:</span> skyblue</span><br><span class="line"><span class="variable">@width</span>: <span class="number">50%</span>;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">@bgColor</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择器变量（@&#123;&#125;使用）</span></span><br><span class="line"><span class="variable">@mySelector:</span> #wrap;</span><br><span class="line"><span class="variable">@Wrap:</span> wrap;</span><br><span class="line"></span><br><span class="line"><span class="variable">@&#123;mySelector&#125;</span>&#123;  <span class="comment">// 变量名必须使用打括号包裹起来</span></span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">@bgColor</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 属性变量 （直接使用）</span></span><br><span class="line"><span class="variable">@borderStyle:</span> border-style;</span><br><span class="line"><span class="variable">@Solid:</span> solid;</span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line"> <span class="attribute">@&#123;borderStyle&#125;</span>: <span class="variable">@Solid</span>;  <span class="comment">// 变量名 必须使用大括号包裹 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// url变量（@&#123;&#125;）</span></span><br><span class="line"><span class="variable">@images:</span> <span class="string">'../img/dog.png'</span></span><br><span class="line">body&#123;</span><br><span class="line">    <span class="attribute">background</span>: url(<span class="string">"@&#123;images&#125;"</span>);   <span class="comment">// 大括号包裹</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明变量</span></span><br><span class="line"><span class="comment">// 结构 @name&#123;属性: 值&#125;;</span></span><br><span class="line"><span class="comment">// 使用 @name();</span></span><br><span class="line"><span class="variable">@background</span>:&#123;<span class="attribute">background</span>:red;&#125;;</span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="variable">@background</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="变量运算"><a href="#变量运算" class="headerlink" title="变量运算"></a>变量运算</h4><ul>
-<li>加减法时，以第一个数据的单位为基准</li>
-<li>乘除法时 注意单位一定要统一单位统一</li>
-</ul>
-<h3 id="嵌套用法"><a href="#嵌套用法" class="headerlink" title="嵌套用法"></a>嵌套用法</h3><p>&amp;：代表上一层选择器的名字</p>
-<h4 id="媒体查询"><a href="#媒体查询" class="headerlink" title="媒体查询"></a>媒体查询</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span> &#123;</span><br><span class="line">    <span class="keyword">@media</span> screen&#123;</span><br><span class="line">        <span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>)&#123;</span><br><span class="line">            <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@media</span> tv&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">2000px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的css</span></span><br><span class="line"><span class="keyword">@media</span> screen and (<span class="attribute">maxwidth</span>: <span class="number">768px</span>)&#123;</span><br><span class="line">    <span class="selector-id">#main</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> tv&#123;</span><br><span class="line">    <span class="selector-id">#main</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">2000px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="默认参数写法"><a href="#默认参数写法" class="headerlink" title="默认参数写法"></a>默认参数写法</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.border</span>(<span class="variable">@a</span>:<span class="number">10px</span>,<span class="variable">@b</span>:<span class="number">50px</span>,<span class="variable">@c</span>:<span class="number">30px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="variable">@argumengts</span>;    <span class="comment">// 指代全部参数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span> &#123;</span><br><span class="line">    <span class="selector-class">.border</span>(<span class="number">0px</span>,<span class="number">5px</span>,<span class="number">30px</span>,red);   <span class="comment">// 必须带着单位</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span> &#123;</span><br><span class="line">    <span class="selector-class">.border</span>(<span class="number">0px</span>);    </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#content</span>&#123;<span class="selector-tag">0</span></span><br><span class="line">    <span class="selector-class">.border</span>;    <span class="comment">// 等价于 .border();</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 数量不定参数</span></span><br><span class="line"><span class="selector-class">.boxShadow</span>(...)&#123;  </span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="variable">@arguments</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法匹配模式"><a href="#方法匹配模式" class="headerlink" title="方法匹配模式"></a>方法匹配模式</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.triangle</span>(top,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent  transparent <span class="variable">@color</span> transparent ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(right,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent <span class="variable">@color</span> transparent  transparent ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.triangle</span>(bottom,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:<span class="variable">@color</span> transparent  transparent  transparent ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(left,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent  transparent  transparent <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(<span class="variable">@_</span>,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-style</span>: solid;</span><br><span class="line">    <span class="attribute">border-width</span>: <span class="variable">@width</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="selector-class">.triangle</span>(left, <span class="number">50px</span>, <span class="number">#999</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 匹配规则</span></span><br><span class="line"><span class="comment">// 第一个参数left要会找到方法中匹配程度最高的，如果匹配程度相同则将全部选择，并存在着样式覆盖替换</span></span><br><span class="line"><span class="comment">// 如果匹配的参数是变量，则将会匹配如@_.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成的 CSS */</span></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">  <span class="attribute">border-color</span>:transparent  transparent  transparent <span class="number">#999</span>;</span><br><span class="line">  <span class="attribute">border-style</span>: solid;</span><br><span class="line">  <span class="attribute">border-width</span>: <span class="number">50px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法的条件筛选"><a href="#方法的条件筛选" class="headerlink" title="方法的条件筛选"></a>方法的条件筛选</h4><p>Less没有if和else，可是他有when</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#card</span>&#123;</span><br><span class="line">    <span class="comment">// and运算符，相当于 与运算&amp;&amp;，必须条件全部符合才会执行</span></span><br><span class="line">    <span class="selector-class">.border</span>(<span class="variable">@width</span>,<span class="variable">@color</span>,<span class="variable">@style</span>) <span class="keyword">when</span> (<span class="variable">@width</span>&gt;<span class="number">100px</span>) <span class="keyword">and</span>(<span class="variable">@color</span>=<span class="number">#999</span>)&#123;</span><br><span class="line">        <span class="attribute">border</span>: <span class="variable">@style</span> <span class="variable">@color</span> <span class="variable">@width</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// not运算符，相当于非运算！，条件为 不符合才会执行</span></span><br><span class="line">    <span class="selector-class">.background</span>(<span class="variable">@color</span>) <span class="keyword">when</span> <span class="keyword">not</span>(<span class="variable">@color</span>&gt;=<span class="number">#222</span>)&#123;</span><br><span class="line">        <span class="attribute">background</span>: <span class="variable">@color</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ,逗号分隔符：相当于 || ，只要有一个符合条件就会执行</span></span><br><span class="line">    <span class="selector-class">.font</span>(<span class="variable">@size</span>:<span class="number">20px</span>) <span class="keyword">when</span> (<span class="variable">@size</span>&gt;<span class="number">50px</span>),(<span class="variable">@size</span>&lt;<span class="number">100px</span>)&#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="variable">@size</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="方法使用-important-会给属性都加上-important。"><a href="#方法使用-important-会给属性都加上-important。" class="headerlink" title="方法使用!important 会给属性都加上!important。"></a>方法使用!important 会给属性都加上!important。</h4><h4 id="循环方法"><a href="#循环方法" class="headerlink" title="循环方法"></a>循环方法</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">Less</span>栅格系统</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.generate-columns</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.generate-columns</span>(<span class="variable">@n</span>, <span class="variable">@i</span>:<span class="number">1</span>) <span class="keyword">when</span> (<span class="variable">@i</span> =&lt; <span class="variable">@n</span>)&#123;</span><br><span class="line">    <span class="selector-class">.column-</span><span class="variable">@&#123;i&#125;</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: (<span class="variable">@i</span> * <span class="number">100%</span> / <span class="variable">@n</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.generate-columns</span>(<span class="variable">@n</span>.(<span class="variable">@i</span>+<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"><span class="selector-class">.column-1</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">25%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-2</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-3</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">75%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-4</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="属性拼接方法"><a href="#属性拼接方法" class="headerlink" title="属性拼接方法"></a>属性拼接方法</h4><p>+_代表的是空格，+ 代表的是逗号</p>
-<ul>
-<li><p>逗号</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.boxShadow</span>() &#123;</span><br><span class="line">    <span class="selector-tag">box-shadow</span>+: <span class="selector-tag">inset</span> <span class="selector-tag">0</span> <span class="selector-tag">0</span> <span class="selector-tag">10px</span> <span class="selector-id">#555</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="selector-class">.boxShadow</span>();</span><br><span class="line">  <span class="selector-tag">box-shadow</span>+: <span class="selector-tag">0</span> <span class="selector-tag">0</span> <span class="selector-tag">20px</span> <span class="selector-tag">black</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">box-shadow</span>: inset <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="number">#555</span>, <span class="number">0</span> <span class="number">0</span> <span class="number">20px</span> black;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>空格</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.Animation</span>() &#123;</span><br><span class="line">  <span class="selector-tag">transform</span>+<span class="selector-tag">_</span>: <span class="selector-tag">scale</span>(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="selector-class">.Animation</span>();</span><br><span class="line">  <span class="selector-tag">transform</span>+<span class="selector-tag">_</span>: <span class="selector-tag">rotate</span>(<span class="number">15deg</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成的 CSS */</span></span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">transform</span>: scale(<span class="number">2</span>) rotate(<span class="number">15deg</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>extend 是 Less的一个伪类。它可以继承所匹配声明中的全部样式</p>
-<h4 id="extends-关键字使用"><a href="#extends-关键字使用" class="headerlink" title="extends 关键字使用"></a>extends 关键字使用</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.animation</span>&#123;</span><br><span class="line">    <span class="attribute">transition</span>: all .<span class="number">3s</span> ease-out;</span><br><span class="line">    <span class="selector-class">.hide</span>&#123;</span><br><span class="line">        <span class="attribute">transform</span>: scale(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:extend(.animation)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#con</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:extend(.animation</span> <span class="selector-class">.hide</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="selector-class">.animation</span>,<span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">0.3s</span> ease-out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.animation</span> <span class="selector-class">.hide</span>, <span class="selector-id">#con</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: scale(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="all全局搜索替换"><a href="#all全局搜索替换" class="headerlink" title="all全局搜索替换"></a>all全局搜索替换</h4><p>使用选择器匹配到的全部声明</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mian</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">        <span class="attribute">content</span>: <span class="string">'Less is good!'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span><span class="selector-pseudo">:extends(</span><span class="selector-id">#main</span> <span class="keyword">all</span>)&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*生成的CSS */</span></span><br><span class="line"><span class="selector-id">#main</span>,<span class="selector-id">#wrap</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span><span class="selector-pseudo">:after</span>, <span class="selector-id">#wrap</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">'Less is good!'</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><ol>
-<li>省略文件后缀<figure class="highlight"><table><tr><td class="code"><pre><span class="line">import 'main';    // import 'main.less'</span><br></pre></td></tr></table></figure></li>
-<li>@import 的位置可以随意放置<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@import</span> <span class="string">'style'</span></span><br></pre></td></tr></table></figure></li>
-<li>reference 引入外部文件，但不会把导入的文件编译到最终输出中，只引用<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@import</span> (reference) <span class="string">'bootstrap.less'</span>;</span><br></pre></td></tr></table></figure></li>
-<li>once @import语句的默认行为。表明相同文件只会被导入一次，而随后的导入文件重复的代码都不会被重复解析<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@import</span> (once) <span class="string">"foo.less"</span>;</span><br><span class="line"><span class="keyword">@import</span> (once) <span class="string">"foo.less"</span>;      <span class="comment">// 不会被重复解析</span></span><br></pre></td></tr></table></figure></li>
-<li>multiple 使用@import(multiple)允许导入多个同名文件<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.a</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: green;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@import</span> (multiple) <span class="string">'foo.less'</span>;</span><br><span class="line"><span class="keyword">@import</span> (multiple) <span class="string">'foo.less'</span>;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="避免编译"><a href="#避免编译" class="headerlink" title="避免编译"></a>避免编译</h3><p>结构 ~’ 值 ‘</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="string">~'calc(300px-30px)'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的css</span></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: calc(<span class="number">300px</span>-<span class="number">30px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="变量拼串"><a href="#变量拼串" class="headerlink" title="变量拼串"></a>变量拼串</h3><p>在下面例子中， 实现了不同的 transtion-delay、animation、@keyframes；</p>
-<p>结构： ~’字符@{变量}字符’</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.judge</span>(<span class="variable">@i</span>) <span class="keyword">when</span>(<span class="variable">@i</span>=<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="variable">@size:</span><span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.judge</span>(<span class="variable">@i</span>) <span class="keyword">when</span>(<span class="variable">@i</span>&gt;<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="variable">@size:</span><span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.loopAnimation</span>(<span class="variable">@i</span>) <span class="keyword">when</span> (<span class="variable">@i</span>&lt;<span class="number">16</span>) &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="selector-class">.circle</span><span class="selector-pseudo">:nth-child(</span><span class="variable">@&#123;i&#125;</span>)&#123;</span><br><span class="line">      <span class="selector-class">.judeg</span>(<span class="variable">@i</span>);</span><br><span class="line">      <span class="attribute">border-radius</span>:<span class="variable">@size</span> <span class="variable">@size</span> <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">      <span class="attribute">animation</span>: <span class="string">~"circle-@&#123;i&#125;"</span> <span class="variable">@duration</span> infinite <span class="variable">@ease</span>;</span><br><span class="line">      <span class="attribute">transition-delay</span>:<span class="string">~"@&#123;i&#125;ms"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">@keyframes</span> <span class="string">~"circle-@&#123;i&#125;"</span> &#123;</span><br><span class="line">      <span class="comment">// do something...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.loopAnimation</span>(<span class="variable">@i</span> + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="使用JS"><a href="#使用JS" class="headerlink" title="使用JS"></a>使用JS</h3><p>Less是由JS编写的</p>
-<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="variable">@content:</span><span class="built_in">`"aaa".toUpperCase()`</span>;</span><br><span class="line"><span class="selector-id">#randomColor</span>&#123;</span><br><span class="line">  <span class="variable">@randomColor:</span> <span class="string">~"rgb(`Math.round(Math.random() * 256)`,`Math.round(Math.random() * 256)`,`Math.round(Math.random() * 256)`)"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="string">~"`Math.round(Math.random() * 100)`px"</span>;</span><br><span class="line">  <span class="selector-tag">&amp;</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">      <span class="attribute">content</span>:<span class="variable">@content</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="attribute">height</span>: <span class="string">~"`window.innerHeight`px"</span>;</span><br><span class="line">  <span class="attribute">alert</span>:<span class="string">~"`alert(1)`"</span>;</span><br><span class="line">  <span class="selector-id">#randomColor</span>();</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="variable">@randomColor</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 弹出 1</span></span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: 随机值（<span class="number">0</span>~<span class="number">100</span>）px;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">743px</span>;<span class="comment">//由电脑而异</span></span><br><span class="line">  <span class="attribute">background</span>: 随机颜色;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span><span class="selector-pseudo">::after</span>&#123;</span><br><span class="line">  <span class="attribute">content</span>:<span class="string">"AAA"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>CSS大乱炖</category>
-      </categories>
-      <tags>
-        <tag>css基础</tag>
-        <tag>Less</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python数据类型</title>
-    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
-<li>0x表示16进制</li>
-<li>整数除法<ul>
-<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
-<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
-</ul>
-</li>
-<li>浮点数就是小数</li>
-</ul>
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
-<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
-<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
-</ul>
-<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
-<ul>
-<li><code>and</code>运算，都为True才为True</li>
-<li><code>or</code>运算，有True就为True</li>
-<li><code>not</code>运算, 非运算</li>
-</ul>
-<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
-<ul>
-<li>变量本身类型不固定的语言称为==动态语言==</li>
-<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
-<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
-但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
-</ul>
-<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
-<ul>
-<li>ord()函数获取字符的整数表示</li>
-<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
-<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
-
-<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
-
-<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
-
-
-<table>
-<thead>
-<tr>
-<th>占位符</th>
-<th>替换内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>%d</td>
-<td>整数</td>
-</tr>
-<tr>
-<td>%f</td>
-<td>浮点数</td>
-</tr>
-<tr>
-<td>%s</td>
-<td>字符串</td>
-</tr>
-<tr>
-<td>%x</td>
-<td>十六进制整数</td>
-</tr>
-</tbody></table>
-<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
-<ul>
-<li>append(elem) 向list中追加元素到末尾</li>
-<li>insert(i, elem) 把元素插入到指定位置</li>
-<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
-<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
-
-<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
-<li>if else</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
-<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
-<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
-<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
-<li><code>break</code>退出循环</li>
-<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
-<ul>
-<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
-<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
-<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
-<ul>
-<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
-<li>remove(key) 可以删除元素</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
-<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Redis基础入门</title>
-    <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
-    <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
-<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
-<li>KEYS[pattern]: 时间复杂度为O(n)，查询所有符合给定模式pattern的key。返回符合给定模式的key列表。</li>
-<li>DESIZE key: 返回当前数据库key的数量。计算时不是扫描整个表而是实时更新key总数。</li>
-<li>EXISTS key: 检查给定key是否存在。key存在返回1,否则返回0</li>
-<li>DEL key: 返回被删除的key的数量</li>
-<li>EXPIRE key seconds：为给定的key设置生存时间，当key过期会被自动删除。设置成功返回1，失败返回0。</li>
-<li>PERSIST key: 移除给定key，将这个key转换成持久的，当生存时间移除成功时，返回1。如果key不存在或者没有设置生存时间返回0。</li>
-<li>TTL key: 以秒为单位，给定返回key的剩余生存时间。当key不存在时，返回-2，当key存在但没有设置生存时间，返回-1.否则返回剩余生存时间。<a id="more"></a>
-<h2 id="五种数据结构"><a href="#五种数据结构" class="headerlink" title="五种数据结构"></a>五种数据结构</h2><h3 id="一、字符串：Redis中最基础的数据结构"><a href="#一、字符串：Redis中最基础的数据结构" class="headerlink" title="一、字符串：Redis中最基础的数据结构"></a>一、字符串：Redis中最基础的数据结构</h3>Redis中字符串类型最大只能保存512MB<h4 id="1-SET-key-value-EX-seconds-PX-millseconds-NX-XX"><a href="#1-SET-key-value-EX-seconds-PX-millseconds-NX-XX" class="headerlink" title="1. SET key value [EX seconds][PX millseconds] [NX|XX]"></a>1. SET key value [EX seconds][PX millseconds] [NX|XX]</h4></li>
-<li>将时间字符串value关联到key，如果key已持有其他值，set就覆写旧值，无视类型。</li>
-<li>当set命令对一个带有生存时间（TTL）键进行设置之后，该键原有的TTL将被清除。</li>
-<li>可选参数<ul>
-<li>EX seconds：将键过期时间设置为seconds秒，执行<code>SET key value EX seconds</code>的效果相当于执行<code>SETEX key seconds value</code></li>
-<li>PX milliseconds: 将键的过期时间设置为milliseconds毫秒。执行<code>SET key value PX milliseconds</code>的效果等同于执行<code>PSETEX key milliseconds value</code></li>
-<li>NX:只在键不存在时，才对键进行设置操作。执行<code>SET key value NX</code>的效果等同于执行<code>SETNX key value</code>。</li>
-<li>XX：只在键已经存在时，才对键进行设置操作。</li>
-</ul>
-</li>
-</ul>
-<h4 id="2-GET-key"><a href="#2-GET-key" class="headerlink" title="2. GET key"></a>2. GET key</h4><p>获取与键key相关联的字符串值。</p>
-<ul>
-<li>如果key不存在返会nil，否则返回key的值。</li>
-<li>如果key的值并非字符串类型，那么返回一个错误，GET命令只能用于字符串值</li>
-</ul>
-<h4 id="3-DEL-key-key…"><a href="#3-DEL-key-key…" class="headerlink" title="3. DEL key[key…]"></a>3. DEL key[key…]</h4><p>删除指定的一个或者多个key，不存在的key会被忽略。</p>
-<ul>
-<li>返回被删除的key的数量</li>
-</ul>
-<h4 id="4-MEST-key-value-key-value…"><a href="#4-MEST-key-value-key-value…" class="headerlink" title="4. MEST key value[key value…]"></a>4. MEST key value[key value…]</h4><p>同时为多个键设置值，如果某个给定键已经存在，用MEST将新值去覆盖旧值。</p>
-<ul>
-<li>总是返回OK<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; MSET date &quot;2012.3.30&quot; time &quot;11:00 a.m.&quot; weather &quot;sunny&quot;</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; MGET date time weather</span><br><span class="line">1) &quot;2012.3.30&quot;</span><br><span class="line">2) &quot;11:00 a.m.&quot;</span><br><span class="line">3) &quot;sunny&quot;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="5-MSETNX-key-value"><a href="#5-MSETNX-key-value" class="headerlink" title="5. MSETNX key value"></a>5. MSETNX key value</h4><p>当且仅当所有给定键都不存在时,为所有给定键设置值。即使只有一个给定键已经存在，MSETNX命令也会拒绝执行对所有键的设置操作。</p>
-<ul>
-<li>当所有给定键都设置成功，命令返回1，如果因为某个给定键已存在而导致未能执行成功，返回0</li>
-</ul>
-<h4 id="6-MGET-key-key…"><a href="#6-MGET-key-key…" class="headerlink" title="6. MGET key[key…]"></a>6. MGET key[key…]</h4><p>返回给定的一个或多个字符串键的值。如果给定的字符串键里面，有某个键不存在，那么这个键的值将以特殊值nil表示。</p>
-<h3 id="二、哈希"><a href="#二、哈希" class="headerlink" title="二、哈希"></a>二、哈希</h3><p>Redis的哈希是键值对的集合，是字符串字段和字符串值之间的映射。<br><img src="http://wx2.sinaimg.cn/large/e0e01e43gy1g04saqqy8ij20x00bj41k.jpg" alt="哈希"></p>
-<h4 id="1-HSET-key-field-value"><a href="#1-HSET-key-field-value" class="headerlink" title="1. HSET key field value"></a>1. HSET key field value</h4><p>将哈希表key中域field的值设置为value，如果给定的哈希表不存在，那么一个新的哈希表将被创建并执行HSET操作，如果域field已存在于哈希表中，那么它的旧值将被新值value覆盖。</p>
-<ul>
-<li>当新创建field域并成功为它设置值时,命令返回</li>
-<li>当域field已经存在于哈希表，并且HSET命令成功使用新值覆盖了它的旧值，那么命令返回0</li>
-</ul>
-<h4 id="2-HGET-key-field"><a href="#2-HGET-key-field" class="headerlink" title="2. HGET key field"></a>2. HGET key field</h4><ul>
-<li>返回给定域的值，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，那么命令返回nil。</li>
-</ul>
-<h4 id="3-HGETALL-key"><a href="#3-HGETALL-key" class="headerlink" title="3. HGETALL key"></a>3. HGETALL key</h4><p>以列表的形式返回哈希表的域和值</p>
-<ul>
-<li>以列表形式返回哈希表的域和域的值，若key不存在，返回空列表。</li>
-</ul>
-<h4 id="4-HDEL-key-field-field"><a href="#4-HDEL-key-field-field" class="headerlink" title="4. HDEL key field [field]"></a>4. HDEL key field [field]</h4><p>删除哈希表key中的一个或多个指定域，不存在的域将被忽略。</p>
-<ul>
-<li>被成功移除的域的数量，不包括被忽略的域。</li>
-</ul>
-<h4 id="5-HMSET-key-field-value-field-value-…"><a href="#5-HMSET-key-field-value-field-value-…" class="headerlink" title="5. HMSET key field value [field value …]"></a>5. HMSET key field value [field value …]</h4><p>同时将多个field-value(域-值)对设置到哈希表key中，此命令会覆盖哈希表中已存在的域，如果key不存在，一个空哈希表被创建并执行HMSET操作。</p>
-<ul>
-<li>如果命令执行成功，返回OK，当key不是哈希表(hash)类型时，返回一个错误。</li>
-</ul>
-<h4 id="6-HMGET-key-field-field…"><a href="#6-HMGET-key-field-field…" class="headerlink" title="6. HMGET key field[field…]"></a>6. HMGET key field[field…]</h4><p>返回哈希表key中，一个或多个给定域的值，如果给定的域不存在于哈希表，那么返回一个nil值</p>
-<ul>
-<li>返回一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; HMSET pet dog &quot;doudou&quot; cat &quot;nounou&quot;    #一次设置多个域</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; HMGET pet dog cat fake_pet             #返回值的顺序和传入参数的顺序一样</span><br><span class="line">1) &quot;doudou&quot;</span><br><span class="line">2) &quot;nounou&quot;</span><br><span class="line">3) (nil)                                      #不存在的域返回nil值</span><br></pre></td></tr></table></figure>
-<h3 id="三、列表"><a href="#三、列表" class="headerlink" title="三、列表"></a>三、列表</h3>列表用于存储多个有序的字符串，列表是一种比较灵活的数据结构，可以充当栈和队列的角色<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04u9xkllmj21bs0ijq7t.jpg" alt="列表结构"></li>
-</ul>
-<h4 id="1-LPUSH-key-value-value-…"><a href="#1-LPUSH-key-value-value-…" class="headerlink" title="1. LPUSH key value[value …]"></a>1. LPUSH key value[value …]</h4><p>将一个或多个值value插入到列表key的表头（最左边），如果有多个value值，那么各个value值按从左到右的顺序依次插入到表头</p>
-<ul>
-<li>返回执行命令后列表的长度</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; LPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-RPUSH-key-value-value-…"><a href="#2-RPUSH-key-value-value-…" class="headerlink" title="2. RPUSH key value [value …]"></a>2. RPUSH key value [value …]</h4><p>将一个或多个值value插入到列表key的表尾（最右边），如果有多个value值，那么各个value值按从左到右的顺序依次插入</p>
-<ul>
-<li>返回执行命令后列表的长度<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; RPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;c&quot;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h4 id="3-LPOP"><a href="#3-LPOP" class="headerlink" title="3. LPOP"></a>3. LPOP</h4><p>移除头元素并返回被弹出的元素</p>
-<h4 id="4-RPOP-key"><a href="#4-RPOP-key" class="headerlink" title="4. RPOP key"></a>4. RPOP key</h4><p>移除尾元素并返回被弹出的元素</p>
-<h4 id="5-LINDEX-key-index"><a href="#5-LINDEX-key-index" class="headerlink" title="5. LINDEX key index"></a>5. LINDEX key index</h4><p>返回列表key中，下标为index的元素</p>
-<ul>
-<li>如果index参数的值不在列表的区间范围内(out of range)，返回nil</li>
-</ul>
-<h4 id="6-LINSERT-key-BEFORE-AFTER-pivot-value"><a href="#6-LINSERT-key-BEFORE-AFTER-pivot-value" class="headerlink" title="6. LINSERT key BEFORE|AFTER pivot value"></a>6. LINSERT key BEFORE|AFTER pivot value</h4><p>将值value值插入到列表key当中，位于值pivot之前或之后，当pivot不存在于列表key时，不执行任何操作。</p>
-<ul>
-<li>命令执行成功，返回插入操作完成之后，列表的长度。</li>
-<li>如果没有找到pivot，返回-1。</li>
-<li>如果key不存在或为空列表，返回0。</li>
-</ul>
-<h4 id="7-LRANGE-key-start-stop"><a href="#7-LRANGE-key-start-stop" class="headerlink" title="7. LRANGE key start stop"></a>7. LRANGE key start stop</h4><p>获取列表指定范围内的元素</p>
-<h4 id="8-LREM-key-count-value"><a href="#8-LREM-key-count-value" class="headerlink" title="8. LREM key count value"></a>8. LREM key count value</h4><p>移除列表元素</p>
-<h4 id="9-LTRIM-key-start-stop"><a href="#9-LTRIM-key-start-stop" class="headerlink" title="9. LTRIM key start stop"></a>9. LTRIM key start stop</h4><p>对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。</p>
-<h3 id="四、集合"><a href="#四、集合" class="headerlink" title="四、集合"></a>四、集合</h3><p>Redis的Set是String类型的无序集合，集合成员都是唯一的。集合是通过hash表实现的。<br><img src="http://ws1.sinaimg.cn/large/e0e01e43gy1g04woe8h2dj20je093myh.jpg" alt="无序集合"></p>
-<h4 id="1-SADD-key-member-member-…"><a href="#1-SADD-key-member-member-…" class="headerlink" title="1. SADD key member [member …]"></a>1. SADD key member [member …]</h4><p>将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略，假如key不存在，则创建一个只包含member元素作成员的集合，当key不是集合类型时，返回一个错误。</p>
-<ul>
-<li>返回被添加到新集合中的元素，不包括被忽略的元素</li>
-</ul>
-<h4 id="2-SPOP-key-count"><a href="#2-SPOP-key-count" class="headerlink" title="2. SPOP key [count]"></a>2. SPOP key [count]</h4><p>随机移除count个元素并返回被移除的元素</p>
-<ul>
-<li>返回被移除的随机元素，当key不存在或key是空集时，返回nil。</li>
-</ul>
-<h4 id="3-SREM-key-member-member-…"><a href="#3-SREM-key-member-member-…" class="headerlink" title="3. SREM key member[member …]"></a>3. SREM key member[member …]</h4><p>移除集合key中的一个或多个member元素，不存在的member元素会被忽略，当key不是集合类型，返回一个错误。</p>
-<ul>
-<li>返回被成功移除的元素个数，不包括被忽略的元素</li>
-</ul>
-<h4 id="4-SMEMBERS-key"><a href="#4-SMEMBERS-key" class="headerlink" title="4. SMEMBERS key"></a>4. SMEMBERS key</h4><p>返回集合key中的所有成员，不存在的key被视为空集合。</p>
-<ul>
-<li>返回值： 集合中的所有成员。</li>
-</ul>
-<h3 id="五、有序集合"><a href="#五、有序集合" class="headerlink" title="五、有序集合"></a>五、有序集合</h3><p>Redis有序集合和集合一样也是String类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。有序集合的成员是唯一的,但分数(score)却可以重复。集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04y9o37y7j21810j644t.jpg" alt="有序集合"></p>
-<h4 id="1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…"><a href="#1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…" class="headerlink" title="1. ZADD key [NX|XX][CH][INCR] score member [score member …]"></a>1. ZADD key [NX|XX][CH][INCR] score member [score member …]</h4><p>将一个或多个member元素及其score值加入到有序集key当中。如果某个member已经是有序集的成员，那么更新这个member的score值，并通过重新插入这个member元素，来保证该member在正确的位置上。score值可以是整数值或双精度浮点数。如果key不存在，则创建一个空的有序集并执行ZADD操作。当key存在但不是有序集类型时，返回一个错误。</p>
-<ul>
-<li>NX: member必须不存在，才可以设置成功，用于添加</li>
-<li>XX: member必须存在，才可以设置成功，用于更新</li>
-<li>CH：返回此次操作后，有序集合元素和分数发生变化的个数</li>
-<li>INCR：对scroe做增加，相当于ZINCRBY</li>
-</ul>
-<h4 id="2-ZREM-key-member-member-…"><a href="#2-ZREM-key-member-member-…" class="headerlink" title="2. ZREM key member [member …]"></a>2. ZREM key member [member …]</h4><p>移除有序集key中的一个或多个成员，不存在的成员将被忽略，当key存在但不是有序集类型时，返回一个错误</p>
-<ul>
-<li>返回被成功移除的成员的数量，不包括被忽略的成员。</li>
-</ul>
-<h4 id="3-ZRANGE-key-start-stop-WITHSCORES"><a href="#3-ZRANGE-key-start-stop-WITHSCORES" class="headerlink" title="3. ZRANGE key start stop [WITHSCORES]"></a>3. ZRANGE key start stop [WITHSCORES]</h4><p>通过索引区间返回有序集合成指定区间内的成员</p>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://ddnd.cn/2019/02/13/redis-chapter-2/" target="_blank" rel="noopener">第二章 Redis API的使用 单线程介绍【Redis入门教程】</a></p>
-<p><a href="https://segmentfault.com/a/1190000004620779" target="_blank" rel="noopener">Redis简易入门教程</a></p>
-]]></content>
-      <categories>
-        <category>web后端</category>
-      </categories>
-      <tags>
-        <tag>后端</tag>
-        <tag>node</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>TCP和UDP</title>
-    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
-    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
-<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
-<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
-<li>超文本传输协议（HTTP）万维网基本协议</li>
-<li>文件传输协议（TFTP简单文件传输协议）</li>
-<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
-<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
-<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
-</ol>
-<a id="more"></a>
-
-<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
-<li>Internet协议（IP）；</li>
-<li>Internet控制信息协议（ICMP）；</li>
-<li>地址解析协议（ARP）；</li>
-<li>反向地址解析协议（RARP）。</li>
-</ol>
-<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
-<ul>
-<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
-</ul>
-<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
-<ul>
-<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
-</ul>
-<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
-<ul>
-<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
-</ul>
-<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
-<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
-<ul>
-<li>第一次挥手(FIN=1，seq=x)</li>
-</ul>
-<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
-<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
-<ul>
-<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
-</ul>
-<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
-<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
-<ul>
-<li>第三次挥手(FIN=1，seq=y)</li>
-</ul>
-<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
-<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
-<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
-<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
-<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
-<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
-<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
-<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
-<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
-<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
-<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
-<ul>
-<li>缩短超时（SYN Timeout）时间</li>
-<li>增加最大半连接数</li>
-<li>过滤网关防护</li>
-<li>SYN cookies技术</li>
-</ul>
-<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
-<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
-<ul>
-<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
-<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
-<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
-<li>UDP 支持多播和广播。（TCP不支持）</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Cookie 和 Session比较</title>
-    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
-    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
-<a id="more"></a>
-
-<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
-<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
-<p><strong>express中读取还是设置都是在req中</strong>。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Jest+Enzyme前端自动化测试</title>
     <url>/2019/08/11/Jest-Enzyme%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/</url>
     <content><![CDATA[<h1 id="jest测试"><a href="#jest测试" class="headerlink" title="jest测试"></a>jest测试</h1><p>笔者接触组件库开发已经几月了，目前组件库越做越大，越做越好，但随之而来接入的业务方提的bug也越来越多，这显得前端自动化测试格外重要，此文主要是讲测试入门以及一些思想，具体怎么配置笔者觉得没有必要花心思去整理，网上一搜一大堆。</p>
@@ -582,6 +144,444 @@
       </categories>
       <tags>
         <tag>React测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis基础入门</title>
+    <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
+    <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
+<h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
+<li>KEYS[pattern]: 时间复杂度为O(n)，查询所有符合给定模式pattern的key。返回符合给定模式的key列表。</li>
+<li>DESIZE key: 返回当前数据库key的数量。计算时不是扫描整个表而是实时更新key总数。</li>
+<li>EXISTS key: 检查给定key是否存在。key存在返回1,否则返回0</li>
+<li>DEL key: 返回被删除的key的数量</li>
+<li>EXPIRE key seconds：为给定的key设置生存时间，当key过期会被自动删除。设置成功返回1，失败返回0。</li>
+<li>PERSIST key: 移除给定key，将这个key转换成持久的，当生存时间移除成功时，返回1。如果key不存在或者没有设置生存时间返回0。</li>
+<li>TTL key: 以秒为单位，给定返回key的剩余生存时间。当key不存在时，返回-2，当key存在但没有设置生存时间，返回-1.否则返回剩余生存时间。<a id="more"></a>
+<h2 id="五种数据结构"><a href="#五种数据结构" class="headerlink" title="五种数据结构"></a>五种数据结构</h2><h3 id="一、字符串：Redis中最基础的数据结构"><a href="#一、字符串：Redis中最基础的数据结构" class="headerlink" title="一、字符串：Redis中最基础的数据结构"></a>一、字符串：Redis中最基础的数据结构</h3>Redis中字符串类型最大只能保存512MB<h4 id="1-SET-key-value-EX-seconds-PX-millseconds-NX-XX"><a href="#1-SET-key-value-EX-seconds-PX-millseconds-NX-XX" class="headerlink" title="1. SET key value [EX seconds][PX millseconds] [NX|XX]"></a>1. SET key value [EX seconds][PX millseconds] [NX|XX]</h4></li>
+<li>将时间字符串value关联到key，如果key已持有其他值，set就覆写旧值，无视类型。</li>
+<li>当set命令对一个带有生存时间（TTL）键进行设置之后，该键原有的TTL将被清除。</li>
+<li>可选参数<ul>
+<li>EX seconds：将键过期时间设置为seconds秒，执行<code>SET key value EX seconds</code>的效果相当于执行<code>SETEX key seconds value</code></li>
+<li>PX milliseconds: 将键的过期时间设置为milliseconds毫秒。执行<code>SET key value PX milliseconds</code>的效果等同于执行<code>PSETEX key milliseconds value</code></li>
+<li>NX:只在键不存在时，才对键进行设置操作。执行<code>SET key value NX</code>的效果等同于执行<code>SETNX key value</code>。</li>
+<li>XX：只在键已经存在时，才对键进行设置操作。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-GET-key"><a href="#2-GET-key" class="headerlink" title="2. GET key"></a>2. GET key</h4><p>获取与键key相关联的字符串值。</p>
+<ul>
+<li>如果key不存在返会nil，否则返回key的值。</li>
+<li>如果key的值并非字符串类型，那么返回一个错误，GET命令只能用于字符串值</li>
+</ul>
+<h4 id="3-DEL-key-key…"><a href="#3-DEL-key-key…" class="headerlink" title="3. DEL key[key…]"></a>3. DEL key[key…]</h4><p>删除指定的一个或者多个key，不存在的key会被忽略。</p>
+<ul>
+<li>返回被删除的key的数量</li>
+</ul>
+<h4 id="4-MEST-key-value-key-value…"><a href="#4-MEST-key-value-key-value…" class="headerlink" title="4. MEST key value[key value…]"></a>4. MEST key value[key value…]</h4><p>同时为多个键设置值，如果某个给定键已经存在，用MEST将新值去覆盖旧值。</p>
+<ul>
+<li>总是返回OK<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; MSET date &quot;2012.3.30&quot; time &quot;11:00 a.m.&quot; weather &quot;sunny&quot;</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; MGET date time weather</span><br><span class="line">1) &quot;2012.3.30&quot;</span><br><span class="line">2) &quot;11:00 a.m.&quot;</span><br><span class="line">3) &quot;sunny&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="5-MSETNX-key-value"><a href="#5-MSETNX-key-value" class="headerlink" title="5. MSETNX key value"></a>5. MSETNX key value</h4><p>当且仅当所有给定键都不存在时,为所有给定键设置值。即使只有一个给定键已经存在，MSETNX命令也会拒绝执行对所有键的设置操作。</p>
+<ul>
+<li>当所有给定键都设置成功，命令返回1，如果因为某个给定键已存在而导致未能执行成功，返回0</li>
+</ul>
+<h4 id="6-MGET-key-key…"><a href="#6-MGET-key-key…" class="headerlink" title="6. MGET key[key…]"></a>6. MGET key[key…]</h4><p>返回给定的一个或多个字符串键的值。如果给定的字符串键里面，有某个键不存在，那么这个键的值将以特殊值nil表示。</p>
+<h3 id="二、哈希"><a href="#二、哈希" class="headerlink" title="二、哈希"></a>二、哈希</h3><p>Redis的哈希是键值对的集合，是字符串字段和字符串值之间的映射。<br><img src="http://wx2.sinaimg.cn/large/e0e01e43gy1g04saqqy8ij20x00bj41k.jpg" alt="哈希"></p>
+<h4 id="1-HSET-key-field-value"><a href="#1-HSET-key-field-value" class="headerlink" title="1. HSET key field value"></a>1. HSET key field value</h4><p>将哈希表key中域field的值设置为value，如果给定的哈希表不存在，那么一个新的哈希表将被创建并执行HSET操作，如果域field已存在于哈希表中，那么它的旧值将被新值value覆盖。</p>
+<ul>
+<li>当新创建field域并成功为它设置值时,命令返回</li>
+<li>当域field已经存在于哈希表，并且HSET命令成功使用新值覆盖了它的旧值，那么命令返回0</li>
+</ul>
+<h4 id="2-HGET-key-field"><a href="#2-HGET-key-field" class="headerlink" title="2. HGET key field"></a>2. HGET key field</h4><ul>
+<li>返回给定域的值，如果给定域不存在于哈希表中，又或者给定的哈希表并不存在，那么命令返回nil。</li>
+</ul>
+<h4 id="3-HGETALL-key"><a href="#3-HGETALL-key" class="headerlink" title="3. HGETALL key"></a>3. HGETALL key</h4><p>以列表的形式返回哈希表的域和值</p>
+<ul>
+<li>以列表形式返回哈希表的域和域的值，若key不存在，返回空列表。</li>
+</ul>
+<h4 id="4-HDEL-key-field-field"><a href="#4-HDEL-key-field-field" class="headerlink" title="4. HDEL key field [field]"></a>4. HDEL key field [field]</h4><p>删除哈希表key中的一个或多个指定域，不存在的域将被忽略。</p>
+<ul>
+<li>被成功移除的域的数量，不包括被忽略的域。</li>
+</ul>
+<h4 id="5-HMSET-key-field-value-field-value-…"><a href="#5-HMSET-key-field-value-field-value-…" class="headerlink" title="5. HMSET key field value [field value …]"></a>5. HMSET key field value [field value …]</h4><p>同时将多个field-value(域-值)对设置到哈希表key中，此命令会覆盖哈希表中已存在的域，如果key不存在，一个空哈希表被创建并执行HMSET操作。</p>
+<ul>
+<li>如果命令执行成功，返回OK，当key不是哈希表(hash)类型时，返回一个错误。</li>
+</ul>
+<h4 id="6-HMGET-key-field-field…"><a href="#6-HMGET-key-field-field…" class="headerlink" title="6. HMGET key field[field…]"></a>6. HMGET key field[field…]</h4><p>返回哈希表key中，一个或多个给定域的值，如果给定的域不存在于哈希表，那么返回一个nil值</p>
+<ul>
+<li>返回一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; HMSET pet dog &quot;doudou&quot; cat &quot;nounou&quot;    #一次设置多个域</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis&gt; HMGET pet dog cat fake_pet             #返回值的顺序和传入参数的顺序一样</span><br><span class="line">1) &quot;doudou&quot;</span><br><span class="line">2) &quot;nounou&quot;</span><br><span class="line">3) (nil)                                      #不存在的域返回nil值</span><br></pre></td></tr></table></figure>
+<h3 id="三、列表"><a href="#三、列表" class="headerlink" title="三、列表"></a>三、列表</h3>列表用于存储多个有序的字符串，列表是一种比较灵活的数据结构，可以充当栈和队列的角色<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04u9xkllmj21bs0ijq7t.jpg" alt="列表结构"></li>
+</ul>
+<h4 id="1-LPUSH-key-value-value-…"><a href="#1-LPUSH-key-value-value-…" class="headerlink" title="1. LPUSH key value[value …]"></a>1. LPUSH key value[value …]</h4><p>将一个或多个值value插入到列表key的表头（最左边），如果有多个value值，那么各个value值按从左到右的顺序依次插入到表头</p>
+<ul>
+<li>返回执行命令后列表的长度</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; LPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;c&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-RPUSH-key-value-value-…"><a href="#2-RPUSH-key-value-value-…" class="headerlink" title="2. RPUSH key value [value …]"></a>2. RPUSH key value [value …]</h4><p>将一个或多个值value插入到列表key的表尾（最右边），如果有多个value值，那么各个value值按从左到右的顺序依次插入</p>
+<ul>
+<li>返回执行命令后列表的长度<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">redis&gt; RPUSH mylist a b c</span><br><span class="line">(integer) 3</span><br><span class="line"></span><br><span class="line">redis&gt; LRANGE mylist 0 -1</span><br><span class="line">1) &quot;a&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;c&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="3-LPOP"><a href="#3-LPOP" class="headerlink" title="3. LPOP"></a>3. LPOP</h4><p>移除头元素并返回被弹出的元素</p>
+<h4 id="4-RPOP-key"><a href="#4-RPOP-key" class="headerlink" title="4. RPOP key"></a>4. RPOP key</h4><p>移除尾元素并返回被弹出的元素</p>
+<h4 id="5-LINDEX-key-index"><a href="#5-LINDEX-key-index" class="headerlink" title="5. LINDEX key index"></a>5. LINDEX key index</h4><p>返回列表key中，下标为index的元素</p>
+<ul>
+<li>如果index参数的值不在列表的区间范围内(out of range)，返回nil</li>
+</ul>
+<h4 id="6-LINSERT-key-BEFORE-AFTER-pivot-value"><a href="#6-LINSERT-key-BEFORE-AFTER-pivot-value" class="headerlink" title="6. LINSERT key BEFORE|AFTER pivot value"></a>6. LINSERT key BEFORE|AFTER pivot value</h4><p>将值value值插入到列表key当中，位于值pivot之前或之后，当pivot不存在于列表key时，不执行任何操作。</p>
+<ul>
+<li>命令执行成功，返回插入操作完成之后，列表的长度。</li>
+<li>如果没有找到pivot，返回-1。</li>
+<li>如果key不存在或为空列表，返回0。</li>
+</ul>
+<h4 id="7-LRANGE-key-start-stop"><a href="#7-LRANGE-key-start-stop" class="headerlink" title="7. LRANGE key start stop"></a>7. LRANGE key start stop</h4><p>获取列表指定范围内的元素</p>
+<h4 id="8-LREM-key-count-value"><a href="#8-LREM-key-count-value" class="headerlink" title="8. LREM key count value"></a>8. LREM key count value</h4><p>移除列表元素</p>
+<h4 id="9-LTRIM-key-start-stop"><a href="#9-LTRIM-key-start-stop" class="headerlink" title="9. LTRIM key start stop"></a>9. LTRIM key start stop</h4><p>对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除。</p>
+<h3 id="四、集合"><a href="#四、集合" class="headerlink" title="四、集合"></a>四、集合</h3><p>Redis的Set是String类型的无序集合，集合成员都是唯一的。集合是通过hash表实现的。<br><img src="http://ws1.sinaimg.cn/large/e0e01e43gy1g04woe8h2dj20je093myh.jpg" alt="无序集合"></p>
+<h4 id="1-SADD-key-member-member-…"><a href="#1-SADD-key-member-member-…" class="headerlink" title="1. SADD key member [member …]"></a>1. SADD key member [member …]</h4><p>将一个或多个member元素加入到集合key当中，已经存在于集合的member元素将被忽略，假如key不存在，则创建一个只包含member元素作成员的集合，当key不是集合类型时，返回一个错误。</p>
+<ul>
+<li>返回被添加到新集合中的元素，不包括被忽略的元素</li>
+</ul>
+<h4 id="2-SPOP-key-count"><a href="#2-SPOP-key-count" class="headerlink" title="2. SPOP key [count]"></a>2. SPOP key [count]</h4><p>随机移除count个元素并返回被移除的元素</p>
+<ul>
+<li>返回被移除的随机元素，当key不存在或key是空集时，返回nil。</li>
+</ul>
+<h4 id="3-SREM-key-member-member-…"><a href="#3-SREM-key-member-member-…" class="headerlink" title="3. SREM key member[member …]"></a>3. SREM key member[member …]</h4><p>移除集合key中的一个或多个member元素，不存在的member元素会被忽略，当key不是集合类型，返回一个错误。</p>
+<ul>
+<li>返回被成功移除的元素个数，不包括被忽略的元素</li>
+</ul>
+<h4 id="4-SMEMBERS-key"><a href="#4-SMEMBERS-key" class="headerlink" title="4. SMEMBERS key"></a>4. SMEMBERS key</h4><p>返回集合key中的所有成员，不存在的key被视为空集合。</p>
+<ul>
+<li>返回值： 集合中的所有成员。</li>
+</ul>
+<h3 id="五、有序集合"><a href="#五、有序集合" class="headerlink" title="五、有序集合"></a>五、有序集合</h3><p>Redis有序集合和集合一样也是String类型元素的集合,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。Redis正是通过分数来为集合中的成员进行从小到大的排序。有序集合的成员是唯一的,但分数(score)却可以重复。集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。<br><img src="http://wx3.sinaimg.cn/large/e0e01e43gy1g04y9o37y7j21810j644t.jpg" alt="有序集合"></p>
+<h4 id="1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…"><a href="#1-ZADD-key-NX-XX-CH-INCR-score-member-score-member-…" class="headerlink" title="1. ZADD key [NX|XX][CH][INCR] score member [score member …]"></a>1. ZADD key [NX|XX][CH][INCR] score member [score member …]</h4><p>将一个或多个member元素及其score值加入到有序集key当中。如果某个member已经是有序集的成员，那么更新这个member的score值，并通过重新插入这个member元素，来保证该member在正确的位置上。score值可以是整数值或双精度浮点数。如果key不存在，则创建一个空的有序集并执行ZADD操作。当key存在但不是有序集类型时，返回一个错误。</p>
+<ul>
+<li>NX: member必须不存在，才可以设置成功，用于添加</li>
+<li>XX: member必须存在，才可以设置成功，用于更新</li>
+<li>CH：返回此次操作后，有序集合元素和分数发生变化的个数</li>
+<li>INCR：对scroe做增加，相当于ZINCRBY</li>
+</ul>
+<h4 id="2-ZREM-key-member-member-…"><a href="#2-ZREM-key-member-member-…" class="headerlink" title="2. ZREM key member [member …]"></a>2. ZREM key member [member …]</h4><p>移除有序集key中的一个或多个成员，不存在的成员将被忽略，当key存在但不是有序集类型时，返回一个错误</p>
+<ul>
+<li>返回被成功移除的成员的数量，不包括被忽略的成员。</li>
+</ul>
+<h4 id="3-ZRANGE-key-start-stop-WITHSCORES"><a href="#3-ZRANGE-key-start-stop-WITHSCORES" class="headerlink" title="3. ZRANGE key start stop [WITHSCORES]"></a>3. ZRANGE key start stop [WITHSCORES]</h4><p>通过索引区间返回有序集合成指定区间内的成员</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://ddnd.cn/2019/02/13/redis-chapter-2/" target="_blank" rel="noopener">第二章 Redis API的使用 单线程介绍【Redis入门教程】</a></p>
+<p><a href="https://segmentfault.com/a/1190000004620779" target="_blank" rel="noopener">Redis简易入门教程</a></p>
+]]></content>
+      <categories>
+        <category>web后端</category>
+      </categories>
+      <tags>
+        <tag>后端</tag>
+        <tag>node</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python数据类型</title>
+    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<li>0x表示16进制</li>
+<li>整数除法<ul>
+<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
+<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
+</ul>
+</li>
+<li>浮点数就是小数</li>
+</ul>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
+<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
+<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
+</ul>
+<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
+<ul>
+<li><code>and</code>运算，都为True才为True</li>
+<li><code>or</code>运算，有True就为True</li>
+<li><code>not</code>运算, 非运算</li>
+</ul>
+<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
+<ul>
+<li>变量本身类型不固定的语言称为==动态语言==</li>
+<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
+但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
+</ul>
+<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
+<ul>
+<li>ord()函数获取字符的整数表示</li>
+<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
+<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
+
+<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
+
+<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>替换内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%d</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制整数</td>
+</tr>
+</tbody></table>
+<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
+<ul>
+<li>append(elem) 向list中追加元素到末尾</li>
+<li>insert(i, elem) 把元素插入到指定位置</li>
+<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
+<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
+<li>if else</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
+<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>break</code>退出循环</li>
+<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
+<ul>
+<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
+<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
+<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
+<ul>
+<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
+<li>remove(key) 可以删除元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Less常见用法</title>
+    <url>/2019/07/09/Less%E5%B8%B8%E8%A7%81%E7%94%A8%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="less常见用法"><a href="#less常见用法" class="headerlink" title="less常见用法"></a>less常见用法</h2><p>最近在写组件库，对Less的用法感觉很多都生疏了，所以去看了下官方文档跟掘金～ 整理一篇笔记出来</p>
+<a id="more"></a>
+
+<h3 id="定义常量（只能定义一次，不能重复使用）"><a href="#定义常量（只能定义一次，不能重复使用）" class="headerlink" title="定义常量（只能定义一次，不能重复使用）"></a>定义常量（只能定义一次，不能重复使用）</h3><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="variable">@color:</span> <span class="number">#999</span>;</span><br><span class="line"><span class="variable">@bgColor:</span> skyblue</span><br><span class="line"><span class="variable">@width</span>: <span class="number">50%</span>;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">@bgColor</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 选择器变量（@&#123;&#125;使用）</span></span><br><span class="line"><span class="variable">@mySelector:</span> #wrap;</span><br><span class="line"><span class="variable">@Wrap:</span> wrap;</span><br><span class="line"></span><br><span class="line"><span class="variable">@&#123;mySelector&#125;</span>&#123;  <span class="comment">// 变量名必须使用打括号包裹起来</span></span><br><span class="line">    <span class="attribute">color</span>: <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="variable">@bgColor</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 属性变量 （直接使用）</span></span><br><span class="line"><span class="variable">@borderStyle:</span> border-style;</span><br><span class="line"><span class="variable">@Solid:</span> solid;</span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line"> <span class="attribute">@&#123;borderStyle&#125;</span>: <span class="variable">@Solid</span>;  <span class="comment">// 变量名 必须使用大括号包裹 </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// url变量（@&#123;&#125;）</span></span><br><span class="line"><span class="variable">@images:</span> <span class="string">'../img/dog.png'</span></span><br><span class="line">body&#123;</span><br><span class="line">    <span class="attribute">background</span>: url(<span class="string">"@&#123;images&#125;"</span>);   <span class="comment">// 大括号包裹</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 声明变量</span></span><br><span class="line"><span class="comment">// 结构 @name&#123;属性: 值&#125;;</span></span><br><span class="line"><span class="comment">// 使用 @name();</span></span><br><span class="line"><span class="variable">@background</span>:&#123;<span class="attribute">background</span>:red;&#125;;</span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="variable">@background</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="变量运算"><a href="#变量运算" class="headerlink" title="变量运算"></a>变量运算</h4><ul>
+<li>加减法时，以第一个数据的单位为基准</li>
+<li>乘除法时 注意单位一定要统一单位统一</li>
+</ul>
+<h3 id="嵌套用法"><a href="#嵌套用法" class="headerlink" title="嵌套用法"></a>嵌套用法</h3><p>&amp;：代表上一层选择器的名字</p>
+<h4 id="媒体查询"><a href="#媒体查询" class="headerlink" title="媒体查询"></a>媒体查询</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span> &#123;</span><br><span class="line">    <span class="keyword">@media</span> screen&#123;</span><br><span class="line">        <span class="keyword">@media</span> (<span class="attribute">max-width</span>: <span class="number">768px</span>)&#123;</span><br><span class="line">            <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">@media</span> tv&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">2000px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的css</span></span><br><span class="line"><span class="keyword">@media</span> screen and (<span class="attribute">maxwidth</span>: <span class="number">768px</span>)&#123;</span><br><span class="line">    <span class="selector-id">#main</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@media</span> tv&#123;</span><br><span class="line">    <span class="selector-id">#main</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: <span class="number">2000px</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="默认参数写法"><a href="#默认参数写法" class="headerlink" title="默认参数写法"></a>默认参数写法</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.border</span>(<span class="variable">@a</span>:<span class="number">10px</span>,<span class="variable">@b</span>:<span class="number">50px</span>,<span class="variable">@c</span>:<span class="number">30px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="variable">@color</span>;</span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="variable">@argumengts</span>;    <span class="comment">// 指代全部参数</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span> &#123;</span><br><span class="line">    <span class="selector-class">.border</span>(<span class="number">0px</span>,<span class="number">5px</span>,<span class="number">30px</span>,red);   <span class="comment">// 必须带着单位</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span> &#123;</span><br><span class="line">    <span class="selector-class">.border</span>(<span class="number">0px</span>);    </span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#content</span>&#123;<span class="selector-tag">0</span></span><br><span class="line">    <span class="selector-class">.border</span>;    <span class="comment">// 等价于 .border();</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 数量不定参数</span></span><br><span class="line"><span class="selector-class">.boxShadow</span>(...)&#123;  </span><br><span class="line">    <span class="attribute">box-shadow</span>: <span class="variable">@arguments</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法匹配模式"><a href="#方法匹配模式" class="headerlink" title="方法匹配模式"></a>方法匹配模式</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.triangle</span>(top,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent  transparent <span class="variable">@color</span> transparent ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(right,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent <span class="variable">@color</span> transparent  transparent ;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.triangle</span>(bottom,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:<span class="variable">@color</span> transparent  transparent  transparent ;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(left,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-color</span>:transparent  transparent  transparent <span class="variable">@color</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.triangle</span>(<span class="variable">@_</span>,<span class="variable">@width</span>:<span class="number">20px</span>,<span class="variable">@color</span>:<span class="number">#000</span>)&#123;</span><br><span class="line">    <span class="attribute">border-style</span>: solid;</span><br><span class="line">    <span class="attribute">border-width</span>: <span class="variable">@width</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="selector-class">.triangle</span>(left, <span class="number">50px</span>, <span class="number">#999</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 匹配规则</span></span><br><span class="line"><span class="comment">// 第一个参数left要会找到方法中匹配程度最高的，如果匹配程度相同则将全部选择，并存在着样式覆盖替换</span></span><br><span class="line"><span class="comment">// 如果匹配的参数是变量，则将会匹配如@_.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成的 CSS */</span></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">  <span class="attribute">border-color</span>:transparent  transparent  transparent <span class="number">#999</span>;</span><br><span class="line">  <span class="attribute">border-style</span>: solid;</span><br><span class="line">  <span class="attribute">border-width</span>: <span class="number">50px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法的条件筛选"><a href="#方法的条件筛选" class="headerlink" title="方法的条件筛选"></a>方法的条件筛选</h4><p>Less没有if和else，可是他有when</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#card</span>&#123;</span><br><span class="line">    <span class="comment">// and运算符，相当于 与运算&amp;&amp;，必须条件全部符合才会执行</span></span><br><span class="line">    <span class="selector-class">.border</span>(<span class="variable">@width</span>,<span class="variable">@color</span>,<span class="variable">@style</span>) <span class="keyword">when</span> (<span class="variable">@width</span>&gt;<span class="number">100px</span>) <span class="keyword">and</span>(<span class="variable">@color</span>=<span class="number">#999</span>)&#123;</span><br><span class="line">        <span class="attribute">border</span>: <span class="variable">@style</span> <span class="variable">@color</span> <span class="variable">@width</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// not运算符，相当于非运算！，条件为 不符合才会执行</span></span><br><span class="line">    <span class="selector-class">.background</span>(<span class="variable">@color</span>) <span class="keyword">when</span> <span class="keyword">not</span>(<span class="variable">@color</span>&gt;=<span class="number">#222</span>)&#123;</span><br><span class="line">        <span class="attribute">background</span>: <span class="variable">@color</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ,逗号分隔符：相当于 || ，只要有一个符合条件就会执行</span></span><br><span class="line">    <span class="selector-class">.font</span>(<span class="variable">@size</span>:<span class="number">20px</span>) <span class="keyword">when</span> (<span class="variable">@size</span>&gt;<span class="number">50px</span>),(<span class="variable">@size</span>&lt;<span class="number">100px</span>)&#123;</span><br><span class="line">        <span class="attribute">font-size</span>: <span class="variable">@size</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="方法使用-important-会给属性都加上-important。"><a href="#方法使用-important-会给属性都加上-important。" class="headerlink" title="方法使用!important 会给属性都加上!important。"></a>方法使用!important 会给属性都加上!important。</h4><h4 id="循环方法"><a href="#循环方法" class="headerlink" title="循环方法"></a>循环方法</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-tag">Less</span>栅格系统</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.generate-columns</span>(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.generate-columns</span>(<span class="variable">@n</span>, <span class="variable">@i</span>:<span class="number">1</span>) <span class="keyword">when</span> (<span class="variable">@i</span> =&lt; <span class="variable">@n</span>)&#123;</span><br><span class="line">    <span class="selector-class">.column-</span><span class="variable">@&#123;i&#125;</span>&#123;</span><br><span class="line">        <span class="attribute">width</span>: (<span class="variable">@i</span> * <span class="number">100%</span> / <span class="variable">@n</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="selector-class">.generate-columns</span>(<span class="variable">@n</span>.(<span class="variable">@i</span>+<span class="number">1</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"><span class="selector-class">.column-1</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">25%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-2</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-3</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">75%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.column-4</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="属性拼接方法"><a href="#属性拼接方法" class="headerlink" title="属性拼接方法"></a>属性拼接方法</h4><p>+_代表的是空格，+ 代表的是逗号</p>
+<ul>
+<li><p>逗号</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.boxShadow</span>() &#123;</span><br><span class="line">    <span class="selector-tag">box-shadow</span>+: <span class="selector-tag">inset</span> <span class="selector-tag">0</span> <span class="selector-tag">0</span> <span class="selector-tag">10px</span> <span class="selector-id">#555</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="selector-class">.boxShadow</span>();</span><br><span class="line">  <span class="selector-tag">box-shadow</span>+: <span class="selector-tag">0</span> <span class="selector-tag">0</span> <span class="selector-tag">20px</span> <span class="selector-tag">black</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">box-shadow</span>: inset <span class="number">0</span> <span class="number">0</span> <span class="number">10px</span> <span class="number">#555</span>, <span class="number">0</span> <span class="number">0</span> <span class="number">20px</span> black;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>空格</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="selector-class">.Animation</span>() &#123;</span><br><span class="line">  <span class="selector-tag">transform</span>+<span class="selector-tag">_</span>: <span class="selector-tag">scale</span>(<span class="number">2</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="selector-class">.Animation</span>();</span><br><span class="line">  <span class="selector-tag">transform</span>+<span class="selector-tag">_</span>: <span class="selector-tag">rotate</span>(<span class="number">15deg</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 生成的 CSS */</span></span><br><span class="line"><span class="selector-class">.main</span> &#123;</span><br><span class="line">  <span class="attribute">transform</span>: scale(<span class="number">2</span>) rotate(<span class="number">15deg</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>extend 是 Less的一个伪类。它可以继承所匹配声明中的全部样式</p>
+<h4 id="extends-关键字使用"><a href="#extends-关键字使用" class="headerlink" title="extends 关键字使用"></a>extends 关键字使用</h4><figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.animation</span>&#123;</span><br><span class="line">    <span class="attribute">transition</span>: all .<span class="number">3s</span> ease-out;</span><br><span class="line">    <span class="selector-class">.hide</span>&#123;</span><br><span class="line">        <span class="attribute">transform</span>: scale(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:extend(.animation)</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#con</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:extend(.animation</span> <span class="selector-class">.hide</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="selector-class">.animation</span>,<span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">transition</span>: all <span class="number">0.3s</span> ease-out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.animation</span> <span class="selector-class">.hide</span>, <span class="selector-id">#con</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: scale(<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="all全局搜索替换"><a href="#all全局搜索替换" class="headerlink" title="all全局搜索替换"></a>all全局搜索替换</h4><p>使用选择器匹配到的全部声明</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#mian</span>&#123;</span><br><span class="line">    <span class="selector-tag">&amp;</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">        <span class="attribute">content</span>: <span class="string">'Less is good!'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span><span class="selector-pseudo">:extends(</span><span class="selector-id">#main</span> <span class="keyword">all</span>)&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*生成的CSS */</span></span><br><span class="line"><span class="selector-id">#main</span>,<span class="selector-id">#wrap</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-id">#main</span><span class="selector-pseudo">:after</span>, <span class="selector-id">#wrap</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">'Less is good!'</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h2><ol>
+<li>省略文件后缀<figure class="highlight"><table><tr><td class="code"><pre><span class="line">import 'main';    // import 'main.less'</span><br></pre></td></tr></table></figure></li>
+<li>@import 的位置可以随意放置<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@import</span> <span class="string">'style'</span></span><br></pre></td></tr></table></figure></li>
+<li>reference 引入外部文件，但不会把导入的文件编译到最终输出中，只引用<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@import</span> (reference) <span class="string">'bootstrap.less'</span>;</span><br></pre></td></tr></table></figure></li>
+<li>once @import语句的默认行为。表明相同文件只会被导入一次，而随后的导入文件重复的代码都不会被重复解析<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="keyword">@import</span> (once) <span class="string">"foo.less"</span>;</span><br><span class="line"><span class="keyword">@import</span> (once) <span class="string">"foo.less"</span>;      <span class="comment">// 不会被重复解析</span></span><br></pre></td></tr></table></figure></li>
+<li>multiple 使用@import(multiple)允许导入多个同名文件<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.a</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: green;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@import</span> (multiple) <span class="string">'foo.less'</span>;</span><br><span class="line"><span class="keyword">@import</span> (multiple) <span class="string">'foo.less'</span>;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="避免编译"><a href="#避免编译" class="headerlink" title="避免编译"></a>避免编译</h3><p>结构 ~’ 值 ‘</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: <span class="string">~'calc(300px-30px)'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的css</span></span><br><span class="line"><span class="selector-id">#main</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>: calc(<span class="number">300px</span>-<span class="number">30px</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量拼串"><a href="#变量拼串" class="headerlink" title="变量拼串"></a>变量拼串</h3><p>在下面例子中， 实现了不同的 transtion-delay、animation、@keyframes；</p>
+<p>结构： ~’字符@{变量}字符’</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.judge</span>(<span class="variable">@i</span>) <span class="keyword">when</span>(<span class="variable">@i</span>=<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="variable">@size:</span><span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.judge</span>(<span class="variable">@i</span>) <span class="keyword">when</span>(<span class="variable">@i</span>&gt;<span class="number">1</span>)&#123;</span><br><span class="line">  <span class="variable">@size:</span><span class="number">16px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.loopAnimation</span>(<span class="variable">@i</span>) <span class="keyword">when</span> (<span class="variable">@i</span>&lt;<span class="number">16</span>) &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="selector-class">.circle</span><span class="selector-pseudo">:nth-child(</span><span class="variable">@&#123;i&#125;</span>)&#123;</span><br><span class="line">      <span class="selector-class">.judeg</span>(<span class="variable">@i</span>);</span><br><span class="line">      <span class="attribute">border-radius</span>:<span class="variable">@size</span> <span class="variable">@size</span> <span class="number">0</span> <span class="number">0</span>;</span><br><span class="line">      <span class="attribute">animation</span>: <span class="string">~"circle-@&#123;i&#125;"</span> <span class="variable">@duration</span> infinite <span class="variable">@ease</span>;</span><br><span class="line">      <span class="attribute">transition-delay</span>:<span class="string">~"@&#123;i&#125;ms"</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">@keyframes</span> <span class="string">~"circle-@&#123;i&#125;"</span> &#123;</span><br><span class="line">      <span class="comment">// do something...</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="selector-class">.loopAnimation</span>(<span class="variable">@i</span> + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="使用JS"><a href="#使用JS" class="headerlink" title="使用JS"></a>使用JS</h3><p>Less是由JS编写的</p>
+<figure class="highlight less"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* Less */</span></span><br><span class="line"><span class="variable">@content:</span><span class="built_in">`"aaa".toUpperCase()`</span>;</span><br><span class="line"><span class="selector-id">#randomColor</span>&#123;</span><br><span class="line">  <span class="variable">@randomColor:</span> <span class="string">~"rgb(`Math.round(Math.random() * 256)`,`Math.round(Math.random() * 256)`,`Math.round(Math.random() * 256)`)"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="string">~"`Math.round(Math.random() * 100)`px"</span>;</span><br><span class="line">  <span class="selector-tag">&amp;</span><span class="selector-pseudo">:after</span>&#123;</span><br><span class="line">      <span class="attribute">content</span>:<span class="variable">@content</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="attribute">height</span>: <span class="string">~"`window.innerHeight`px"</span>;</span><br><span class="line">  <span class="attribute">alert</span>:<span class="string">~"`alert(1)`"</span>;</span><br><span class="line">  <span class="selector-id">#randomColor</span>();</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="variable">@randomColor</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 生成后的 CSS */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 弹出 1</span></span><br><span class="line"><span class="selector-id">#wrap</span>&#123;</span><br><span class="line">  <span class="attribute">width</span>: 随机值（<span class="number">0</span>~<span class="number">100</span>）px;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">743px</span>;<span class="comment">//由电脑而异</span></span><br><span class="line">  <span class="attribute">background</span>: 随机颜色;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-id">#wrap</span><span class="selector-pseudo">::after</span>&#123;</span><br><span class="line">  <span class="attribute">content</span>:<span class="string">"AAA"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>CSS大乱炖</category>
+      </categories>
+      <tags>
+        <tag>css基础</tag>
+        <tag>Less</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>TCP和UDP</title>
+    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
+    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
+<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
+<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
+<li>超文本传输协议（HTTP）万维网基本协议</li>
+<li>文件传输协议（TFTP简单文件传输协议）</li>
+<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
+<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
+<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
+<li>Internet协议（IP）；</li>
+<li>Internet控制信息协议（ICMP）；</li>
+<li>地址解析协议（ARP）；</li>
+<li>反向地址解析协议（RARP）。</li>
+</ol>
+<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
+<ul>
+<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
+<ul>
+<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
+</ul>
+<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
+<ul>
+<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
+<ul>
+<li>第一次挥手(FIN=1，seq=x)</li>
+</ul>
+<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
+<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
+<ul>
+<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
+</ul>
+<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
+<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
+<ul>
+<li>第三次挥手(FIN=1，seq=y)</li>
+</ul>
+<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
+<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
+<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
+<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
+<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
+<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
+<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
+<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
+<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
+<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
+<ul>
+<li>缩短超时（SYN Timeout）时间</li>
+<li>增加最大半连接数</li>
+<li>过滤网关防护</li>
+<li>SYN cookies技术</li>
+</ul>
+<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
+<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
+<ul>
+<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
+<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
+<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
+<li>UDP 支持多播和广播。（TCP不支持）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cookie 和 Session比较</title>
+    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
+    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
+<a id="more"></a>
+
+<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
+<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
+<p><strong>express中读取还是设置都是在req中</strong>。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
