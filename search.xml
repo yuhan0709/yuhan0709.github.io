@@ -64,149 +64,139 @@
       </tags>
   </entry>
   <entry>
-    <title>Jest+Enzyme前端自动化测试</title>
-    <url>/2019/08/11/Jest-Enzyme%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<h1 id="jest测试"><a href="#jest测试" class="headerlink" title="jest测试"></a>jest测试</h1><p>笔者接触组件库开发已经几月了，目前组件库越做越大，越做越好，但随之而来接入的业务方提的bug也越来越多，这显得前端自动化测试格外重要，此文主要是讲测试入门以及一些思想，具体怎么配置笔者觉得没有必要花心思去整理，网上一搜一大堆。</p>
+    <title>Python数据类型</title>
+    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<li>0x表示16进制</li>
+<li>整数除法<ul>
+<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
+<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-
-<h2 id="测试类型"><a href="#测试类型" class="headerlink" title="测试类型"></a>测试类型</h2><ul>
-<li>单元测试：又称模块测试，对一个模块、类、函数等进行正确性检验工作。目标是隔离程序部件并证明这些单个部件是正确的。一个单元测试提供了代码片断需要满足的严密的书面规约。因此，单元测试带来了一些益处。 单元测试在软件开发过程的早期就能发现问题。</li>
-<li>功能测试：又称黑盒测试，是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。</li>
-<li>集成测试：在单元测试的基础上，将所有模块按照设计要求组装成子系统或者系统，进行测试</li>
-<li>冒烟测试： 在正式全面的测试之前，对主要功能进行的与测试，确认主要功能是否满足需要，软件是否能正常运行</li>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
 </ul>
-<h2 id="jest匹配器"><a href="#jest匹配器" class="headerlink" title="jest匹配器"></a>jest匹配器</h2><ul>
-<li>toBe  (===)</li>
-<li>toEqual</li>
-<li>toBeNull</li>
-<li>toBeTrusty</li>
-<li>toBeFalsy</li>
-<li>toBeGreaterThan(number)</li>
-<li>toBeGreaterThanOrEqual(number)</li>
-<li>toBeLessThan(number)</li>
-<li>toBeLessThanOrEqual(number)</li>
-<li>toBeCloseTo(number);   // 近似</li>
-<li>toContainer</li>
-<li>toMatch可以检查字符串是否与正则表达式匹配</li>
+</li>
+<li>浮点数就是小数</li>
 </ul>
-<p>++jest –watchAll(类似热加载)++</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//toBe 失败</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">one</span>: <span class="number">1</span>&#125;</span><br><span class="line">expect(a).toBe(&#123;<span class="attr">one</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-
-<p>异步函数的测试</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fecthData = <span class="function">(<span class="params">fn</span>) =&gt;</span> &#123;</span><br><span class="line">    axios.get(<span class="string">"http://www.dell-lee.com/react/api/demo.json"</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        fn(res)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//回调类型</span></span><br><span class="line"><span class="keyword">import</span> fetchData <span class="keyword">from</span> <span class="string">'./index.js'</span></span><br><span class="line">test(<span class="string">'fetchData 返回结果为&#123; success:true &#125;'</span>,(done) =&gt; &#123;</span><br><span class="line">    fetchData(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toEqual(&#123;</span><br><span class="line">            success: <span class="literal">true</span></span><br><span class="line">        &#125;);</span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>expect.assertions(1);   //至少要执行一个expect语法,expect.assertions,来测试一定数量的断言被调用，否则fulfilled态promise不会让测试失败</p>
-<h2 id="jest-globals-API"><a href="#jest-globals-API" class="headerlink" title="jest globals API"></a>jest globals API</h2><ul>
-<li>discribe(name,func): 块，一个测试单元的所用果能测试用例可组合为一个块</li>
-<li>it(name,func,timeout): 测试用例，一般一个测试用例测试一个单一功能</li>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
+<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
+<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
 </ul>
-<h3 id="beforeEach和afterEach"><a href="#beforeEach和afterEach" class="headerlink" title="beforeEach和afterEach"></a>beforeEach和afterEach</h3><p>需要为多次测试重复设置的工作，可以使用breforeEach和afterEach。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    initializeCityDatabase();     <span class="comment">//每次测试前都要初始化citybase</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    clearCityDatabase();<span class="comment">// 每次测试之后要清空citybase</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="beforeAll和afterAll"><a href="#beforeAll和afterAll" class="headerlink" title="beforeAll和afterAll"></a>beforeAll和afterAll</h3><p>例如，如果 initializeCityDatabase 和 clearCityDatabase 都返回了 promise ，城市数据库可以在测试中重用，我们就能把我们的测试代码改成这样</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> initializeCityDatabase();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> clearCityDatabase(); </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>全局和describe都拥有上面四个生命周期。</p>
+<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
 <ul>
-<li>但describe的after函数优先级<strong>高于</strong>全局after函数</li>
-<li>describe的before函数优先级要<strong>低于</strong>全局的before函数</li>
+<li><code>and</code>运算，都为True才为True</li>
+<li><code>or</code>运算，有True就为True</li>
+<li><code>not</code>运算, 非运算</li>
 </ul>
-<h2 id="mock函数"><a href="#mock函数" class="headerlink" title="mock函数"></a>mock函数</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();   <span class="comment">// mock函数，捕获函数的调用</span></span><br><span class="line">func.mockReturnValueOnce(<span class="string">'Dell'</span>);  <span class="comment">// mock函数第一次调用的返回值</span></span><br><span class="line"><span class="comment">// func.mock.instance mock函数每次被调用this指向</span></span><br></pre></td></tr></table></figure>
-<p>mock函数中的作用</p>
+<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
 <ul>
-<li>捕获函数的调用和返回结果，以及this和调用顺序（func.mock)</li>
-<li>自由设置返回结 func.mockReturnValueOnce();</li>
-<li>改变内部函数的实现</li>
+<li>变量本身类型不固定的语言称为==动态语言==</li>
+<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
+但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
 </ul>
-<p>通过mock函数来测试异步函数</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> getData = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    axios.get(<span class="string">"/api"</span>).then(<span class="function"><span class="params">res</span>=&gt;</span>res.data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line">jest.mock(<span class="string">"axios"</span>);   <span class="comment">// 用jest来模拟ajax请求</span></span><br><span class="line"></span><br><span class="line">test(<span class="string">"test getData"</span>, <span class="keyword">async</span>()=&gt;&#123;</span><br><span class="line">    axios.get.mockReturnValue(<span class="string">"hello"</span>);   <span class="comment">// 把axios的get请求都返回hello</span></span><br><span class="line">    <span class="keyword">await</span> getData().then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">        expect(data).toBe(<span class="string">"hello"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();</span><br><span class="line">func.mockReturnValue(<span class="string">"hello"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">const</span> func = jest.fn(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line">func.mockImplementation(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func.mockReturnThis();   <span class="comment">//undefined;</span></span><br><span class="line">expect(func.mock.calls[<span class="number">0</span>]).toEqual([<span class="string">'abc'</span>]);    <span class="comment">// 第一次调用这个函数的参数是abc</span></span><br><span class="line">expect(func.toBeCalledWidth(<span class="string">'abc'</span>));  <span class="comment">// 每次调用这个函数的参数都是abc</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">jest.mock(<span class="string">'./demo'</span>);</span><br><span class="line"><span class="keyword">import</span> &#123; fetchData &#125; <span class="keyword">from</span> <span class="string">'./demo'</span>;    <span class="comment">// 这个是从__mocks__中引入的模拟的函数</span></span><br><span class="line"><span class="keyword">const</span> &#123; getNumber &#125; = jest.requireActual(<span class="string">'./demo'</span>);   <span class="comment">// 这个是从真实文件夹中引入的函数。</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="spyOn"><a href="#spyOn" class="headerlink" title="spyOn"></a>spyOn</h2><p><code>jest.spuOn()</code>同样创建一个mock函数,但他比jest.fn()或jest.mock()；更厉害的是，他还会执行被mock的原函数。例如</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"1234567"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> jestfn = jest.mock(fn);   <span class="comment">// 如果执行，不会打印任何东西</span></span><br><span class="line"><span class="keyword">const</span> jestspy = jest.spyOn(fn);   <span class="comment">// 如果执行，会打印出1234567</span></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="snapshot-快照测试"><a href="#snapshot-快照测试" class="headerlink" title="snapshot 快照测试"></a>snapshot 快照测试</h2><p>就是看你生成的快照测试跟原来一不一样，如果原来文件更改，测试会失败，也就是让你确定你是不是要更改原来的文件。</p>
-<p>例如对一个React组件而言，传入相同的props，希望得到相同的输出。这样就可以通过快照测试来完成。</p>
-<p>按 <code>u</code>可以 upadte<br>按 <code>i</code> 可以交互的更新快照</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">expect <span class="keyword">const</span> config = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">        url: <span class="string">"http://localhost"</span>,</span><br><span class="line">        port: <span class="string">"8000"</span>,</span><br><span class="line">        time: <span class="keyword">new</span> <span class="built_in">Date</span>()      <span class="comment">// time是时间类型，会一直改变，所以快照是一直通不过的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试config</span></span><br><span class="line">test(<span class="string">"测试config"</span>,()=&gt;&#123;</span><br><span class="line">    expect(config()).toMatchSnapshot(&#123;</span><br><span class="line">        time: expect.any(<span class="built_in">Date</span>)   <span class="comment">// 这是说希望time只要是时间类型就好</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h2 id="行内snapshot和普通snapshot的区别"><a href="#行内snapshot和普通snapshot的区别" class="headerlink" title="行内snapshot和普通snapshot的区别"></a>行内snapshot和普通snapshot的区别</h2><ul>
-<li>普通: <code>toMacthSnapshot()</code>会把生成的快照存到一个新文件里</li>
-<li>行内: <code>toMatchInlineSnapshot()</code>会把生成的快照作为<code>toMatchInlineSnapshot()</code>的参数</li>
-</ul>
-<h3 id="mock-timer"><a href="#mock-timer" class="headerlink" title="mock timer"></a>mock timer</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> timer = <span class="function">(<span class="params">callback</span>)=&gt;</span>&#123;</span><br><span class="line">    setTimerout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">    &#125;,<span class="number">3000</span>)</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line">    timer(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        expect(<span class="number">1</span>).toBe(<span class="number">1</span>);   <span class="comment">// 等3秒后触发</span></span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用假的timer模拟</span></span><br><span class="line">jest.useFakeTimers();</span><br><span class="line"></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line"><span class="keyword">const</span> fn = jest.fn();</span><br><span class="line">    timer(fn);</span><br><span class="line">   </span><br><span class="line">    jest.runOnlyPendingTimers();  <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line">    只执行已经在队列中的timers，不会执行还未被创建的timers</span><br><span class="line">   </span><br><span class="line">    jest.runAllTimers();    <span class="comment">// 避免所有的等待时间（所有的时间函数都会被触发）</span></span><br><span class="line">    </span><br><span class="line">    jest.advanceTimersByTime(<span class="number">6000</span>);   <span class="comment">// 快进时间</span></span><br><span class="line">    </span><br><span class="line">    expect(fn).toHaveBeenCalledTimers(<span class="number">1</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了避免advanceTimersByTime()对其他测试用例的影响，可以用</span></span><br><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    jest.useFakeTimers();    <span class="comment">// 每次测试前都初始化一个实力对象。</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="mock-类"><a href="#mock-类" class="headerlink" title="mock 类"></a>mock 类</h2><ul>
-<li>使用<code>jest.mock(moduleName,factory,options)</code>自动mock模块，jest会自动帮我们mock指定模块中的函数，<code>factory</code>和<code>option</code>参数是可选的。<code>factory</code><h3 id="jest来测试ES6中的类"><a href="#jest来测试ES6中的类" class="headerlink" title="jest来测试ES6中的类"></a>jest来测试ES6中的类</h3>如果引入的文件是一个类的话，jest会默认把这个类里面的构造方法和类方法用jest.fn()代替。</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 源文件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Util</span></span>&#123;</span><br><span class="line">    init() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    a() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    c() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Util;</span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">"./util"</span>);     <span class="comment">// 引入类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line"><span class="keyword">const</span> Util = jest.fn();</span><br><span class="line">Util.a = jest.fn();</span><br><span class="line">Util.c = jest.fn();</span><br></pre></td></tr></table></figure>
-
-<h2 id="TDD-（Test-Driven-Development-测试驱动开发"><a href="#TDD-（Test-Driven-Development-测试驱动开发" class="headerlink" title="TDD （Test Driven Development)  测试驱动开发"></a>TDD （Test Driven Development)  测试驱动开发</h2><ol>
-<li>编写测试用例</li>
-<li>运行测试，测试用例无法通过测试</li>
-<li>编写代码，使测试用例通过测试</li>
-<li>优化代码完成开发</li>
-<li>新功能则重复上述步骤</li>
-</ol>
-<h3 id="TDD优势"><a href="#TDD优势" class="headerlink" title="TDD优势"></a>TDD优势</h3><ol>
-<li>长期减少回归bug：当改变项目代码，所有测试用例会重新运行，一旦测试用例出错，就会发现原来的代码因为回归产生了bug</li>
-<li>代码质量更高（在写测试的时候对代码有了比较完善的思考）</li>
-<li>测试覆盖率高</li>
-</ol>
-<h2 id="BDD-Behavior-Driven-Development-行为驱动开发"><a href="#BDD-Behavior-Driven-Development-行为驱动开发" class="headerlink" title="BDD(Behavior Driven Development) 行为驱动开发"></a>BDD(Behavior Driven Development) 行为驱动开发</h2><p>通过与利益相关者的讨论取得对预期的软件行为的清醒认识。它通过用自然语言书写非程序员可读的测试用例扩展了测试驱动开发方法。行为驱动开发人员使用混合了领域中统一的语言的母语语言来描述他们的代码的目的。这让开发者得以把精力集中在代码应该怎么写，而不是技术细节上，而且也最大程度的减少了将代码编写者的技术语言与商业客户、用户、利益相关者、项目管理者等的领域语言之间来回翻译的代价。</p>
-<h2 id="DDD-Domain-Drive-Design-领域驱动开发"><a href="#DDD-Domain-Drive-Design-领域驱动开发" class="headerlink" title="DDD(Domain Drive Design) 领域驱动开发"></a>DDD(Domain Drive Design) 领域驱动开发</h2><p>核心：</p>
+<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
 <ul>
-<li>统一语言(软件的开发人员/使用人员都使用同一套语言，即对某个概念，名词的认知是统一的）</li>
-<li>面向领域（以领域去思考问题，而不是模块）</li>
-</ul>
-<h3 id="DDD优势"><a href="#DDD优势" class="headerlink" title="DDD优势"></a>DDD优势</h3><ol>
-<li>使用统一的一套通用语言，沟通成本会大大减小。</li>
-<li>对使用产品的用户有好处，他能在产品不断更新过程中，有一套统一流畅的体验。用户不用在每次软件更新时都要抱怨为什么之前的一个数据保存后没有用到了</li>
-<li>面向领域去开发产品有助于我们深入分析产品的内在逻辑，专注于解决当前产品的核心问题，而不是冗余的做很多功能模块。</li>
-</ol>
-<h1 id="Enzyme"><a href="#Enzyme" class="headerlink" title="Enzyme"></a>Enzyme</h1><p>对ReactDOM.render进行包装</p>
-<h2 id="三种渲染方式"><a href="#三种渲染方式" class="headerlink" title="三种渲染方式"></a>三种渲染方式</h2><ul>
-<li><code>shallow</code> 浅渲染（浅复制）,仅对当前jsx结构内的顶级组件进行渲染，而不对这些组件内部嵌套的子组件进行渲染，因此行能很快</li>
-<li><code>mount</code> 会进行完全渲染，而且完全依赖DOM API, 也就是说mount渲染结果跟浏览器结果一样, 结合jsdom这个工具，可以对上面提到的有内部子组件实现复杂交互功能的组件进行测试</li>
-<li><code>render</code>也会进行完整渲染，但不依赖DOM API, 而是渲染成HTML结构。</li>
-</ul>
-<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
-<li>simulate(event,mock): 用来触发事件，但一定注意在原组件要注册这个事件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> mockChange = jest.fn()</span><br><span class="line">wrapper = mount(<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;mockChange&#125;/</span>&gt;</span></span>)</span><br><span class="line">wrapper.simulate(<span class="string">'change'</span>,&#123;<span class="attr">target</span>: &#123;<span class="attr">value</span>: <span class="string">'1'</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<li>ord()函数获取字符的整数表示</li>
+<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
 
+</li>
+</ul>
+<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
+<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
+
+<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
+
+<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>instance() =&gt; ReactComponent|DOMComponent ：返回组件的实例。在React 16，无状态组件会返回null（即不是以class创建的组件）</li>
-<li>find(selector): 查找节点，参数可以是css选择器、组件内部构造函数、组件类名等</li>
-<li>at(index): 返回一个数组对象的第几个元素</li>
-<li>contains(nodeOrNodes)：当前对象是否包含参数重点 node，参数类型为react对象或对象数组</li>
-<li>text()：返回当前组件的文本内容</li>
-<li>html()：返回当前组件的HTML代码形式</li>
-<li>props()：返回根组件所有属性</li>
-<li>prop(key)：返回根组件指定属性</li>
-<li>state()：返回根组件的状态</li>
-<li>setState(nextState)：设置根组件的状态</li>
-<li>setProps(nextProps)：设置根组件的属性</li>
-<li>debug(): 会打印出测试实际渲染出的内容字符串</li>
-<li>first()：返回节点数组的第一个元素</li>
-<li>last()：返回节点数组的最后一个节点</li>
+<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+</li>
 </ul>
-<h1 id="好文分享"><a href="#好文分享" class="headerlink" title="好文分享"></a>好文分享</h1><ul>
-<li><a href="https://juejin.im/post/59b5e79f6fb9a00a600f4216" target="_blank" rel="noopener">Jest模拟函数、timer、类</a></li>
-<li><a href="https://segmentfault.com/a/1190000016717356" target="_blank" rel="noopener">Jest fn、mock、spyOn</a></li>
-<li><a href="http://iceiceice.top/2018/12/29/introduce-jest/#jest.mock%20and%20jest.spyOn" target="_blank" rel="noopener">Jest 入门</a></li>
+<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>替换内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%d</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制整数</td>
+</tr>
+</tbody></table>
+<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
+<ul>
+<li>append(elem) 向list中追加元素到末尾</li>
+<li>insert(i, elem) 把元素插入到指定位置</li>
+<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
+
+</li>
 </ul>
+<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
+<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
+<li>if else</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
+<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>break</code>退出循环</li>
+<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
+<ul>
+<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
+<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
+<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
+<ul>
+<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
+<li>remove(key) 可以删除元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
-        <category>一入React深似海</category>
+        <category>Python</category>
       </categories>
       <tags>
-        <tag>React测试</tag>
+        <tag>后端</tag>
       </tags>
   </entry>
   <entry>
@@ -429,142 +419,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Python数据类型</title>
-    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
-<li>0x表示16进制</li>
-<li>整数除法<ul>
-<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
-<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
-</ul>
-</li>
-<li>浮点数就是小数</li>
-</ul>
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
-<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
-<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
-</ul>
-<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
-<ul>
-<li><code>and</code>运算，都为True才为True</li>
-<li><code>or</code>运算，有True就为True</li>
-<li><code>not</code>运算, 非运算</li>
-</ul>
-<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
-<ul>
-<li>变量本身类型不固定的语言称为==动态语言==</li>
-<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
-<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
-但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
-</ul>
-<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
-<ul>
-<li>ord()函数获取字符的整数表示</li>
-<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
-<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
-
-<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
-
-<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
-
-
-<table>
-<thead>
-<tr>
-<th>占位符</th>
-<th>替换内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>%d</td>
-<td>整数</td>
-</tr>
-<tr>
-<td>%f</td>
-<td>浮点数</td>
-</tr>
-<tr>
-<td>%s</td>
-<td>字符串</td>
-</tr>
-<tr>
-<td>%x</td>
-<td>十六进制整数</td>
-</tr>
-</tbody></table>
-<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
-<ul>
-<li>append(elem) 向list中追加元素到末尾</li>
-<li>insert(i, elem) 把元素插入到指定位置</li>
-<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
-<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
-
-<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
-<li>if else</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
-<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
-<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
-<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
-<li><code>break</code>退出循环</li>
-<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
-<ul>
-<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
-<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
-<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
-<ul>
-<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
-<li>remove(key) 可以删除元素</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
-<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Cookie 和 Session比较</title>
     <url>/2018/10/28/cookie%E5%92%8Csession/</url>
     <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
@@ -582,6 +436,152 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Jest+Enzyme前端自动化测试</title>
+    <url>/2019/08/11/Jest-Enzyme%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<h1 id="jest测试"><a href="#jest测试" class="headerlink" title="jest测试"></a>jest测试</h1><p>笔者接触组件库开发已经几月了，目前组件库越做越大，越做越好，但随之而来接入的业务方提的bug也越来越多，这显得前端自动化测试格外重要，此文主要是讲测试入门以及一些思想，具体怎么配置笔者觉得没有必要花心思去整理，网上一搜一大堆。</p>
+<a id="more"></a>
+
+<h2 id="测试类型"><a href="#测试类型" class="headerlink" title="测试类型"></a>测试类型</h2><ul>
+<li>单元测试：又称模块测试，对一个模块、类、函数等进行正确性检验工作。目标是隔离程序部件并证明这些单个部件是正确的。一个单元测试提供了代码片断需要满足的严密的书面规约。因此，单元测试带来了一些益处。 单元测试在软件开发过程的早期就能发现问题。</li>
+<li>功能测试：又称黑盒测试，是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。</li>
+<li>集成测试：在单元测试的基础上，将所有模块按照设计要求组装成子系统或者系统，进行测试</li>
+<li>冒烟测试： 在正式全面的测试之前，对主要功能进行的与测试，确认主要功能是否满足需要，软件是否能正常运行</li>
+</ul>
+<h2 id="jest匹配器"><a href="#jest匹配器" class="headerlink" title="jest匹配器"></a>jest匹配器</h2><ul>
+<li>toBe  (===)</li>
+<li>toEqual</li>
+<li>toBeNull</li>
+<li>toBeTrusty</li>
+<li>toBeFalsy</li>
+<li>toBeGreaterThan(number)</li>
+<li>toBeGreaterThanOrEqual(number)</li>
+<li>toBeLessThan(number)</li>
+<li>toBeLessThanOrEqual(number)</li>
+<li>toBeCloseTo(number);   // 近似</li>
+<li>toContainer</li>
+<li>toMatch可以检查字符串是否与正则表达式匹配</li>
+</ul>
+<p>++jest –watchAll(类似热加载)++</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//toBe 失败</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">one</span>: <span class="number">1</span>&#125;</span><br><span class="line">expect(a).toBe(&#123;<span class="attr">one</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p>异步函数的测试</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fecthData = <span class="function">(<span class="params">fn</span>) =&gt;</span> &#123;</span><br><span class="line">    axios.get(<span class="string">"http://www.dell-lee.com/react/api/demo.json"</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        fn(res)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//回调类型</span></span><br><span class="line"><span class="keyword">import</span> fetchData <span class="keyword">from</span> <span class="string">'./index.js'</span></span><br><span class="line">test(<span class="string">'fetchData 返回结果为&#123; success:true &#125;'</span>,(done) =&gt; &#123;</span><br><span class="line">    fetchData(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toEqual(&#123;</span><br><span class="line">            success: <span class="literal">true</span></span><br><span class="line">        &#125;);</span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>expect.assertions(1);   //至少要执行一个expect语法,expect.assertions,来测试一定数量的断言被调用，否则fulfilled态promise不会让测试失败</p>
+<h2 id="jest-globals-API"><a href="#jest-globals-API" class="headerlink" title="jest globals API"></a>jest globals API</h2><ul>
+<li>discribe(name,func): 块，一个测试单元的所用果能测试用例可组合为一个块</li>
+<li>it(name,func,timeout): 测试用例，一般一个测试用例测试一个单一功能</li>
+</ul>
+<h3 id="beforeEach和afterEach"><a href="#beforeEach和afterEach" class="headerlink" title="beforeEach和afterEach"></a>beforeEach和afterEach</h3><p>需要为多次测试重复设置的工作，可以使用breforeEach和afterEach。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    initializeCityDatabase();     <span class="comment">//每次测试前都要初始化citybase</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    clearCityDatabase();<span class="comment">// 每次测试之后要清空citybase</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="beforeAll和afterAll"><a href="#beforeAll和afterAll" class="headerlink" title="beforeAll和afterAll"></a>beforeAll和afterAll</h3><p>例如，如果 initializeCityDatabase 和 clearCityDatabase 都返回了 promise ，城市数据库可以在测试中重用，我们就能把我们的测试代码改成这样</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> initializeCityDatabase();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> clearCityDatabase(); </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>全局和describe都拥有上面四个生命周期。</p>
+<ul>
+<li>但describe的after函数优先级<strong>高于</strong>全局after函数</li>
+<li>describe的before函数优先级要<strong>低于</strong>全局的before函数</li>
+</ul>
+<h2 id="mock函数"><a href="#mock函数" class="headerlink" title="mock函数"></a>mock函数</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();   <span class="comment">// mock函数，捕获函数的调用</span></span><br><span class="line">func.mockReturnValueOnce(<span class="string">'Dell'</span>);  <span class="comment">// mock函数第一次调用的返回值</span></span><br><span class="line"><span class="comment">// func.mock.instance mock函数每次被调用this指向</span></span><br></pre></td></tr></table></figure>
+<p>mock函数中的作用</p>
+<ul>
+<li>捕获函数的调用和返回结果，以及this和调用顺序（func.mock)</li>
+<li>自由设置返回结 func.mockReturnValueOnce();</li>
+<li>改变内部函数的实现</li>
+</ul>
+<p>通过mock函数来测试异步函数</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> getData = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    axios.get(<span class="string">"/api"</span>).then(<span class="function"><span class="params">res</span>=&gt;</span>res.data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line">jest.mock(<span class="string">"axios"</span>);   <span class="comment">// 用jest来模拟ajax请求</span></span><br><span class="line"></span><br><span class="line">test(<span class="string">"test getData"</span>, <span class="keyword">async</span>()=&gt;&#123;</span><br><span class="line">    axios.get.mockReturnValue(<span class="string">"hello"</span>);   <span class="comment">// 把axios的get请求都返回hello</span></span><br><span class="line">    <span class="keyword">await</span> getData().then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">        expect(data).toBe(<span class="string">"hello"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();</span><br><span class="line">func.mockReturnValue(<span class="string">"hello"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">const</span> func = jest.fn(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line">func.mockImplementation(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func.mockReturnThis();   <span class="comment">//undefined;</span></span><br><span class="line">expect(func.mock.calls[<span class="number">0</span>]).toEqual([<span class="string">'abc'</span>]);    <span class="comment">// 第一次调用这个函数的参数是abc</span></span><br><span class="line">expect(func.toBeCalledWidth(<span class="string">'abc'</span>));  <span class="comment">// 每次调用这个函数的参数都是abc</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">jest.mock(<span class="string">'./demo'</span>);</span><br><span class="line"><span class="keyword">import</span> &#123; fetchData &#125; <span class="keyword">from</span> <span class="string">'./demo'</span>;    <span class="comment">// 这个是从__mocks__中引入的模拟的函数</span></span><br><span class="line"><span class="keyword">const</span> &#123; getNumber &#125; = jest.requireActual(<span class="string">'./demo'</span>);   <span class="comment">// 这个是从真实文件夹中引入的函数。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="spyOn"><a href="#spyOn" class="headerlink" title="spyOn"></a>spyOn</h2><p><code>jest.spuOn()</code>同样创建一个mock函数,但他比jest.fn()或jest.mock()；更厉害的是，他还会执行被mock的原函数。例如</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"1234567"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> jestfn = jest.mock(fn);   <span class="comment">// 如果执行，不会打印任何东西</span></span><br><span class="line"><span class="keyword">const</span> jestspy = jest.spyOn(fn);   <span class="comment">// 如果执行，会打印出1234567</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="snapshot-快照测试"><a href="#snapshot-快照测试" class="headerlink" title="snapshot 快照测试"></a>snapshot 快照测试</h2><p>就是看你生成的快照测试跟原来一不一样，如果原来文件更改，测试会失败，也就是让你确定你是不是要更改原来的文件。</p>
+<p>例如对一个React组件而言，传入相同的props，希望得到相同的输出。这样就可以通过快照测试来完成。</p>
+<p>按 <code>u</code>可以 upadte<br>按 <code>i</code> 可以交互的更新快照</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">expect <span class="keyword">const</span> config = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">        url: <span class="string">"http://localhost"</span>,</span><br><span class="line">        port: <span class="string">"8000"</span>,</span><br><span class="line">        time: <span class="keyword">new</span> <span class="built_in">Date</span>()      <span class="comment">// time是时间类型，会一直改变，所以快照是一直通不过的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试config</span></span><br><span class="line">test(<span class="string">"测试config"</span>,()=&gt;&#123;</span><br><span class="line">    expect(config()).toMatchSnapshot(&#123;</span><br><span class="line">        time: expect.any(<span class="built_in">Date</span>)   <span class="comment">// 这是说希望time只要是时间类型就好</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="行内snapshot和普通snapshot的区别"><a href="#行内snapshot和普通snapshot的区别" class="headerlink" title="行内snapshot和普通snapshot的区别"></a>行内snapshot和普通snapshot的区别</h2><ul>
+<li>普通: <code>toMacthSnapshot()</code>会把生成的快照存到一个新文件里</li>
+<li>行内: <code>toMatchInlineSnapshot()</code>会把生成的快照作为<code>toMatchInlineSnapshot()</code>的参数</li>
+</ul>
+<h3 id="mock-timer"><a href="#mock-timer" class="headerlink" title="mock timer"></a>mock timer</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> timer = <span class="function">(<span class="params">callback</span>)=&gt;</span>&#123;</span><br><span class="line">    setTimerout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">    &#125;,<span class="number">3000</span>)</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line">    timer(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        expect(<span class="number">1</span>).toBe(<span class="number">1</span>);   <span class="comment">// 等3秒后触发</span></span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用假的timer模拟</span></span><br><span class="line">jest.useFakeTimers();</span><br><span class="line"></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line"><span class="keyword">const</span> fn = jest.fn();</span><br><span class="line">    timer(fn);</span><br><span class="line">   </span><br><span class="line">    jest.runOnlyPendingTimers();  <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line">    只执行已经在队列中的timers，不会执行还未被创建的timers</span><br><span class="line">   </span><br><span class="line">    jest.runAllTimers();    <span class="comment">// 避免所有的等待时间（所有的时间函数都会被触发）</span></span><br><span class="line">    </span><br><span class="line">    jest.advanceTimersByTime(<span class="number">6000</span>);   <span class="comment">// 快进时间</span></span><br><span class="line">    </span><br><span class="line">    expect(fn).toHaveBeenCalledTimers(<span class="number">1</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了避免advanceTimersByTime()对其他测试用例的影响，可以用</span></span><br><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    jest.useFakeTimers();    <span class="comment">// 每次测试前都初始化一个实力对象。</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="mock-类"><a href="#mock-类" class="headerlink" title="mock 类"></a>mock 类</h2><ul>
+<li>使用<code>jest.mock(moduleName,factory,options)</code>自动mock模块，jest会自动帮我们mock指定模块中的函数，<code>factory</code>和<code>option</code>参数是可选的。<code>factory</code><h3 id="jest来测试ES6中的类"><a href="#jest来测试ES6中的类" class="headerlink" title="jest来测试ES6中的类"></a>jest来测试ES6中的类</h3>如果引入的文件是一个类的话，jest会默认把这个类里面的构造方法和类方法用jest.fn()代替。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 源文件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Util</span></span>&#123;</span><br><span class="line">    init() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    a() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    c() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Util;</span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">"./util"</span>);     <span class="comment">// 引入类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line"><span class="keyword">const</span> Util = jest.fn();</span><br><span class="line">Util.a = jest.fn();</span><br><span class="line">Util.c = jest.fn();</span><br></pre></td></tr></table></figure>
+
+<h2 id="TDD-（Test-Driven-Development-测试驱动开发"><a href="#TDD-（Test-Driven-Development-测试驱动开发" class="headerlink" title="TDD （Test Driven Development)  测试驱动开发"></a>TDD （Test Driven Development)  测试驱动开发</h2><ol>
+<li>编写测试用例</li>
+<li>运行测试，测试用例无法通过测试</li>
+<li>编写代码，使测试用例通过测试</li>
+<li>优化代码完成开发</li>
+<li>新功能则重复上述步骤</li>
+</ol>
+<h3 id="TDD优势"><a href="#TDD优势" class="headerlink" title="TDD优势"></a>TDD优势</h3><ol>
+<li>长期减少回归bug：当改变项目代码，所有测试用例会重新运行，一旦测试用例出错，就会发现原来的代码因为回归产生了bug</li>
+<li>代码质量更高（在写测试的时候对代码有了比较完善的思考）</li>
+<li>测试覆盖率高</li>
+</ol>
+<h2 id="BDD-Behavior-Driven-Development-行为驱动开发"><a href="#BDD-Behavior-Driven-Development-行为驱动开发" class="headerlink" title="BDD(Behavior Driven Development) 行为驱动开发"></a>BDD(Behavior Driven Development) 行为驱动开发</h2><p>通过与利益相关者的讨论取得对预期的软件行为的清醒认识。它通过用自然语言书写非程序员可读的测试用例扩展了测试驱动开发方法。行为驱动开发人员使用混合了领域中统一的语言的母语语言来描述他们的代码的目的。这让开发者得以把精力集中在代码应该怎么写，而不是技术细节上，而且也最大程度的减少了将代码编写者的技术语言与商业客户、用户、利益相关者、项目管理者等的领域语言之间来回翻译的代价。</p>
+<h2 id="DDD-Domain-Drive-Design-领域驱动开发"><a href="#DDD-Domain-Drive-Design-领域驱动开发" class="headerlink" title="DDD(Domain Drive Design) 领域驱动开发"></a>DDD(Domain Drive Design) 领域驱动开发</h2><p>核心：</p>
+<ul>
+<li>统一语言(软件的开发人员/使用人员都使用同一套语言，即对某个概念，名词的认知是统一的）</li>
+<li>面向领域（以领域去思考问题，而不是模块）</li>
+</ul>
+<h3 id="DDD优势"><a href="#DDD优势" class="headerlink" title="DDD优势"></a>DDD优势</h3><ol>
+<li>使用统一的一套通用语言，沟通成本会大大减小。</li>
+<li>对使用产品的用户有好处，他能在产品不断更新过程中，有一套统一流畅的体验。用户不用在每次软件更新时都要抱怨为什么之前的一个数据保存后没有用到了</li>
+<li>面向领域去开发产品有助于我们深入分析产品的内在逻辑，专注于解决当前产品的核心问题，而不是冗余的做很多功能模块。</li>
+</ol>
+<h1 id="Enzyme"><a href="#Enzyme" class="headerlink" title="Enzyme"></a>Enzyme</h1><p>对ReactDOM.render进行包装</p>
+<h2 id="三种渲染方式"><a href="#三种渲染方式" class="headerlink" title="三种渲染方式"></a>三种渲染方式</h2><ul>
+<li><code>shallow</code> 浅渲染（浅复制）,仅对当前jsx结构内的顶级组件进行渲染，而不对这些组件内部嵌套的子组件进行渲染，因此行能很快</li>
+<li><code>mount</code> 会进行完全渲染，而且完全依赖DOM API, 也就是说mount渲染结果跟浏览器结果一样, 结合jsdom这个工具，可以对上面提到的有内部子组件实现复杂交互功能的组件进行测试</li>
+<li><code>render</code>也会进行完整渲染，但不依赖DOM API, 而是渲染成HTML结构。</li>
+</ul>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li>simulate(event,mock): 用来触发事件，但一定注意在原组件要注册这个事件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> mockChange = jest.fn()</span><br><span class="line">wrapper = mount(<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;mockChange&#125;/</span>&gt;</span></span>)</span><br><span class="line">wrapper.simulate(<span class="string">'change'</span>,&#123;<span class="attr">target</span>: &#123;<span class="attr">value</span>: <span class="string">'1'</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>instance() =&gt; ReactComponent|DOMComponent ：返回组件的实例。在React 16，无状态组件会返回null（即不是以class创建的组件）</li>
+<li>find(selector): 查找节点，参数可以是css选择器、组件内部构造函数、组件类名等</li>
+<li>at(index): 返回一个数组对象的第几个元素</li>
+<li>contains(nodeOrNodes)：当前对象是否包含参数重点 node，参数类型为react对象或对象数组</li>
+<li>text()：返回当前组件的文本内容</li>
+<li>html()：返回当前组件的HTML代码形式</li>
+<li>props()：返回根组件所有属性</li>
+<li>prop(key)：返回根组件指定属性</li>
+<li>state()：返回根组件的状态</li>
+<li>setState(nextState)：设置根组件的状态</li>
+<li>setProps(nextProps)：设置根组件的属性</li>
+<li>debug(): 会打印出测试实际渲染出的内容字符串</li>
+<li>first()：返回节点数组的第一个元素</li>
+<li>last()：返回节点数组的最后一个节点</li>
+</ul>
+<h1 id="好文分享"><a href="#好文分享" class="headerlink" title="好文分享"></a>好文分享</h1><ul>
+<li><a href="https://juejin.im/post/59b5e79f6fb9a00a600f4216" target="_blank" rel="noopener">Jest模拟函数、timer、类</a></li>
+<li><a href="https://segmentfault.com/a/1190000016717356" target="_blank" rel="noopener">Jest fn、mock、spyOn</a></li>
+<li><a href="http://iceiceice.top/2018/12/29/introduce-jest/#jest.mock%20and%20jest.spyOn" target="_blank" rel="noopener">Jest 入门</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React测试</tag>
       </tags>
   </entry>
   <entry>
@@ -767,44 +767,6 @@
       </tags>
   </entry>
   <entry>
-    <title>你不知道的JSON.stringify</title>
-    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
-    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
-<a id="more"></a>
-<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
-<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
-</ul>
-<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
-<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
-
-<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
-<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
-<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
-<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
-]]></content>
-      <categories>
-        <category>JS基础</category>
-      </categories>
-      <tags>
-        <tag>朝花夕拾</tag>
-        <tag>JS基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>从购买服务器到服务器部署mongodb</title>
     <url>/2020/04/08/%E4%BB%8E%E8%B4%AD%E4%B9%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%83%A8%E7%BD%B2mongodb/</url>
     <content><![CDATA[<h1 id="阿里云服务器部署mongodb"><a href="#阿里云服务器部署mongodb" class="headerlink" title="阿里云服务器部署mongodb"></a>阿里云服务器部署mongodb</h1><p>需求背景：笔者最近在准备开始着手开发毕业设计，是跟另一个腾讯校招的同学一起合作开发一个 电商运营的数据分析全栈系统。所以涉及到一个合作共享数据库的这个需求，故使用远程<code>mongodb</code>数据库。</p>
@@ -954,6 +916,44 @@
       </categories>
       <tags>
         <tag>web后端</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你不知道的JSON.stringify</title>
+    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
+    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
+<a id="more"></a>
+<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
+<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
+</ul>
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
+<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
+
+<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
+<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
+<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
+<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>朝花夕拾</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
