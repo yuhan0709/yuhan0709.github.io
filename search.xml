@@ -210,6 +210,142 @@
       </tags>
   </entry>
   <entry>
+    <title>Python数据类型</title>
+    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
+<li>0x表示16进制</li>
+<li>整数除法<ul>
+<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
+<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
+</ul>
+</li>
+<li>浮点数就是小数</li>
+</ul>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
+<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
+<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
+</ul>
+<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
+<ul>
+<li><code>and</code>运算，都为True才为True</li>
+<li><code>or</code>运算，有True就为True</li>
+<li><code>not</code>运算, 非运算</li>
+</ul>
+<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
+<ul>
+<li>变量本身类型不固定的语言称为==动态语言==</li>
+<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
+<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
+但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
+</ul>
+<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
+<ul>
+<li>ord()函数获取字符的整数表示</li>
+<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
+<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
+
+<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
+
+<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
+
+
+<table>
+<thead>
+<tr>
+<th>占位符</th>
+<th>替换内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%d</td>
+<td>整数</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>浮点数</td>
+</tr>
+<tr>
+<td>%s</td>
+<td>字符串</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制整数</td>
+</tr>
+</tbody></table>
+<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
+<ul>
+<li>append(elem) 向list中追加元素到末尾</li>
+<li>insert(i, elem) 把元素插入到指定位置</li>
+<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
+<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
+
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
+<li>if else</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
+<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
+<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
+<li><code>break</code>退出循环</li>
+<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
+<ul>
+<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
+<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
+<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
+<ul>
+<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
+<li>remove(key) 可以删除元素</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>后端</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis基础入门</title>
     <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
@@ -463,162 +599,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Cookie 和 Session比较</title>
-    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
-    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
-<a id="more"></a>
-
-<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
-<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
-<p><strong>express中读取还是设置都是在req中</strong>。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Python数据类型</title>
-    <url>/2019/06/12/Python%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><h2 id="整数"><a href="#整数" class="headerlink" title="整数"></a>整数</h2><ul>
-<li>0x表示16进制</li>
-<li>整数除法<ul>
-<li><code>/</code>:运算结果是浮点数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;3    3.3333333333333333333335</span><br><span class="line">&gt;&gt;&gt; 9&#x2F;3     3.0</span><br></pre></td></tr></table></figure></li>
-<li><code>//</code>: 运算结果是整数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; 10&#x2F;&#x2F;3   3</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h2 id="浮点数"><a href="#浮点数" class="headerlink" title="浮点数"></a>浮点数</h2></li>
-</ul>
-</li>
-<li>浮点数就是小数</li>
-</ul>
-<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><ul>
-<li>关于转义<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="string">'I\'m \"OK\"!'</span>  <span class="comment"># 相当于 I'm "OK"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># \n表示换行</span></span><br><span class="line">print(<span class="string">'\\\n\\'</span>)</span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">'\\\t\\'</span>)</span><br><span class="line"><span class="comment"># \   \</span></span><br><span class="line"></span><br><span class="line">print(<span class="string">r'\\\t\\'</span><span class="string">')</span></span><br><span class="line"><span class="string"># \\\t\\</span></span><br></pre></td></tr></table></figure></li>
-<li>用<code>\n</code>写在一行不好阅读，为了简化，Python允许用<code>&#39;&#39;&#39;...&#39;&#39;&#39;</code>格式来表示多行内容</li>
-</ul>
-<h2 id="布尔值"><a href="#布尔值" class="headerlink" title="布尔值"></a>布尔值</h2><p>只有<code>True</code>和<code>False</code>两种布尔值</p>
-<ul>
-<li><code>and</code>运算，都为True才为True</li>
-<li><code>or</code>运算，有True就为True</li>
-<li><code>not</code>运算, 非运算</li>
-</ul>
-<h2 id="空值"><a href="#空值" class="headerlink" title="空值"></a>空值</h2><p><code>None</code>表示空值，<code>None</code>不能理解为<code>0</code>，<code>0</code>有意义，而<code>None</code>是空值。</p>
-<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>必须以英文、数字和_组合，且不能是数字开头</p>
-<ul>
-<li>变量本身类型不固定的语言称为==动态语言==</li>
-<li>在定义变量时指定的变量类型，称为==静态语言==<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; 例如</span><br><span class="line">a &#x3D; 1;  &#x2F;&#x2F; 动态语言</span><br><span class="line">a &#x3D; &quot;ABC&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int b &#x3D; 123;</span><br><span class="line">b &#x3D; &quot;ABC&quot;; &#x2F;&#x2F;错误</span><br></pre></td></tr></table></figure>
-<h2 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h2>常量就是不能变的量，在Python中全部用大写的变量名表示常量<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">PI &#x3D; 3.14159265359</span><br></pre></td></tr></table></figure>
-但事实上，PI也是一个变量，只是大家约定俗成将PI视为常量，如果你一定要改变他的值，也不是不可以</li>
-</ul>
-<h2 id="Python的字符串和编码"><a href="#Python的字符串和编码" class="headerlink" title="Python的字符串和编码"></a>Python的字符串和编码</h2><p>Python提供了</p>
-<ul>
-<li>ord()函数获取字符的整数表示</li>
-<li>chr()函数把编码转化为对应的字符<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; ord(&quot;A&quot;)</span><br><span class="line">65</span><br><span class="line">&gt;&gt;&gt; ord(&quot;中&quot;)</span><br><span class="line">20013</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; chr(66)</span><br><span class="line">&#39;B&#39;</span><br><span class="line">&gt;&gt;&gt; chr(25591)</span><br><span class="line">&#39;文&#39;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>Python的字符串类型是<code>str</code>，在内存中以Unicode表示，一个字符对应若干字节。</p>
-<p>如果在网络上传输，或者保存到磁盘上，就需要把<code>str</code>变为以字节为单位的<code>bytes</code></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">x &#x3D; b&#39;ABC&#39;  &#x2F;&#x2F; bytes类型的数据用带&#96;b&#96;前缀的单引号或者双引号表示</span><br></pre></td></tr></table></figure>
-
-<p>以Unicode表示的<code>str</code>通过<code>encode()</code>方法可以编码为指定的<code>bytes</code>(类似转码)</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;ABC&#39;.encode(&#39;ascii&#39;)</span><br><span class="line">b&#39;ABC&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;中文&#39;.encode(&#39;utf-8&#39;)</span><br><span class="line">b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br></pre></td></tr></table></figure>
-
-<p>反过来，如果我们从网络或磁盘上读取了字节流，那么读到的数据就是<code>bytes</code>，要把<code>bytes</code>变为<code>str</code>。需要用<code>decode()</code>方法。（类似解码）</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; b&#39;ABC&#39;.decode(&#39;ascii&#39;)</span><br><span class="line">&#39;ABC&#39;</span><br><span class="line">&gt;&gt;&gt; b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;</span><br><span class="line">&#39;中文&#39;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>len()方法可以计算<code>str</code>的字符数，如果换成<code>bytes</code>,<code>len()</code>函数就计算字节数<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; len(b&#39;ABC&#39;)  &#x2F;&#x2F; 英文字符占用一个字节</span><br><span class="line">3</span><br><span class="line">&gt;&gt;&gt; len(b&#39;\xe4\xb8\xad\xe6\x96\x87&#39;) </span><br><span class="line">6</span><br><span class="line">&gt;&gt;&gt; len(&#39;中文&#39;.encode(&#39;utf-8&#39;))  &#x2F;&#x2F;中文字符经过转码一般会占用3个字节</span><br><span class="line">6</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="格式化输出字符串"><a href="#格式化输出字符串" class="headerlink" title="格式化输出字符串"></a>格式化输出字符串</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; &#39;Hello, %s&#39; % &#39;world&#39;</span><br><span class="line">&#39;Hello, world&#39;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; &#39;Hi, %s, you have $%d&#39; %(&#39;Michael&#39;, 1000000)</span><br><span class="line">&#39;Hi, Michael, you have $1000000&#39;</span><br></pre></td></tr></table></figure>
-
-
-<table>
-<thead>
-<tr>
-<th>占位符</th>
-<th>替换内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>%d</td>
-<td>整数</td>
-</tr>
-<tr>
-<td>%f</td>
-<td>浮点数</td>
-</tr>
-<tr>
-<td>%s</td>
-<td>字符串</td>
-</tr>
-<tr>
-<td>%x</td>
-<td>十六进制整数</td>
-</tr>
-</tbody></table>
-<h2 id="list"><a href="#list" class="headerlink" title="list"></a>list</h2><p>一种有序集合，可随时添加和删除其中得元素</p>
-<ul>
-<li>append(elem) 向list中追加元素到末尾</li>
-<li>insert(i, elem) 把元素插入到指定位置</li>
-<li>pop(elem) 删除list末尾的元素<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; [&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;]</span><br><span class="line">&gt;&gt;&gt; len(classmates);   &#x2F;&#x2F; 3</span><br><span class="line"></span><br><span class="line"># 向list中追加元素到末尾</span><br><span class="line">&gt;&gt;&gt; classmates.append(&#39;Adam&#39;)</span><br><span class="line">&gt;&gt;&gt; classmates</span><br><span class="line">[&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;, &#39;Adam&#39;]</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="tuple"><a href="#tuple" class="headerlink" title="tuple"></a>tuple</h3><p>元组<code>tuple</code>，一旦初始化就不能修改。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; classmates &#x3D; (&#39;Michael&#39;, &#39;Bob&#39;, &#39;Tracy&#39;);</span><br></pre></td></tr></table></figure>
-<p>在定义tuple的时候，tuple元素就必须被确定下来</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; t &#x3D; (1, 2)</span><br><span class="line">&gt;&gt;&gt; m &#x3D; () # 空tuple</span><br><span class="line">&gt;&gt;&gt; n &#x3D; (1,) # 1个元素的tuple</span><br><span class="line">&gt;&gt;&gt; e &#x3D; (&#39;a&#39;, &#39;b&#39;, [&#39;A&#39;, &#39;B&#39;]) # 这是一个可变的tuple</span><br></pre></td></tr></table></figure>
-
-<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><ul>
-<li>if else</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">else:</span><br><span class="line">    print(&#39;your age is&#39;, age);</span><br><span class="line">    print(&#39;teenager&#39;)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>elif<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">age &#x3D; 3</span><br><span class="line">if age &gt;&#x3D; 18:</span><br><span class="line">    print(&#39;adult&#39;)</span><br><span class="line">elif age &gt;&#x3D; 16:     # 表示else if</span><br><span class="line">    print(&#39;tennager&#39;)</span><br><span class="line">else: </span><br><span class="line">    print(&#39;kid&#39;)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>input()返回的数据类型是<code>str</code>, <code>str</code>不能直接喝整数比较，需要把<code>str</code>转换成整数。<code>int()</code>函数可以完成这件事。</p>
-<h2 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h2><ul>
-<li><code>for x in ...</code> 循环就是把每个元素带入变量<code>x</code>, 然后执行缩进块语句<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0</span><br><span class="line">for x in [1, 2, 3, 4, 5, 6, 7]:</span><br><span class="line">    sum &#x3D; sum + x</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
-<li><code>while</code> 循环，只要满足条件，就不断循环，条件不满足时退出循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sum &#x3D; 0;</span><br><span class="line">n &#x3D; 99;</span><br><span class="line">while n&gt;0:</span><br><span class="line">    sum  &#x3D; sum + n</span><br><span class="line">    n &#x3D; n - 2</span><br><span class="line">print(sum)</span><br></pre></td></tr></table></figure></li>
-<li><code>break</code>退出循环</li>
-<li><code>continue</code>跳过当前循环，直接开始下一次循环<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">n &#x3D; 0</span><br><span class="line">while n &lt; 10:</span><br><span class="line">    n &#x3D; n + 1</span><br><span class="line">    if n % 2 &#x3D;&#x3D; 0:  # 如果n是偶数，执行continue语句</span><br><span class="line">        continue    # continue语句会直接继续下一轮循环，后续print()语句不会执行</span><br><span class="line">    print(n)</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="dict字典"><a href="#dict字典" class="headerlink" title="dict字典"></a>dict字典</h2><p>使用键-值（key-value）存储，具有极快的查找速度</p>
-<ul>
-<li>pop(key)方法，会从dict中删除对应的键值，返回被删除的值<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; d &#x3D; &#123;&#39;Michael&#39;: 95, &#39;Bob&#39;: 75, &#39;Tracy&#39;: 85&#125;</span><br><span class="line">&gt;&gt;&gt; d[&#39;Michael&#39;]</span><br><span class="line">95</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;] &#x3D; 67 # 可以通过指定键值的方式来增加dict元素</span><br><span class="line">&gt;&gt;&gt; d[&#39;Adam&#39;]</span><br><span class="line">67</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;)</span><br><span class="line"># None</span><br><span class="line">&gt;&gt;&gt; d.get(&#39;Thomas&#39;, -1)</span><br><span class="line">-1</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p><code>dict</code>与<code>list</code>相比是一种用空间换取时间的方法，需要牢记：dict的key必须是不可变对象。</p>
-<p><code>dict</code>根据<code>key</code>来计算<code>value</code>的存储位置，如果每次计算的<code>key</code>不同，那<code>dict</code>的内部就混乱了，这个通过<code>key</code>计算未知的方法称为哈希算法（Hash）</p>
-<h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p><code>set</code> 和 <code>dict</code>类似，是一组<code>key</code>的集合，不存储<code>value</code>。由于<code>key</code>不能重复，所以在<code>set</code>中，没有重复的<code>key</code>。</p>
-<ul>
-<li>add(key) 可以添加元素到set中，可以重复添加，但不会有效果</li>
-<li>remove(key) 可以删除元素</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.add(4);</span><br><span class="line">&gt;&gt;&gt; s</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s.remove(1);</span><br><span class="line">&#123;2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
-<p>set可以看成数学意义上无序和无重复元素的集合，因此<code>set</code>可以做数学意义上的交集、并集等操作</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;&gt;&gt; s1 &#x3D; set([1, 2, 3])</span><br><span class="line">&gt;&gt;&gt; s2 &#x3D; set([2, 3, 4])</span><br><span class="line">&gt;&gt;&gt; s1 &amp; s2</span><br><span class="line">&#123;2, 3&#125;</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; s1 | s2</span><br><span class="line">&#123;1, 2, 3, 4&#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>后端</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>TCP和UDP</title>
     <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
     <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
@@ -701,65 +681,161 @@
       </tags>
   </entry>
   <entry>
-    <title>width\height\top\left辨析</title>
-    <url>/2019/12/20/widthheighttopleft%E8%BE%A8%E6%9E%90/</url>
-    <content><![CDATA[<p>笔者最近在重构组件库的时候，学习大佬们的代码，表示很迷茫，主要是感觉这个XXHeight才在这里见到，然后又出现了另一个XXHeight。感觉有点混淆，所以简单的辨析一下这个几个Height和Width顺便再辨析一下Top和Left。</p>
+    <title>event-loop 宏任务 微任务</title>
+    <url>/2021/01/04/event-loop-%E5%AE%8F%E4%BB%BB%E5%8A%A1-%E5%BE%AE%E4%BB%BB%E5%8A%A1/</url>
+    <content><![CDATA[<p>从一道执行顺序的面试题，到最终搞懂这一块，记录下来，这是一些自己的见解，可能不是那么准确，但是确实能让我自己理解这一块内容了。</p>
+<p>还有<code>requestAnimation</code>一直跟宏、微分不开，所以也放到这一篇来科普</p>
 <a id="more"></a>
 
-<table>
-<thead>
-<tr>
-<th><code>offset</code></th>
-<th><code>client</code></th>
-<th><code>scroll</code></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>offsetWidth</code></td>
-<td><code>clientWidth</code></td>
-<td><code>scrollWidth</code></td>
-</tr>
-<tr>
-<td><code>offsetHeight</code></td>
-<td><code>clientHeight</code></td>
-<td><code>scrollHeight</code></td>
-</tr>
-<tr>
-<td><code>offsetLeft</code></td>
-<td><code>clientLeft</code></td>
-<td><code>scrollLeft</code></td>
-</tr>
-<tr>
-<td><code>offsetTop</code></td>
-<td><code>clientTop</code></td>
-<td><code>scrollTop</code></td>
-</tr>
-</tbody></table>
-<h2 id="Offset相关"><a href="#Offset相关" class="headerlink" title="Offset相关"></a><code>Offset相关</code></h2><ul>
-<li><code>offsetTop</code>：子元素距离已定位的父容器的上边距离，不包括子元素与父元素的border</li>
-<li><code>offsetLeft</code>：子元素距离已定位的父容器的左边距离，不包括子元素与父元素的border</li>
-<li><code>offsetWidth</code>：元素外尺寸的宽度，是元素内容宽度+内边距+边框，不包括外边距与滚动条</li>
-<li><code>offsetHeight</code>：元素外尺寸的高度，是元素内容高度+内边距边框，不包括外边距与滚动条。</li>
+<h2 id="浏览器机制"><a href="#浏览器机制" class="headerlink" title="浏览器机制"></a>浏览器机制</h2><p><img src="https://www.html5rocks.com/zh/tutorials/internals/howbrowserswork/layers.png" alt="浏览器运行机制"></p>
+<ol>
+<li>用户界面：除了浏览器主窗口显示的请求界面外，都属于用户界面。</li>
+<li>浏览器内核：在用户界面与渲染引擎之间传送指令。</li>
+<li>渲染引擎：负责显示请求内容，解析 HTML 和 CSS，并将解析结果传送到界面上。</li>
+<li>网络：用于网络调用，如 HTTP 请求。起接口与平台无关，为所有平台提供底层实现。</li>
+<li>用户界面后端：用于绘制基本的窗口小部件，比如组合框和窗口。其公开了与平台无关的通用接口，而在底层使用操作系统的用户界面方法。（个人理解是一些获取用户习惯的接口）</li>
+<li>JavaScript 解释器：用于解析和执行 JavaScript 代码。</li>
+<li>数据存储：持久层。Cookie，session 等网络数据库，是一个完整且轻便的浏览器内数据库。</li>
+</ol>
+<h2 id="Nodejs-运行机制"><a href="#Nodejs-运行机制" class="headerlink" title="Nodejs 运行机制"></a>Nodejs 运行机制</h2><ol>
+<li>V8 引擎解析 JavaScript 脚本。</li>
+<li>解析后代码调用 Node API。</li>
+<li>libuv 库负责 Node API 的执行。它将不同任务分配给不同的线程，形成一个 Event Loop(事件循环)，以异步的方式将任务的执行结果返回给 V8 引擎</li>
+<li>V8 引擎再将结果返回给用户。</li>
+</ol>
+<h2 id="Nodejs-与任务队列相关的两个方法"><a href="#Nodejs-与任务队列相关的两个方法" class="headerlink" title="Nodejs 与任务队列相关的两个方法"></a>Nodejs 与任务队列相关的两个方法</h2><ul>
+<li><code>process.nextTick</code>：<ul>
+<li><code>process.nextTick()</code>的意思是定义一个动作，并让这个动作在下一次事件轮训的时间点上执行。</li>
 </ul>
-<h2 id="Client相关"><a href="#Client相关" class="headerlink" title="Client相关"></a><code>Client相关</code></h2><ul>
-<li><code>clientTop</code>：元素的内边距外边缘和边框外边缘的距离，实际就是上边框的厚度。</li>
-<li><code>clientLeft</code>：元素的内边距外边缘和边框外边缘的距离，实际上是左边框的厚度。</li>
-<li><code>clientWidth</code>：元素尺寸宽度，仅仅表示元素内容宽度，包括内边距，不包括边框。</li>
-<li><code>clientHeight</code>：元素尺寸高度，仅仅表示元素内容高度，包括内边距，不包括边框。</li>
+</li>
+<li><code>setImmediate</code>：一次<code>Event Loop</code>执行完毕后调用。即当前轮询阶段完成后就执行函数。</li>
 </ul>
-<h2 id="Scroll相关"><a href="#Scroll相关" class="headerlink" title="Scroll相关"></a><code>Scroll相关</code></h2><ul>
-<li><code>scrollTop</code>：元素滚动条上边已经滚动的高度</li>
-<li><code>scrollLeft</code>：元素滚动条左边已经滚动的乱度</li>
-<li><code>scrollWidth</code>：内容区域加内边距加上溢出的尺寸</li>
-<li><code>scrollHeight</code>：内容区域加内边距加上溢出的尺寸</li>
+<h3 id="宏任务与微任务"><a href="#宏任务与微任务" class="headerlink" title="宏任务与微任务"></a>宏任务与微任务</h3><p><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/QQ20201122-183048%402x.png" alt="宏任务、微任务、事件循环之间的关系"></p>
+<ul>
+<li><p>宏任务（macro-task）：</p>
+<ul>
+<li>包括整体代码 script</li>
+<li>setTimeout，setInterval-&gt;这个个人理解可以说是<code>异步宏任务</code></li>
+<li>requestAnimationFrame</li>
+<li>setImmediate（Node 端）</li>
 </ul>
+</li>
+<li><p>微任务（micro-task）：</p>
+<ul>
+<li>Promise.then、catch、finally</li>
+<li>process.nextTick（Node 端）</li>
+<li>MutationObserver</li>
+</ul>
+</li>
+</ul>
+<h3 id="执行顺序："><a href="#执行顺序：" class="headerlink" title="执行顺序："></a>执行顺序：</h3><p>主流程宏任务-&gt; 异步微任务-&gt; 异步宏任务</p>
+<h2 id="async-await"><a href="#async-await" class="headerlink" title="async\await"></a>async\await</h2><p>其实<code>async\await</code>本质上还是基于<code>Promise</code>的封装，而<code>Promise</code>是微任务的一种。所以在使用<code>await</code>关键字与<code>Promise.then</code>效果相似。</p>
+<p>可以这样理解，在<code>async</code>函数中在<code>await</code>前都是同步执行的，<code>await</code>前的代码都是<code>new Promise</code>时传入的代码，然后执行<code>await</code>这一行的代码，再将<code>await</code>之后的所有代码都是在<code>Promise.then</code>中的回调。</p>
+<h3 id="配合代码理解"><a href="#配合代码理解" class="headerlink" title="配合代码理解"></a>配合代码理解</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line">setTimeout(<span class="function">(<span class="params">_</span>) =&gt;</span> <span class="built_in">console</span>.log(<span class="number">4</span>), <span class="number">0</span>); <span class="comment">// 注册异步宏任务</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">main</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">  <span class="keyword">await</span> <span class="built_in">Promise</span>.resolve();</span><br><span class="line">  <span class="comment">// 以下注册微任务</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">3</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line"><span class="comment">// 1,2,3,4</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>首先执行主流宏任务，首先是 1，然后是 2。</li>
+<li>主流宏任务执行完</li>
+<li>执行微任务，打印出 3</li>
+<li>执行异步宏任务，打印出 4</li>
+</ol>
+<h2 id="requestAnimation"><a href="#requestAnimation" class="headerlink" title="requestAnimation"></a>requestAnimation</h2><h3 id="requestAnimationFrame-是什么"><a href="#requestAnimationFrame-是什么" class="headerlink" title="requestAnimationFrame 是什么"></a>requestAnimationFrame 是什么</h3><p><code>requestAnimationFrame</code>方法告诉浏览器希望执行动画，并请求浏览器在<strong>下一次重绘之前</strong>调用回调函数来更新动画</p>
+<h3 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h3><p><code>requestAnimationFrame</code>的回调函数会被传入<code>DOMHighResTimeStamp</code>参数，<code>DOMHighResTimeStamp</code>指示当前被<code>requestAnimationFrame()</code>排序的回调函数被触发的时间。</p>
+<h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.requestAnimationFrame(callback);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>callback</li>
+</ul>
+<p>下一次重绘之前更新动画帧所调用的函数，该回调函数会被传入<code>DOMHighResTimeStamp</code>参数，该参数与<code>performance.now()</code>的返回值相同，它表示<code>requestAnimationFrame()</code>开始去执行回调函数的时刻。</p>
+<ul>
+<li>返回值</li>
+</ul>
+<p>一个<code>long</code>整数，请求 ID，是回调列表中唯一标识。是一个非零值，没别的意义。可以传这个值给<code>window.cancelAnimationFrame()</code>以取消回调函数。</p>
+<h2 id="综合例子"><a href="#综合例子" class="headerlink" title="综合例子"></a>综合例子</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 'async1 start'及await 相当于主流宏任务 （主宏-2）</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"async1 start"</span>);</span><br><span class="line">  <span class="keyword">await</span> async2();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// await 后的代码都相当于Promise.then，放入微任务队列 （微-3）</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"async1 end"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 'async2'及await 相当于主流宏任务（主宏-3）</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"async2"</span>);</span><br><span class="line">  <span class="keyword">await</span> <span class="built_in">Promise</span>.resolve();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同上面（微-1）</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"async2 end"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主流宏任务（主宏-1）</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"script start"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步宏任务 （异宏-1）</span></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"setTimeout"</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主流宏任务（2）</span></span><br><span class="line">async1();</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// （主宏-4）</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"promise1"</span>);</span><br><span class="line">  resolve();</span><br><span class="line">&#125;)</span><br><span class="line">  .then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// 放入微任务队列 （微-2）</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"promise2"</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  .then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 微任务队列（微-4）</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"promise end"</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主流宏任务（主宏-5）</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"script end"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>按照主流宏任务-微任务-异步宏任务的顺序 结果</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">script start（主宏-1）</span><br><span class="line">async1 start（主宏-2）</span><br><span class="line">async2（主宏-3）</span><br><span class="line">promise1（主宏-4）</span><br><span class="line">script end（主宏-5）</span><br><span class="line">async2 end（微-1）</span><br><span class="line">promise2（微-2）</span><br><span class="line">async1 end（微-3）</span><br><span class="line">promise end（微-4）</span><br><span class="line">setTimeout（异宏-1）</span><br></pre></td></tr></table></figure>
+
+<p>这里为什么<code>promise2</code>在<code>async1 end</code>前执行，是因为，<code>async1</code> 函数 调用<code>async2</code>函数，而<code>async2</code>中也有异步调用，所以相当于</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"async1 start"</span>);</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"async2"</span>);</span><br><span class="line">    &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">"async2 end"</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"async1 end"</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <tags>
+        <tag>JS基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cookie 和 Session比较</title>
+    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
+    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
+<a id="more"></a>
+
+<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
+<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
+<p><strong>express中读取还是设置都是在req中</strong>。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
-        <category>CSS大乱炖</category>
+        <category>计算机网络</category>
       </categories>
       <tags>
-        <tag>CSS基础</tag>
-        <tag>朝花夕拾</tag>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react hook</title>
+    <url>/2019/09/09/hook/</url>
+    <content><![CDATA[<h1 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h1><p>可以让你在不编写class的情况下使用state以及其他React特性</p>
+<p>Hook的作用就是让你的函数组件中可以使用class中的一些生命周期和state等。</p>
+<a id="more"></a>
+
+<h2 id="Hook规则"><a href="#Hook规则" class="headerlink" title="Hook规则"></a>Hook规则</h2><p>Hook就是JavaScript函数，但是使用它们会有两个额外的规则</p>
+<ul>
+<li>只能在<strong>函数最外层</strong>调用Hook，不要在循环、条件判断或子函数中调用</li>
+<li>只能在<strong>React的函数组件</strong>中调用Hook。（除了自定义Hook外）</li>
+</ul>
+<h2 id="useState方法"><a href="#useState方法" class="headerlink" title="useState方法"></a>useState方法</h2><h3 id="基本例子"><a href="#基本例子" class="headerlink" title="基本例子"></a>基本例子</h3><ul>
+<li>useState会返回一对值：<code>当前状态</code>和一个让你<code>更新它的函数</code>。<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 声明一个叫 “count” 的 state 变量。</span></span><br><span class="line">  <span class="comment">// 这个变量的初始值是0, 即useState里的初始值</span></span><br><span class="line">  <span class="comment">// 更新这个变量的函数就是setCount</span></span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h2><h3 id="基本例子-1"><a href="#基本例子-1" class="headerlink" title="基本例子"></a>基本例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Similar to componentDidMount and componentDidUpdate:</span></span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// Update the document title using the browser API</span></span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>useEffect</code>默认在第一次渲染后和每次更新之后都会执行。 React保证了每次渲染effect的同时DOM都已经更新完毕。</li>
+<li>与<code>componentDidMount</code>和<code>componentDidUpdate</code>不同的是，使用<code>useEffect</code>调度的<code>effect</code>不会阻塞浏览器更新屏幕，这让你的应用看起来响应更快。</li>
+</ul>
+<h3 id="清除effect"><a href="#清除effect" class="headerlink" title="清除effect"></a>清除effect</h3><p>当<code>useEffect</code>返回一个函数时，react将会在执行清除操作时调用它。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"> useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">      setIsOnline(status.isOnline);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个函数，清除时调用。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="仅在state更改是更新。"><a href="#仅在state更改是更新。" class="headerlink" title="仅在state更改是更新。"></a>仅在state更改是更新。</h3><p>使<code>Hook</code>在<code>count</code>更改时更新</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.title=<span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span></span><br><span class="line">&#125;,[count])</span><br></pre></td></tr></table></figure>
+
+<p>仅在 props.friend.id 发生变化时，重新订阅</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">    setIsOnline(status.isOnline);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.friend.id]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./mycontext;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> MyContext = React.createContext(&#123;<span class="attr">count</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在组件中使用</span></span><br><span class="line"><span class="keyword">import</span> &#123; MyContext &#125; <span class="keyword">from</span> <span class="string">'./mycontext'</span>;</span><br><span class="line"><span class="keyword">const</span> value = useContext(MyContext);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原来this.context.count;</span></span><br><span class="line"><span class="comment">// 相当于value.count</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer"></a>useReducer</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState, init);</span><br><span class="line"><span class="comment">// reducer： 形如(state，action) =&gt; newState;</span></span><br><span class="line"><span class="comment">// initialState：初始化的State</span></span><br><span class="line"><span class="comment">// init：惰性创建 state</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="基础例子"><a href="#基础例子" class="headerlink" title="基础例子"></a>基础例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params">initialCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">count</span>: initialCount&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'increment'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'decrement'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'reset'</span>:</span><br><span class="line">      <span class="keyword">return</span> init(action.payload);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialCount, init);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button</span><br><span class="line">        onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'reset'</span>, <span class="attr">payload</span>: initialCount&#125;)&#125;&gt;</span><br><span class="line"></span><br><span class="line">        Reset</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;type: 'increment'&#125;)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'decrement'</span>&#125;)&#125;&gt;-&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="useRef"><a href="#useRef" class="headerlink" title="useRef"></a>useRef</h2><p>useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。</p>
+<p>返回的 ref 对象在组件的整个生命周期内保持不变。</p>
+<p>useRef不仅可以取代原来的<code>ref</code>属性，还可以用于保存<code>Hook</code>属性的实例变量。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于普通ref</span></span><br><span class="line"><span class="keyword">const</span> domRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    domRef.current.focus();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render()&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">            &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于保存一个实例变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> staticRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> id = setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里staticRef就是用于保存变量的</span></span><br><span class="line">    staticRef.current = id;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      clearInterval(staticRef.current);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义Hook"><a href="#自定义Hook" class="headerlink" title="自定义Hook"></a>自定义Hook</h2><p>自定义Hook是一个函数，其名称以<code>use</code>开头，函数内部可以调用其他Hook。</p>
+<ul>
+<li>两个组件中使用相同的Hook不会共享state，因为自定义 Hook 是一种重用状态逻辑的机制(例如设置为订阅并存储当前值)，所以每次使用自定义 Hook 时，其中的所有<code>state</code> 和<code>effect</code>都是完全隔离的。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(count + <span class="number">1</span>)&#125;&gt;+&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React基础</tag>
       </tags>
   </entry>
   <entry>
@@ -825,6 +901,106 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>width\height\top\left辨析</title>
+    <url>/2019/12/20/widthheighttopleft%E8%BE%A8%E6%9E%90/</url>
+    <content><![CDATA[<p>笔者最近在重构组件库的时候，学习大佬们的代码，表示很迷茫，主要是感觉这个XXHeight才在这里见到，然后又出现了另一个XXHeight。感觉有点混淆，所以简单的辨析一下这个几个Height和Width顺便再辨析一下Top和Left。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th><code>offset</code></th>
+<th><code>client</code></th>
+<th><code>scroll</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>offsetWidth</code></td>
+<td><code>clientWidth</code></td>
+<td><code>scrollWidth</code></td>
+</tr>
+<tr>
+<td><code>offsetHeight</code></td>
+<td><code>clientHeight</code></td>
+<td><code>scrollHeight</code></td>
+</tr>
+<tr>
+<td><code>offsetLeft</code></td>
+<td><code>clientLeft</code></td>
+<td><code>scrollLeft</code></td>
+</tr>
+<tr>
+<td><code>offsetTop</code></td>
+<td><code>clientTop</code></td>
+<td><code>scrollTop</code></td>
+</tr>
+</tbody></table>
+<h2 id="Offset相关"><a href="#Offset相关" class="headerlink" title="Offset相关"></a><code>Offset相关</code></h2><ul>
+<li><code>offsetTop</code>：子元素距离已定位的父容器的上边距离，不包括子元素与父元素的border</li>
+<li><code>offsetLeft</code>：子元素距离已定位的父容器的左边距离，不包括子元素与父元素的border</li>
+<li><code>offsetWidth</code>：元素外尺寸的宽度，是元素内容宽度+内边距+边框，不包括外边距与滚动条</li>
+<li><code>offsetHeight</code>：元素外尺寸的高度，是元素内容高度+内边距边框，不包括外边距与滚动条。</li>
+</ul>
+<h2 id="Client相关"><a href="#Client相关" class="headerlink" title="Client相关"></a><code>Client相关</code></h2><ul>
+<li><code>clientTop</code>：元素的内边距外边缘和边框外边缘的距离，实际就是上边框的厚度。</li>
+<li><code>clientLeft</code>：元素的内边距外边缘和边框外边缘的距离，实际上是左边框的厚度。</li>
+<li><code>clientWidth</code>：元素尺寸宽度，仅仅表示元素内容宽度，包括内边距，不包括边框。</li>
+<li><code>clientHeight</code>：元素尺寸高度，仅仅表示元素内容高度，包括内边距，不包括边框。</li>
+</ul>
+<h2 id="Scroll相关"><a href="#Scroll相关" class="headerlink" title="Scroll相关"></a><code>Scroll相关</code></h2><ul>
+<li><code>scrollTop</code>：元素滚动条上边已经滚动的高度</li>
+<li><code>scrollLeft</code>：元素滚动条左边已经滚动的乱度</li>
+<li><code>scrollWidth</code>：内容区域加内边距加上溢出的尺寸</li>
+<li><code>scrollHeight</code>：内容区域加内边距加上溢出的尺寸</li>
+</ul>
+]]></content>
+      <categories>
+        <category>CSS大乱炖</category>
+      </categories>
+      <tags>
+        <tag>CSS基础</tag>
+        <tag>朝花夕拾</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你不知道的JSON.stringify</title>
+    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
+    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
+<a id="more"></a>
+<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
+<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
+</ul>
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
+<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
+
+<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
+<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
+<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
+<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>JS基础</tag>
+        <tag>朝花夕拾</tag>
       </tags>
   </entry>
   <entry>
@@ -980,61 +1156,6 @@
       </tags>
   </entry>
   <entry>
-    <title>react hook</title>
-    <url>/2019/09/09/hook/</url>
-    <content><![CDATA[<h1 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h1><p>可以让你在不编写class的情况下使用state以及其他React特性</p>
-<p>Hook的作用就是让你的函数组件中可以使用class中的一些生命周期和state等。</p>
-<a id="more"></a>
-
-<h2 id="Hook规则"><a href="#Hook规则" class="headerlink" title="Hook规则"></a>Hook规则</h2><p>Hook就是JavaScript函数，但是使用它们会有两个额外的规则</p>
-<ul>
-<li>只能在<strong>函数最外层</strong>调用Hook，不要在循环、条件判断或子函数中调用</li>
-<li>只能在<strong>React的函数组件</strong>中调用Hook。（除了自定义Hook外）</li>
-</ul>
-<h2 id="useState方法"><a href="#useState方法" class="headerlink" title="useState方法"></a>useState方法</h2><h3 id="基本例子"><a href="#基本例子" class="headerlink" title="基本例子"></a>基本例子</h3><ul>
-<li>useState会返回一对值：<code>当前状态</code>和一个让你<code>更新它的函数</code>。<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 声明一个叫 “count” 的 state 变量。</span></span><br><span class="line">  <span class="comment">// 这个变量的初始值是0, 即useState里的初始值</span></span><br><span class="line">  <span class="comment">// 更新这个变量的函数就是setCount</span></span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h2><h3 id="基本例子-1"><a href="#基本例子-1" class="headerlink" title="基本例子"></a>基本例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Similar to componentDidMount and componentDidUpdate:</span></span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// Update the document title using the browser API</span></span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>useEffect</code>默认在第一次渲染后和每次更新之后都会执行。 React保证了每次渲染effect的同时DOM都已经更新完毕。</li>
-<li>与<code>componentDidMount</code>和<code>componentDidUpdate</code>不同的是，使用<code>useEffect</code>调度的<code>effect</code>不会阻塞浏览器更新屏幕，这让你的应用看起来响应更快。</li>
-</ul>
-<h3 id="清除effect"><a href="#清除effect" class="headerlink" title="清除effect"></a>清除effect</h3><p>当<code>useEffect</code>返回一个函数时，react将会在执行清除操作时调用它。</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"> useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">      setIsOnline(status.isOnline);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个函数，清除时调用。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<h3 id="仅在state更改是更新。"><a href="#仅在state更改是更新。" class="headerlink" title="仅在state更改是更新。"></a>仅在state更改是更新。</h3><p>使<code>Hook</code>在<code>count</code>更改时更新</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.title=<span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span></span><br><span class="line">&#125;,[count])</span><br></pre></td></tr></table></figure>
-
-<p>仅在 props.friend.id 发生变化时，重新订阅</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">    setIsOnline(status.isOnline);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.friend.id]);</span><br></pre></td></tr></table></figure>
-
-<h2 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./mycontext;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> MyContext = React.createContext(&#123;<span class="attr">count</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在组件中使用</span></span><br><span class="line"><span class="keyword">import</span> &#123; MyContext &#125; <span class="keyword">from</span> <span class="string">'./mycontext'</span>;</span><br><span class="line"><span class="keyword">const</span> value = useContext(MyContext);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原来this.context.count;</span></span><br><span class="line"><span class="comment">// 相当于value.count</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer"></a>useReducer</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState, init);</span><br><span class="line"><span class="comment">// reducer： 形如(state，action) =&gt; newState;</span></span><br><span class="line"><span class="comment">// initialState：初始化的State</span></span><br><span class="line"><span class="comment">// init：惰性创建 state</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="基础例子"><a href="#基础例子" class="headerlink" title="基础例子"></a>基础例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params">initialCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">count</span>: initialCount&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'increment'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'decrement'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'reset'</span>:</span><br><span class="line">      <span class="keyword">return</span> init(action.payload);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialCount, init);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button</span><br><span class="line">        onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'reset'</span>, <span class="attr">payload</span>: initialCount&#125;)&#125;&gt;</span><br><span class="line"></span><br><span class="line">        Reset</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;type: 'increment'&#125;)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'decrement'</span>&#125;)&#125;&gt;-&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="useRef"><a href="#useRef" class="headerlink" title="useRef"></a>useRef</h2><p>useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。</p>
-<p>返回的 ref 对象在组件的整个生命周期内保持不变。</p>
-<p>useRef不仅可以取代原来的<code>ref</code>属性，还可以用于保存<code>Hook</code>属性的实例变量。</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于普通ref</span></span><br><span class="line"><span class="keyword">const</span> domRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    domRef.current.focus();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render()&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">            &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于保存一个实例变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> staticRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> id = setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里staticRef就是用于保存变量的</span></span><br><span class="line">    staticRef.current = id;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      clearInterval(staticRef.current);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="自定义Hook"><a href="#自定义Hook" class="headerlink" title="自定义Hook"></a>自定义Hook</h2><p>自定义Hook是一个函数，其名称以<code>use</code>开头，函数内部可以调用其他Hook。</p>
-<ul>
-<li>两个组件中使用相同的Hook不会共享state，因为自定义 Hook 是一种重用状态逻辑的机制(例如设置为订阅并存储当前值)，所以每次使用自定义 Hook 时，其中的所有<code>state</code> 和<code>effect</code>都是完全隔离的。</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(count + <span class="number">1</span>)&#125;&gt;+&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>一入React深似海</category>
-      </categories>
-      <tags>
-        <tag>React基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>再读React官方文档</title>
     <url>/2019/09/09/%E5%86%8D%E8%AF%BBReact%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/</url>
     <content><![CDATA[<h1 id="再读React"><a href="#再读React" class="headerlink" title="再读React"></a>再读React</h1><p>笔者最近空闲时间比较多，这也可能是笔者这未来人生中时间最自由的一个月。所以想抓紧时间巩固和学习一下新知识，在公司实习期间一直在写业务，所以自己学习的时间很少，为了追上同事的步伐，一定要抓紧这一个月又一个质的突破。</p>
@@ -1123,59 +1244,6 @@
       </tags>
   </entry>
   <entry>
-    <title>常见状态码</title>
-    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
-    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
-<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
-<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
-<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
-<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
-<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
-<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
-<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
-<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
-<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
-<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
-<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
-<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
-<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
-<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
-<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
-</ul>
-<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
-<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
-<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
-<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
-<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
-<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
-<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
-<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
-<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
-<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
-<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
-<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
-<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
-<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
-<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
-<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
-</ul>
-<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
-<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
-<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
-<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
-<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
-<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
-<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>知识盲区（一）</title>
     <url>/2020/04/20/%E7%9F%A5%E8%AF%86%E7%9B%B2%E5%8C%BA%EF%BC%88%E4%B8%80%EF%BC%89/</url>
     <content><![CDATA[<p>工作闲暇的期间，会读一些博文，更多的是刷面筋，虽然已经工作稳定。但还是偶尔需要有危机感，去看看现在企业喜欢问什么问题。其实大部分面筋问题都还不是很会。会把知识盲区记录下来，然后整理成博文</p>
@@ -1244,41 +1312,56 @@
       </tags>
   </entry>
   <entry>
-    <title>你不知道的JSON.stringify</title>
-    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
-    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
-<a id="more"></a>
-<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
-<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
+    <title>常见状态码</title>
+    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
+<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
+<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
+<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
+<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
+<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
+<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
+<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
+<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
+<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
+<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
+<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
+<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
+<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
+<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
+<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
 </ul>
-<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
-<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
-
-<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
-<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
-<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
-<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
+<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
+<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
+<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
+<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
+<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
+<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
+<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
+<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
+<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
+<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
+<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
+<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
+<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
+<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
+<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
+<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
+</ul>
+<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
+<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
+<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
+<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
+<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
+<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
+<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
+</ul>
 ]]></content>
       <categories>
-        <category>JS基础</category>
+        <category>计算机网络</category>
       </categories>
       <tags>
-        <tag>JS基础</tag>
-        <tag>朝花夕拾</tag>
+        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
