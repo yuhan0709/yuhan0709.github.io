@@ -1,149 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Jest+Enzyme前端自动化测试</title>
-    <url>/2019/08/11/Jest-Enzyme%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/</url>
-    <content><![CDATA[<h1 id="jest测试"><a href="#jest测试" class="headerlink" title="jest测试"></a>jest测试</h1><p>笔者接触组件库开发已经几月了，目前组件库越做越大，越做越好，但随之而来接入的业务方提的bug也越来越多，这显得前端自动化测试格外重要，此文主要是讲测试入门以及一些思想，具体怎么配置笔者觉得没有必要花心思去整理，网上一搜一大堆。</p>
+    <title>Proxy和defineProperty</title>
+    <url>/2020/12/23/Proxy%E5%92%8CdefineProperty/</url>
+    <content><![CDATA[<p> <code>Vue3.0</code>中双向绑定的实现从<code>Object.defineProperty</code>变为<code>ES6</code>中的<code>Proxy</code>。其实<code>Proxy</code>和<code>definePrototype</code>在平常业务场景中还是挺少用到，但是作为前端工程师这一块是一个主流框架的底层原理。所以还是必须要了解这两种方法。</p>
 <a id="more"></a>
 
-<h2 id="测试类型"><a href="#测试类型" class="headerlink" title="测试类型"></a>测试类型</h2><ul>
-<li>单元测试：又称模块测试，对一个模块、类、函数等进行正确性检验工作。目标是隔离程序部件并证明这些单个部件是正确的。一个单元测试提供了代码片断需要满足的严密的书面规约。因此，单元测试带来了一些益处。 单元测试在软件开发过程的早期就能发现问题。</li>
-<li>功能测试：又称黑盒测试，是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。</li>
-<li>集成测试：在单元测试的基础上，将所有模块按照设计要求组装成子系统或者系统，进行测试</li>
-<li>冒烟测试： 在正式全面的测试之前，对主要功能进行的与测试，确认主要功能是否满足需要，软件是否能正常运行</li>
+<h2 id="一、Proxy"><a href="#一、Proxy" class="headerlink" title="一、Proxy"></a>一、Proxy</h2><h3 id="1-什么是Proxy"><a href="#1-什么是Proxy" class="headerlink" title="1. 什么是Proxy"></a>1. 什么是Proxy</h3><ul>
+<li>MDN中定义：Proxy对象用于创建一个对象的代理，从而实现基本的拦截和自定义（如属性查找、赋值、枚举、函数调用等）</li>
+<li>ES6入门中定义：Proxy用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”，即对编程语言进行编程。</li>
 </ul>
-<h2 id="jest匹配器"><a href="#jest匹配器" class="headerlink" title="jest匹配器"></a>jest匹配器</h2><ul>
-<li>toBe  (===)</li>
-<li>toEqual</li>
-<li>toBeNull</li>
-<li>toBeTrusty</li>
-<li>toBeFalsy</li>
-<li>toBeGreaterThan(number)</li>
-<li>toBeGreaterThanOrEqual(number)</li>
-<li>toBeLessThan(number)</li>
-<li>toBeLessThanOrEqual(number)</li>
-<li>toBeCloseTo(number);   // 近似</li>
-<li>toContainer</li>
-<li>toMatch可以检查字符串是否与正则表达式匹配</li>
-</ul>
-<p>++jest –watchAll(类似热加载)++</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//toBe 失败</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">one</span>: <span class="number">1</span>&#125;</span><br><span class="line">expect(a).toBe(&#123;<span class="attr">one</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-
-<p>异步函数的测试</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fecthData = <span class="function">(<span class="params">fn</span>) =&gt;</span> &#123;</span><br><span class="line">    axios.get(<span class="string">"http://www.dell-lee.com/react/api/demo.json"</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        fn(res)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//回调类型</span></span><br><span class="line"><span class="keyword">import</span> fetchData <span class="keyword">from</span> <span class="string">'./index.js'</span></span><br><span class="line">test(<span class="string">'fetchData 返回结果为&#123; success:true &#125;'</span>,(done) =&gt; &#123;</span><br><span class="line">    fetchData(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toEqual(&#123;</span><br><span class="line">            success: <span class="literal">true</span></span><br><span class="line">        &#125;);</span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>expect.assertions(1);   //至少要执行一个expect语法,expect.assertions,来测试一定数量的断言被调用，否则fulfilled态promise不会让测试失败</p>
-<h2 id="jest-globals-API"><a href="#jest-globals-API" class="headerlink" title="jest globals API"></a>jest globals API</h2><ul>
-<li>discribe(name,func): 块，一个测试单元的所用果能测试用例可组合为一个块</li>
-<li>it(name,func,timeout): 测试用例，一般一个测试用例测试一个单一功能</li>
-</ul>
-<h3 id="beforeEach和afterEach"><a href="#beforeEach和afterEach" class="headerlink" title="beforeEach和afterEach"></a>beforeEach和afterEach</h3><p>需要为多次测试重复设置的工作，可以使用breforeEach和afterEach。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    initializeCityDatabase();     <span class="comment">//每次测试前都要初始化citybase</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    clearCityDatabase();<span class="comment">// 每次测试之后要清空citybase</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h3 id="beforeAll和afterAll"><a href="#beforeAll和afterAll" class="headerlink" title="beforeAll和afterAll"></a>beforeAll和afterAll</h3><p>例如，如果 initializeCityDatabase 和 clearCityDatabase 都返回了 promise ，城市数据库可以在测试中重用，我们就能把我们的测试代码改成这样</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> initializeCityDatabase();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> clearCityDatabase(); </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>全局和describe都拥有上面四个生命周期。</p>
+<p><code>Proxy</code>可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问都必须通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。<code>Proxy</code>原意就是代理，可以理解为代理某些操作。</p>
+<h3 id="2-语法"><a href="#2-语法" class="headerlink" title="2. 语法"></a>2. 语法</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br></pre></td></tr></table></figure>
 <ul>
-<li>但describe的after函数优先级<strong>高于</strong>全局after函数</li>
-<li>describe的before函数优先级要<strong>低于</strong>全局的before函数</li>
+<li><code>target</code>：就是你要是用<code>Proxy</code>包装的目标对象（可以是任何类型的对象，包括函数、数组，甚至是另一个代理）。</li>
+<li><code>handler</code>：是一个对象，里面有各种你代理的方法。</li>
 </ul>
-<h2 id="mock函数"><a href="#mock函数" class="headerlink" title="mock函数"></a>mock函数</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();   <span class="comment">// mock函数，捕获函数的调用</span></span><br><span class="line">func.mockReturnValueOnce(<span class="string">'Dell'</span>);  <span class="comment">// mock函数第一次调用的返回值</span></span><br><span class="line"><span class="comment">// func.mock.instance mock函数每次被调用this指向</span></span><br></pre></td></tr></table></figure>
-<p>mock函数中的作用</p>
+<h3 id="3-一个例子"><a href="#3-一个例子" class="headerlink" title="3. 一个例子"></a>3. 一个例子</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">    age: <span class="number">10</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> handler = &#123;</span><br><span class="line">    <span class="keyword">get</span>: (target, propKey, receiver)=&gt;&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(target, propKey, receiver);</span><br><span class="line">        <span class="keyword">return</span> target[propKey]</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">set</span>: (target, propKey, value, receiver)=&gt;&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(target, propKey, value, receiver);</span><br><span class="line">        target[propKey] = value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy_obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, handler);</span><br><span class="line">proxy_obj.age = <span class="number">11</span>;</span><br><span class="line"><span class="built_in">console</span>.log(proxy_obj.age);</span><br></pre></td></tr></table></figure>
 <ul>
-<li>捕获函数的调用和返回结果，以及this和调用顺序（func.mock)</li>
-<li>自由设置返回结 func.mockReturnValueOnce();</li>
-<li>改变内部函数的实现</li>
+<li>输出结果<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/WX20201223-150230%402x.png" alt="输出结果"></li>
+<li>target：就是你代理的对象。</li>
+<li>propKey：要读取的属性名。</li>
+<li>value：要设置的新value。</li>
+<li>receiver：Proxy或者继承Proxy的对象。</li>
 </ul>
-<p>通过mock函数来测试异步函数</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> getData = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    axios.get(<span class="string">"/api"</span>).then(<span class="function"><span class="params">res</span>=&gt;</span>res.data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line">jest.mock(<span class="string">"axios"</span>);   <span class="comment">// 用jest来模拟ajax请求</span></span><br><span class="line"></span><br><span class="line">test(<span class="string">"test getData"</span>, <span class="keyword">async</span>()=&gt;&#123;</span><br><span class="line">    axios.get.mockReturnValue(<span class="string">"hello"</span>);   <span class="comment">// 把axios的get请求都返回hello</span></span><br><span class="line">    <span class="keyword">await</span> getData().then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">        expect(data).toBe(<span class="string">"hello"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();</span><br><span class="line">func.mockReturnValue(<span class="string">"hello"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">const</span> func = jest.fn(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line">func.mockImplementation(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func.mockReturnThis();   <span class="comment">//undefined;</span></span><br><span class="line">expect(func.mock.calls[<span class="number">0</span>]).toEqual([<span class="string">'abc'</span>]);    <span class="comment">// 第一次调用这个函数的参数是abc</span></span><br><span class="line">expect(func.toBeCalledWidth(<span class="string">'abc'</span>));  <span class="comment">// 每次调用这个函数的参数都是abc</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">jest.mock(<span class="string">'./demo'</span>);</span><br><span class="line"><span class="keyword">import</span> &#123; fetchData &#125; <span class="keyword">from</span> <span class="string">'./demo'</span>;    <span class="comment">// 这个是从__mocks__中引入的模拟的函数</span></span><br><span class="line"><span class="keyword">const</span> &#123; getNumber &#125; = jest.requireActual(<span class="string">'./demo'</span>);   <span class="comment">// 这个是从真实文件夹中引入的函数。</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="spyOn"><a href="#spyOn" class="headerlink" title="spyOn"></a>spyOn</h2><p><code>jest.spuOn()</code>同样创建一个mock函数,但他比jest.fn()或jest.mock()；更厉害的是，他还会执行被mock的原函数。例如</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"1234567"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> jestfn = jest.mock(fn);   <span class="comment">// 如果执行，不会打印任何东西</span></span><br><span class="line"><span class="keyword">const</span> jestspy = jest.spyOn(fn);   <span class="comment">// 如果执行，会打印出1234567</span></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="snapshot-快照测试"><a href="#snapshot-快照测试" class="headerlink" title="snapshot 快照测试"></a>snapshot 快照测试</h2><p>就是看你生成的快照测试跟原来一不一样，如果原来文件更改，测试会失败，也就是让你确定你是不是要更改原来的文件。</p>
-<p>例如对一个React组件而言，传入相同的props，希望得到相同的输出。这样就可以通过快照测试来完成。</p>
-<p>按 <code>u</code>可以 upadte<br>按 <code>i</code> 可以交互的更新快照</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">expect <span class="keyword">const</span> config = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">        url: <span class="string">"http://localhost"</span>,</span><br><span class="line">        port: <span class="string">"8000"</span>,</span><br><span class="line">        time: <span class="keyword">new</span> <span class="built_in">Date</span>()      <span class="comment">// time是时间类型，会一直改变，所以快照是一直通不过的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试config</span></span><br><span class="line">test(<span class="string">"测试config"</span>,()=&gt;&#123;</span><br><span class="line">    expect(config()).toMatchSnapshot(&#123;</span><br><span class="line">        time: expect.any(<span class="built_in">Date</span>)   <span class="comment">// 这是说希望time只要是时间类型就好</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<h2 id="行内snapshot和普通snapshot的区别"><a href="#行内snapshot和普通snapshot的区别" class="headerlink" title="行内snapshot和普通snapshot的区别"></a>行内snapshot和普通snapshot的区别</h2><ul>
-<li>普通: <code>toMacthSnapshot()</code>会把生成的快照存到一个新文件里</li>
-<li>行内: <code>toMatchInlineSnapshot()</code>会把生成的快照作为<code>toMatchInlineSnapshot()</code>的参数</li>
+<h3 id="4-Proxy的支持的拦截操作"><a href="#4-Proxy的支持的拦截操作" class="headerlink" title="4. Proxy的支持的拦截操作"></a>4. Proxy的支持的拦截操作</h3><ul>
+<li><code>get(target, propKey, receiver)</code>：拦截对象属性的读取，如<ul>
+<li><code>proxy.foo</code></li>
+<li><code>proxy[&#39;foo&#39;]</code></li>
 </ul>
-<h3 id="mock-timer"><a href="#mock-timer" class="headerlink" title="mock timer"></a>mock timer</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> timer = <span class="function">(<span class="params">callback</span>)=&gt;</span>&#123;</span><br><span class="line">    setTimerout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">    &#125;,<span class="number">3000</span>)</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line">    timer(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        expect(<span class="number">1</span>).toBe(<span class="number">1</span>);   <span class="comment">// 等3秒后触发</span></span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用假的timer模拟</span></span><br><span class="line">jest.useFakeTimers();</span><br><span class="line"></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line"><span class="keyword">const</span> fn = jest.fn();</span><br><span class="line">    timer(fn);</span><br><span class="line">   </span><br><span class="line">    jest.runOnlyPendingTimers();  <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line">    只执行已经在队列中的timers，不会执行还未被创建的timers</span><br><span class="line">   </span><br><span class="line">    jest.runAllTimers();    <span class="comment">// 避免所有的等待时间（所有的时间函数都会被触发）</span></span><br><span class="line">    </span><br><span class="line">    jest.advanceTimersByTime(<span class="number">6000</span>);   <span class="comment">// 快进时间</span></span><br><span class="line">    </span><br><span class="line">    expect(fn).toHaveBeenCalledTimers(<span class="number">1</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了避免advanceTimersByTime()对其他测试用例的影响，可以用</span></span><br><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    jest.useFakeTimers();    <span class="comment">// 每次测试前都初始化一个实力对象。</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="mock-类"><a href="#mock-类" class="headerlink" title="mock 类"></a>mock 类</h2><ul>
-<li>使用<code>jest.mock(moduleName,factory,options)</code>自动mock模块，jest会自动帮我们mock指定模块中的函数，<code>factory</code>和<code>option</code>参数是可选的。<code>factory</code><h3 id="jest来测试ES6中的类"><a href="#jest来测试ES6中的类" class="headerlink" title="jest来测试ES6中的类"></a>jest来测试ES6中的类</h3>如果引入的文件是一个类的话，jest会默认把这个类里面的构造方法和类方法用jest.fn()代替。</li>
+</li>
+<li><code>set(target, propKey, value, receiver)</code>：返回一个布尔值。拦截对象属性的设置，如<ul>
+<li><code>proxu.foo = v</code></li>
+<li><code>proxy[&#39;foo&#39;] = v</code>，</li>
 </ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 源文件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Util</span></span>&#123;</span><br><span class="line">    init() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    a() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    c() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Util;</span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">"./util"</span>);     <span class="comment">// 引入类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line"><span class="keyword">const</span> Util = jest.fn();</span><br><span class="line">Util.a = jest.fn();</span><br><span class="line">Util.c = jest.fn();</span><br></pre></td></tr></table></figure>
-
-<h2 id="TDD-（Test-Driven-Development-测试驱动开发"><a href="#TDD-（Test-Driven-Development-测试驱动开发" class="headerlink" title="TDD （Test Driven Development)  测试驱动开发"></a>TDD （Test Driven Development)  测试驱动开发</h2><ol>
-<li>编写测试用例</li>
-<li>运行测试，测试用例无法通过测试</li>
-<li>编写代码，使测试用例通过测试</li>
-<li>优化代码完成开发</li>
-<li>新功能则重复上述步骤</li>
+</li>
+<li><code>has(target, propKey)</code>：拦截<code>propKey in proxy</code>的操作，返回一个布尔值。</li>
+<li><code>deleteProperty(target, propKey)</code>：返回一个布尔值,拦截以下方法<ul>
+<li><code>delete proxy[propKey]</code></li>
+</ul>
+</li>
+<li><code>ownKeys(target)</code>：返回一个数组，该方法返回目标对象所有的属性的属性名，而<code>Obejct.keys()</code>的返回结果仅包括目标对象自身的可属性。拦截以下方法<ul>
+<li><code>Object.getOwnPropertyNames(proxy)</code></li>
+<li><code>Object.getOwnPropertySymbols(proxy)</code></li>
+<li><code>Object.keys(proxy)</code></li>
+<li><code>for...in</code>循环</li>
+</ul>
+</li>
+<li><code>getOwnPropertyDescriptor(target, propKey)</code>：返回属性的<strong>描述对象</strong>，拦截以下方法<ul>
+<li><code>Object.getOwnPropertyDescriptor(proxy, propKey)</code></li>
+</ul>
+</li>
+<li><code>defineProperty(target, propKey, propDesc)</code>：返回一个布尔值，拦截以下方法<ul>
+<li><code>Object.defineProperty(proxy, propKey, propDesc)</code>、</li>
+<li><code>Object.defineProperties(proxy, propDescs)</code></li>
+</ul>
+</li>
+<li><code>preventExtensions(target)</code>：返回一个布尔值，拦截以下方法<ul>
+<li><code>Object.preventExtensions(proxy)</code></li>
+</ul>
+</li>
+<li><code>getPrototypeOf(target)</code>：返回一个布尔值，拦截以下方法<ul>
+<li><code>Object.getPrototypeOf(proxy)</code></li>
+</ul>
+</li>
+<li><code>isExtensible(target)</code>：返回一个布尔值，拦截以下方法<ul>
+<li><code>Object.isExtensible(proxy)</code></li>
+</ul>
+</li>
+<li><code>setPrototypeOf(target, proto)</code>返回一个布尔值，拦截以下方法<br>  -<code>Object.setPrototypeOf(proxy, proto)</code>，</li>
+<li><code>apply(target, object, args)</code>：拦截Proxy<strong>实例</strong>作为<strong>函数调用</strong>的操作，比如<ul>
+<li><code>proxy(...args)</code></li>
+<li><code>proxy,call(object, ...args)</code></li>
+<li><code>proxy.apply(...)</code>。</li>
+</ul>
+</li>
+<li><code>construct(target, args)</code>：拦截Proxy实例作为<strong>构造函数调用</strong>的操作，比如<ul>
+<li><code>new proxy(...args)</code>。</li>
+</ul>
+</li>
+</ul>
+<p>注：描述对象指<code>value</code>、<code>writable</code>、<code>enumerable</code>、<code>configurable</code>、<code>get</code>、<code>set</code>这六个描述对象。</p>
+<h2 id="二、Reflect"><a href="#二、Reflect" class="headerlink" title="二、Reflect"></a>二、Reflect</h2><p>说来惭愧，笔者在很长一段时间里，都没有意识到前端还有<code>Reflect</code>这一模块，用模块来形容<code>Reflect</code>是因为，它长得是一个对象的样子，也很像一个<code>函数对象</code>，但很抱歉的是，他没有<code>new</code>方法，他就是一个普普通通的<code>对象</code>。</p>
+<h3 id="1-什么是Reflect"><a href="#1-什么是Reflect" class="headerlink" title="1. 什么是Reflect"></a>1. 什么是Reflect</h3><ul>
+<li>MDN 中的定义<code>：Reflect</code>是一个内置的对象，它提供拦截 <code>JavaScript</code> 操作的方法。这些方法与<code>proxy handlers</code>的方法相同。<code>Reflect</code>不是一个函数对象，因此它是不可构造的。</li>
+<li>ES6 中的定义<code>：Reflect</code>对象与<code>Proxy</code>很相似，都是<code>ES6</code>为了操作对象而提供的新的API。</li>
+</ul>
+<h3 id="2-如何使用"><a href="#2-如何使用" class="headerlink" title="2. 如何使用"></a>2. 如何使用</h3><p>首先，我们要了解，为什么要创造出<code>Reflect</code>。ES6中列出了<code>Reflect</code>对象设计的意义。</p>
+<ol>
+<li>将<code>Object</code>中明显属于语言内部的方法如<code>Object.defineProperty</code>放到<code>Reflect</code>对象中来。现阶段，某些方法同时在<code>Object</code>和<code>Reflect</code>对象上部署，未来新方法指将部署在<code>Reflect</code>对象上，可以说<code>Reflect</code>上可以找到语言内部的方法。</li>
+<li>修改某些<code>Object</code>方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回false。</li>
+<li>让<code>Object</code>操作都变成函数行为。某些<code>Object</code>操作是命令式，比如<code>name in obj</code>和<code>delete obj[name]</code>，而<code>Reflect.has(obj, name)</code>和<code>Reflect.deleteProperty(obj, name)</code>让它们变成了函数行为。</li>
 </ol>
-<h3 id="TDD优势"><a href="#TDD优势" class="headerlink" title="TDD优势"></a>TDD优势</h3><ol>
-<li>长期减少回归bug：当改变项目代码，所有测试用例会重新运行，一旦测试用例出错，就会发现原来的代码因为回归产生了bug</li>
-<li>代码质量更高（在写测试的时候对代码有了比较完善的思考）</li>
-<li>测试覆盖率高</li>
-</ol>
-<h2 id="BDD-Behavior-Driven-Development-行为驱动开发"><a href="#BDD-Behavior-Driven-Development-行为驱动开发" class="headerlink" title="BDD(Behavior Driven Development) 行为驱动开发"></a>BDD(Behavior Driven Development) 行为驱动开发</h2><p>通过与利益相关者的讨论取得对预期的软件行为的清醒认识。它通过用自然语言书写非程序员可读的测试用例扩展了测试驱动开发方法。行为驱动开发人员使用混合了领域中统一的语言的母语语言来描述他们的代码的目的。这让开发者得以把精力集中在代码应该怎么写，而不是技术细节上，而且也最大程度的减少了将代码编写者的技术语言与商业客户、用户、利益相关者、项目管理者等的领域语言之间来回翻译的代价。</p>
-<h2 id="DDD-Domain-Drive-Design-领域驱动开发"><a href="#DDD-Domain-Drive-Design-领域驱动开发" class="headerlink" title="DDD(Domain Drive Design) 领域驱动开发"></a>DDD(Domain Drive Design) 领域驱动开发</h2><p>核心：</p>
-<ul>
-<li>统一语言(软件的开发人员/使用人员都使用同一套语言，即对某个概念，名词的认知是统一的）</li>
-<li>面向领域（以领域去思考问题，而不是模块）</li>
-</ul>
-<h3 id="DDD优势"><a href="#DDD优势" class="headerlink" title="DDD优势"></a>DDD优势</h3><ol>
-<li>使用统一的一套通用语言，沟通成本会大大减小。</li>
-<li>对使用产品的用户有好处，他能在产品不断更新过程中，有一套统一流畅的体验。用户不用在每次软件更新时都要抱怨为什么之前的一个数据保存后没有用到了</li>
-<li>面向领域去开发产品有助于我们深入分析产品的内在逻辑，专注于解决当前产品的核心问题，而不是冗余的做很多功能模块。</li>
-</ol>
-<h1 id="Enzyme"><a href="#Enzyme" class="headerlink" title="Enzyme"></a>Enzyme</h1><p>对ReactDOM.render进行包装</p>
-<h2 id="三种渲染方式"><a href="#三种渲染方式" class="headerlink" title="三种渲染方式"></a>三种渲染方式</h2><ul>
-<li><code>shallow</code> 浅渲染（浅复制）,仅对当前jsx结构内的顶级组件进行渲染，而不对这些组件内部嵌套的子组件进行渲染，因此行能很快</li>
-<li><code>mount</code> 会进行完全渲染，而且完全依赖DOM API, 也就是说mount渲染结果跟浏览器结果一样, 结合jsdom这个工具，可以对上面提到的有内部子组件实现复杂交互功能的组件进行测试</li>
-<li><code>render</code>也会进行完整渲染，但不依赖DOM API, 而是渲染成HTML结构。</li>
-</ul>
-<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
-<li>simulate(event,mock): 用来触发事件，但一定注意在原组件要注册这个事件</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> mockChange = jest.fn()</span><br><span class="line">wrapper = mount(<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;mockChange&#125;/</span>&gt;</span></span>)</span><br><span class="line">wrapper.simulate(<span class="string">'change'</span>,&#123;<span class="attr">target</span>: &#123;<span class="attr">value</span>: <span class="string">'1'</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="string">'assign'</span> <span class="keyword">in</span> <span class="built_in">Object</span>      <span class="comment">// true;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新写法</span></span><br><span class="line"><span class="built_in">Reflect</span>.has(<span class="built_in">Object</span>, <span class="string">'assign'</span>);      <span class="comment">// true;</span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>instance() =&gt; ReactComponent|DOMComponent ：返回组件的实例。在React 16，无状态组件会返回null（即不是以class创建的组件）</li>
-<li>find(selector): 查找节点，参数可以是css选择器、组件内部构造函数、组件类名等</li>
-<li>at(index): 返回一个数组对象的第几个元素</li>
-<li>contains(nodeOrNodes)：当前对象是否包含参数重点 node，参数类型为react对象或对象数组</li>
-<li>text()：返回当前组件的文本内容</li>
-<li>html()：返回当前组件的HTML代码形式</li>
-<li>props()：返回根组件所有属性</li>
-<li>prop(key)：返回根组件指定属性</li>
-<li>state()：返回根组件的状态</li>
-<li>setState(nextState)：设置根组件的状态</li>
-<li>setProps(nextProps)：设置根组件的属性</li>
-<li>debug(): 会打印出测试实际渲染出的内容字符串</li>
-<li>first()：返回节点数组的第一个元素</li>
-<li>last()：返回节点数组的最后一个节点</li>
+<ol start="4">
+<li><code>Reflect</code>对象的方法<code>Proxy</code>对象的方法，只要是<code>Proxy</code>对象的方法，就能在<code>Reflect</code>对象上找到对应的方法。这就让<code>Proxy</code>对象可以方便地调用对应的<code>Reflect</code>方法，完成默认行为，作为修改行为的基础。也就是说，不管<code>Proxy</code>怎么修改默认行为，你总可以在<code>Reflect</code>上获取默认行为。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> loggedObj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line">  <span class="keyword">get</span>(target, name) &#123;</span><br><span class="line">  <span class="comment">// proxy修改默认行为</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'get'</span>, target, name);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回默认行为</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  deleteProperty(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'delete'</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.deleteProperty(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  has(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'has'</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.has(target, name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-Reflect的支持的拦截操作"><a href="#3-Reflect的支持的拦截操作" class="headerlink" title="3. Reflect的支持的拦截操作"></a>3. Reflect的支持的拦截操作</h3><p> 与<code>Proxy</code>支持的操作完全相同</p>
+<h2 id="三、Object-defineProperty"><a href="#三、Object-defineProperty" class="headerlink" title="三、Object.defineProperty"></a>三、Object.defineProperty</h2><h3 id="1-什么是Object-defineProperty"><a href="#1-什么是Object-defineProperty" class="headerlink" title="1. 什么是Object.defineProperty"></a>1. 什么是Object.defineProperty</h3><ul>
+<li>MDN中的定义<code>：Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。</li>
 </ul>
-<h1 id="好文分享"><a href="#好文分享" class="headerlink" title="好文分享"></a>好文分享</h1><ul>
-<li><a href="https://juejin.im/post/59b5e79f6fb9a00a600f4216" target="_blank" rel="noopener">Jest模拟函数、timer、类</a></li>
-<li><a href="https://segmentfault.com/a/1190000016717356" target="_blank" rel="noopener">Jest fn、mock、spyOn</a></li>
-<li><a href="http://iceiceice.top/2018/12/29/introduce-jest/#jest.mock%20and%20jest.spyOn" target="_blank" rel="noopener">Jest 入门</a></li>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> object1 = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(object1, <span class="string">'property1'</span>, &#123;</span><br><span class="line">  value: <span class="number">42</span>,</span><br><span class="line">  writable: <span class="literal">false</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">object1.property1 = <span class="number">77</span>;</span><br><span class="line"><span class="comment">// throws an error in strict mode</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(object1.property1);</span><br><span class="line"><span class="comment">// expected output: 42</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-使用"><a href="#2-使用" class="headerlink" title="2. 使用"></a>2. 使用</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Object</span>.defineProperty(obj, prop, descriptor);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>obj：要定义属性的对象</li>
+<li>prop：要定义或修改的属性的名称或<code>Symbol</code></li>
+<li>descriptor：要定义或修改的属性描述符。</li>
 </ul>
 ]]></content>
-      <categories>
-        <category>一入React深似海</category>
-      </categories>
       <tags>
-        <tag>React测试</tag>
+        <tag>JS基础</tag>
       </tags>
   </entry>
   <entry>
@@ -346,6 +316,309 @@
       </tags>
   </entry>
   <entry>
+    <title>Jest+Enzyme前端自动化测试</title>
+    <url>/2019/08/11/Jest-Enzyme%E5%89%8D%E7%AB%AF%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/</url>
+    <content><![CDATA[<h1 id="jest测试"><a href="#jest测试" class="headerlink" title="jest测试"></a>jest测试</h1><p>笔者接触组件库开发已经几月了，目前组件库越做越大，越做越好，但随之而来接入的业务方提的bug也越来越多，这显得前端自动化测试格外重要，此文主要是讲测试入门以及一些思想，具体怎么配置笔者觉得没有必要花心思去整理，网上一搜一大堆。</p>
+<a id="more"></a>
+
+<h2 id="测试类型"><a href="#测试类型" class="headerlink" title="测试类型"></a>测试类型</h2><ul>
+<li>单元测试：又称模块测试，对一个模块、类、函数等进行正确性检验工作。目标是隔离程序部件并证明这些单个部件是正确的。一个单元测试提供了代码片断需要满足的严密的书面规约。因此，单元测试带来了一些益处。 单元测试在软件开发过程的早期就能发现问题。</li>
+<li>功能测试：又称黑盒测试，是通过测试来检测每个功能是否都能正常使用。在测试中，把程序看作一个不能打开的黑盒子，在完全不考虑程序内部结构和内部特性的情况下，在程序接口进行测试，它只检查程序功能是否按照需求规格说明书的规定正常使用，程序是否能适当地接收输入数据而产生正确的输出信息。黑盒测试着眼于程序外部结构，不考虑内部逻辑结构，主要针对软件界面和软件功能进行测试。</li>
+<li>集成测试：在单元测试的基础上，将所有模块按照设计要求组装成子系统或者系统，进行测试</li>
+<li>冒烟测试： 在正式全面的测试之前，对主要功能进行的与测试，确认主要功能是否满足需要，软件是否能正常运行</li>
+</ul>
+<h2 id="jest匹配器"><a href="#jest匹配器" class="headerlink" title="jest匹配器"></a>jest匹配器</h2><ul>
+<li>toBe  (===)</li>
+<li>toEqual</li>
+<li>toBeNull</li>
+<li>toBeTrusty</li>
+<li>toBeFalsy</li>
+<li>toBeGreaterThan(number)</li>
+<li>toBeGreaterThanOrEqual(number)</li>
+<li>toBeLessThan(number)</li>
+<li>toBeLessThanOrEqual(number)</li>
+<li>toBeCloseTo(number);   // 近似</li>
+<li>toContainer</li>
+<li>toMatch可以检查字符串是否与正则表达式匹配</li>
+</ul>
+<p>++jest –watchAll(类似热加载)++</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//toBe 失败</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;<span class="attr">one</span>: <span class="number">1</span>&#125;</span><br><span class="line">expect(a).toBe(&#123;<span class="attr">one</span>: <span class="number">1</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<p>异步函数的测试</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fecthData = <span class="function">(<span class="params">fn</span>) =&gt;</span> &#123;</span><br><span class="line">    axios.get(<span class="string">"http://www.dell-lee.com/react/api/demo.json"</span>)</span><br><span class="line">    .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        fn(res)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">//回调类型</span></span><br><span class="line"><span class="keyword">import</span> fetchData <span class="keyword">from</span> <span class="string">'./index.js'</span></span><br><span class="line">test(<span class="string">'fetchData 返回结果为&#123; success:true &#125;'</span>,(done) =&gt; &#123;</span><br><span class="line">    fetchData(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">        expect(data).toEqual(&#123;</span><br><span class="line">            success: <span class="literal">true</span></span><br><span class="line">        &#125;);</span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>expect.assertions(1);   //至少要执行一个expect语法,expect.assertions,来测试一定数量的断言被调用，否则fulfilled态promise不会让测试失败</p>
+<h2 id="jest-globals-API"><a href="#jest-globals-API" class="headerlink" title="jest globals API"></a>jest globals API</h2><ul>
+<li>discribe(name,func): 块，一个测试单元的所用果能测试用例可组合为一个块</li>
+<li>it(name,func,timeout): 测试用例，一般一个测试用例测试一个单一功能</li>
+</ul>
+<h3 id="beforeEach和afterEach"><a href="#beforeEach和afterEach" class="headerlink" title="beforeEach和afterEach"></a>beforeEach和afterEach</h3><p>需要为多次测试重复设置的工作，可以使用breforeEach和afterEach。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    initializeCityDatabase();     <span class="comment">//每次测试前都要初始化citybase</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    clearCityDatabase();<span class="comment">// 每次测试之后要清空citybase</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="beforeAll和afterAll"><a href="#beforeAll和afterAll" class="headerlink" title="beforeAll和afterAll"></a>beforeAll和afterAll</h3><p>例如，如果 initializeCityDatabase 和 clearCityDatabase 都返回了 promise ，城市数据库可以在测试中重用，我们就能把我们的测试代码改成这样</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">beforeAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> initializeCityDatabase();</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">afterAll(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> clearCityDatabase(); </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>全局和describe都拥有上面四个生命周期。</p>
+<ul>
+<li>但describe的after函数优先级<strong>高于</strong>全局after函数</li>
+<li>describe的before函数优先级要<strong>低于</strong>全局的before函数</li>
+</ul>
+<h2 id="mock函数"><a href="#mock函数" class="headerlink" title="mock函数"></a>mock函数</h2><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();   <span class="comment">// mock函数，捕获函数的调用</span></span><br><span class="line">func.mockReturnValueOnce(<span class="string">'Dell'</span>);  <span class="comment">// mock函数第一次调用的返回值</span></span><br><span class="line"><span class="comment">// func.mock.instance mock函数每次被调用this指向</span></span><br></pre></td></tr></table></figure>
+<p>mock函数中的作用</p>
+<ul>
+<li>捕获函数的调用和返回结果，以及this和调用顺序（func.mock)</li>
+<li>自由设置返回结 func.mockReturnValueOnce();</li>
+<li>改变内部函数的实现</li>
+</ul>
+<p>通过mock函数来测试异步函数</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> getData = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    axios.get(<span class="string">"/api"</span>).then(<span class="function"><span class="params">res</span>=&gt;</span>res.data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试</span></span><br><span class="line">jest.mock(<span class="string">"axios"</span>);   <span class="comment">// 用jest来模拟ajax请求</span></span><br><span class="line"></span><br><span class="line">test(<span class="string">"test getData"</span>, <span class="keyword">async</span>()=&gt;&#123;</span><br><span class="line">    axios.get.mockReturnValue(<span class="string">"hello"</span>);   <span class="comment">// 把axios的get请求都返回hello</span></span><br><span class="line">    <span class="keyword">await</span> getData().then(<span class="function">(<span class="params">data</span>)=&gt;</span>&#123;</span><br><span class="line">        expect(data).toBe(<span class="string">"hello"</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> func = jest.fn();</span><br><span class="line">func.mockReturnValue(<span class="string">"hello"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"><span class="keyword">const</span> func = jest.fn(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line">func.mockImplementation(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"hello"</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">func.mockReturnThis();   <span class="comment">//undefined;</span></span><br><span class="line">expect(func.mock.calls[<span class="number">0</span>]).toEqual([<span class="string">'abc'</span>]);    <span class="comment">// 第一次调用这个函数的参数是abc</span></span><br><span class="line">expect(func.toBeCalledWidth(<span class="string">'abc'</span>));  <span class="comment">// 每次调用这个函数的参数都是abc</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">jest.mock(<span class="string">'./demo'</span>);</span><br><span class="line"><span class="keyword">import</span> &#123; fetchData &#125; <span class="keyword">from</span> <span class="string">'./demo'</span>;    <span class="comment">// 这个是从__mocks__中引入的模拟的函数</span></span><br><span class="line"><span class="keyword">const</span> &#123; getNumber &#125; = jest.requireActual(<span class="string">'./demo'</span>);   <span class="comment">// 这个是从真实文件夹中引入的函数。</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="spyOn"><a href="#spyOn" class="headerlink" title="spyOn"></a>spyOn</h2><p><code>jest.spuOn()</code>同样创建一个mock函数,但他比jest.fn()或jest.mock()；更厉害的是，他还会执行被mock的原函数。例如</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> fn = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"1234567"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> jestfn = jest.mock(fn);   <span class="comment">// 如果执行，不会打印任何东西</span></span><br><span class="line"><span class="keyword">const</span> jestspy = jest.spyOn(fn);   <span class="comment">// 如果执行，会打印出1234567</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="snapshot-快照测试"><a href="#snapshot-快照测试" class="headerlink" title="snapshot 快照测试"></a>snapshot 快照测试</h2><p>就是看你生成的快照测试跟原来一不一样，如果原来文件更改，测试会失败，也就是让你确定你是不是要更改原来的文件。</p>
+<p>例如对一个React组件而言，传入相同的props，希望得到相同的输出。这样就可以通过快照测试来完成。</p>
+<p>按 <code>u</code>可以 upadte<br>按 <code>i</code> 可以交互的更新快照</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">expect <span class="keyword">const</span> config = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">return</span>&#123;</span><br><span class="line">        url: <span class="string">"http://localhost"</span>,</span><br><span class="line">        port: <span class="string">"8000"</span>,</span><br><span class="line">        time: <span class="keyword">new</span> <span class="built_in">Date</span>()      <span class="comment">// time是时间类型，会一直改变，所以快照是一直通不过的</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 测试config</span></span><br><span class="line">test(<span class="string">"测试config"</span>,()=&gt;&#123;</span><br><span class="line">    expect(config()).toMatchSnapshot(&#123;</span><br><span class="line">        time: expect.any(<span class="built_in">Date</span>)   <span class="comment">// 这是说希望time只要是时间类型就好</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="行内snapshot和普通snapshot的区别"><a href="#行内snapshot和普通snapshot的区别" class="headerlink" title="行内snapshot和普通snapshot的区别"></a>行内snapshot和普通snapshot的区别</h2><ul>
+<li>普通: <code>toMacthSnapshot()</code>会把生成的快照存到一个新文件里</li>
+<li>行内: <code>toMatchInlineSnapshot()</code>会把生成的快照作为<code>toMatchInlineSnapshot()</code>的参数</li>
+</ul>
+<h3 id="mock-timer"><a href="#mock-timer" class="headerlink" title="mock timer"></a>mock timer</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> timer = <span class="function">(<span class="params">callback</span>)=&gt;</span>&#123;</span><br><span class="line">    setTimerout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        callback();</span><br><span class="line">    &#125;,<span class="number">3000</span>)</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// test</span></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line">    timer(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        expect(<span class="number">1</span>).toBe(<span class="number">1</span>);   <span class="comment">// 等3秒后触发</span></span><br><span class="line">        done();</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用假的timer模拟</span></span><br><span class="line">jest.useFakeTimers();</span><br><span class="line"></span><br><span class="line">test(<span class="string">"timer 测试"</span>,(done)=&gt;&#123;</span><br><span class="line"><span class="keyword">const</span> fn = jest.fn();</span><br><span class="line">    timer(fn);</span><br><span class="line">   </span><br><span class="line">    jest.runOnlyPendingTimers();  <span class="comment">// </span></span><br><span class="line">    </span><br><span class="line">    只执行已经在队列中的timers，不会执行还未被创建的timers</span><br><span class="line">   </span><br><span class="line">    jest.runAllTimers();    <span class="comment">// 避免所有的等待时间（所有的时间函数都会被触发）</span></span><br><span class="line">    </span><br><span class="line">    jest.advanceTimersByTime(<span class="number">6000</span>);   <span class="comment">// 快进时间</span></span><br><span class="line">    </span><br><span class="line">    expect(fn).toHaveBeenCalledTimers(<span class="number">1</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 为了避免advanceTimersByTime()对其他测试用例的影响，可以用</span></span><br><span class="line">beforeEach(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    jest.useFakeTimers();    <span class="comment">// 每次测试前都初始化一个实力对象。</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="mock-类"><a href="#mock-类" class="headerlink" title="mock 类"></a>mock 类</h2><ul>
+<li>使用<code>jest.mock(moduleName,factory,options)</code>自动mock模块，jest会自动帮我们mock指定模块中的函数，<code>factory</code>和<code>option</code>参数是可选的。<code>factory</code><h3 id="jest来测试ES6中的类"><a href="#jest来测试ES6中的类" class="headerlink" title="jest来测试ES6中的类"></a>jest来测试ES6中的类</h3>如果引入的文件是一个类的话，jest会默认把这个类里面的构造方法和类方法用jest.fn()代替。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 源文件</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Util</span></span>&#123;</span><br><span class="line">    init() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    a() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">    c() &#123;</span><br><span class="line">        <span class="comment">// ... 异常复杂</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Util;</span><br><span class="line"></span><br><span class="line">jest.mock(<span class="string">"./util"</span>);     <span class="comment">// 引入类</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 相当于</span></span><br><span class="line"><span class="keyword">const</span> Util = jest.fn();</span><br><span class="line">Util.a = jest.fn();</span><br><span class="line">Util.c = jest.fn();</span><br></pre></td></tr></table></figure>
+
+<h2 id="TDD-（Test-Driven-Development-测试驱动开发"><a href="#TDD-（Test-Driven-Development-测试驱动开发" class="headerlink" title="TDD （Test Driven Development)  测试驱动开发"></a>TDD （Test Driven Development)  测试驱动开发</h2><ol>
+<li>编写测试用例</li>
+<li>运行测试，测试用例无法通过测试</li>
+<li>编写代码，使测试用例通过测试</li>
+<li>优化代码完成开发</li>
+<li>新功能则重复上述步骤</li>
+</ol>
+<h3 id="TDD优势"><a href="#TDD优势" class="headerlink" title="TDD优势"></a>TDD优势</h3><ol>
+<li>长期减少回归bug：当改变项目代码，所有测试用例会重新运行，一旦测试用例出错，就会发现原来的代码因为回归产生了bug</li>
+<li>代码质量更高（在写测试的时候对代码有了比较完善的思考）</li>
+<li>测试覆盖率高</li>
+</ol>
+<h2 id="BDD-Behavior-Driven-Development-行为驱动开发"><a href="#BDD-Behavior-Driven-Development-行为驱动开发" class="headerlink" title="BDD(Behavior Driven Development) 行为驱动开发"></a>BDD(Behavior Driven Development) 行为驱动开发</h2><p>通过与利益相关者的讨论取得对预期的软件行为的清醒认识。它通过用自然语言书写非程序员可读的测试用例扩展了测试驱动开发方法。行为驱动开发人员使用混合了领域中统一的语言的母语语言来描述他们的代码的目的。这让开发者得以把精力集中在代码应该怎么写，而不是技术细节上，而且也最大程度的减少了将代码编写者的技术语言与商业客户、用户、利益相关者、项目管理者等的领域语言之间来回翻译的代价。</p>
+<h2 id="DDD-Domain-Drive-Design-领域驱动开发"><a href="#DDD-Domain-Drive-Design-领域驱动开发" class="headerlink" title="DDD(Domain Drive Design) 领域驱动开发"></a>DDD(Domain Drive Design) 领域驱动开发</h2><p>核心：</p>
+<ul>
+<li>统一语言(软件的开发人员/使用人员都使用同一套语言，即对某个概念，名词的认知是统一的）</li>
+<li>面向领域（以领域去思考问题，而不是模块）</li>
+</ul>
+<h3 id="DDD优势"><a href="#DDD优势" class="headerlink" title="DDD优势"></a>DDD优势</h3><ol>
+<li>使用统一的一套通用语言，沟通成本会大大减小。</li>
+<li>对使用产品的用户有好处，他能在产品不断更新过程中，有一套统一流畅的体验。用户不用在每次软件更新时都要抱怨为什么之前的一个数据保存后没有用到了</li>
+<li>面向领域去开发产品有助于我们深入分析产品的内在逻辑，专注于解决当前产品的核心问题，而不是冗余的做很多功能模块。</li>
+</ol>
+<h1 id="Enzyme"><a href="#Enzyme" class="headerlink" title="Enzyme"></a>Enzyme</h1><p>对ReactDOM.render进行包装</p>
+<h2 id="三种渲染方式"><a href="#三种渲染方式" class="headerlink" title="三种渲染方式"></a>三种渲染方式</h2><ul>
+<li><code>shallow</code> 浅渲染（浅复制）,仅对当前jsx结构内的顶级组件进行渲染，而不对这些组件内部嵌套的子组件进行渲染，因此行能很快</li>
+<li><code>mount</code> 会进行完全渲染，而且完全依赖DOM API, 也就是说mount渲染结果跟浏览器结果一样, 结合jsdom这个工具，可以对上面提到的有内部子组件实现复杂交互功能的组件进行测试</li>
+<li><code>render</code>也会进行完整渲染，但不依赖DOM API, 而是渲染成HTML结构。</li>
+</ul>
+<h2 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h2><ul>
+<li>simulate(event,mock): 用来触发事件，但一定注意在原组件要注册这个事件</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> mockChange = jest.fn()</span><br><span class="line">wrapper = mount(<span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">onChange</span>=<span class="string">&#123;mockChange&#125;/</span>&gt;</span></span>)</span><br><span class="line">wrapper.simulate(<span class="string">'change'</span>,&#123;<span class="attr">target</span>: &#123;<span class="attr">value</span>: <span class="string">'1'</span>&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>instance() =&gt; ReactComponent|DOMComponent ：返回组件的实例。在React 16，无状态组件会返回null（即不是以class创建的组件）</li>
+<li>find(selector): 查找节点，参数可以是css选择器、组件内部构造函数、组件类名等</li>
+<li>at(index): 返回一个数组对象的第几个元素</li>
+<li>contains(nodeOrNodes)：当前对象是否包含参数重点 node，参数类型为react对象或对象数组</li>
+<li>text()：返回当前组件的文本内容</li>
+<li>html()：返回当前组件的HTML代码形式</li>
+<li>props()：返回根组件所有属性</li>
+<li>prop(key)：返回根组件指定属性</li>
+<li>state()：返回根组件的状态</li>
+<li>setState(nextState)：设置根组件的状态</li>
+<li>setProps(nextProps)：设置根组件的属性</li>
+<li>debug(): 会打印出测试实际渲染出的内容字符串</li>
+<li>first()：返回节点数组的第一个元素</li>
+<li>last()：返回节点数组的最后一个节点</li>
+</ul>
+<h1 id="好文分享"><a href="#好文分享" class="headerlink" title="好文分享"></a>好文分享</h1><ul>
+<li><a href="https://juejin.im/post/59b5e79f6fb9a00a600f4216" target="_blank" rel="noopener">Jest模拟函数、timer、类</a></li>
+<li><a href="https://segmentfault.com/a/1190000016717356" target="_blank" rel="noopener">Jest fn、mock、spyOn</a></li>
+<li><a href="http://iceiceice.top/2018/12/29/introduce-jest/#jest.mock%20and%20jest.spyOn" target="_blank" rel="noopener">Jest 入门</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React测试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Cookie 和 Session比较</title>
+    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
+    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
+<a id="more"></a>
+
+<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
+<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
+<p><strong>express中读取还是设置都是在req中</strong>。</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>TCP和UDP</title>
+    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
+    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
+<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
+<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
+<li>超文本传输协议（HTTP）万维网基本协议</li>
+<li>文件传输协议（TFTP简单文件传输协议）</li>
+<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
+<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
+<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
+</ol>
+<a id="more"></a>
+
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
+<li>Internet协议（IP）；</li>
+<li>Internet控制信息协议（ICMP）；</li>
+<li>地址解析协议（ARP）；</li>
+<li>反向地址解析协议（RARP）。</li>
+</ol>
+<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
+<ul>
+<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
+<ul>
+<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
+</ul>
+<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
+<ul>
+<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
+</ul>
+<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
+<ul>
+<li>第一次挥手(FIN=1，seq=x)</li>
+</ul>
+<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
+<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
+<ul>
+<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
+</ul>
+<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
+<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
+<ul>
+<li>第三次挥手(FIN=1，seq=y)</li>
+</ul>
+<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
+<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
+<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
+<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
+<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
+<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
+<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
+<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
+<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
+<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
+<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
+<ul>
+<li>缩短超时（SYN Timeout）时间</li>
+<li>增加最大半连接数</li>
+<li>过滤网关防护</li>
+<li>SYN cookies技术</li>
+</ul>
+<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
+<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
+<ul>
+<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
+<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
+<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
+<li>UDP 支持多播和广播。（TCP不支持）</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>react hook</title>
+    <url>/2019/09/09/hook/</url>
+    <content><![CDATA[<h1 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h1><p>可以让你在不编写class的情况下使用state以及其他React特性</p>
+<p>Hook的作用就是让你的函数组件中可以使用class中的一些生命周期和state等。</p>
+<a id="more"></a>
+
+<h2 id="Hook规则"><a href="#Hook规则" class="headerlink" title="Hook规则"></a>Hook规则</h2><p>Hook就是JavaScript函数，但是使用它们会有两个额外的规则</p>
+<ul>
+<li>只能在<strong>函数最外层</strong>调用Hook，不要在循环、条件判断或子函数中调用</li>
+<li>只能在<strong>React的函数组件</strong>中调用Hook。（除了自定义Hook外）</li>
+</ul>
+<h2 id="useState方法"><a href="#useState方法" class="headerlink" title="useState方法"></a>useState方法</h2><h3 id="基本例子"><a href="#基本例子" class="headerlink" title="基本例子"></a>基本例子</h3><ul>
+<li>useState会返回一对值：<code>当前状态</code>和一个让你<code>更新它的函数</code>。<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 声明一个叫 “count” 的 state 变量。</span></span><br><span class="line">  <span class="comment">// 这个变量的初始值是0, 即useState里的初始值</span></span><br><span class="line">  <span class="comment">// 更新这个变量的函数就是setCount</span></span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h2><h3 id="基本例子-1"><a href="#基本例子-1" class="headerlink" title="基本例子"></a>基本例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Similar to componentDidMount and componentDidUpdate:</span></span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// Update the document title using the browser API</span></span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>useEffect</code>默认在第一次渲染后和每次更新之后都会执行。 React保证了每次渲染effect的同时DOM都已经更新完毕。</li>
+<li>与<code>componentDidMount</code>和<code>componentDidUpdate</code>不同的是，使用<code>useEffect</code>调度的<code>effect</code>不会阻塞浏览器更新屏幕，这让你的应用看起来响应更快。</li>
+</ul>
+<h3 id="清除effect"><a href="#清除effect" class="headerlink" title="清除effect"></a>清除effect</h3><p>当<code>useEffect</code>返回一个函数时，react将会在执行清除操作时调用它。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"> useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">      setIsOnline(status.isOnline);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个函数，清除时调用。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="仅在state更改是更新。"><a href="#仅在state更改是更新。" class="headerlink" title="仅在state更改是更新。"></a>仅在state更改是更新。</h3><p>使<code>Hook</code>在<code>count</code>更改时更新</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.title=<span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span></span><br><span class="line">&#125;,[count])</span><br></pre></td></tr></table></figure>
+
+<p>仅在 props.friend.id 发生变化时，重新订阅</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">    setIsOnline(status.isOnline);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.friend.id]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./mycontext;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> MyContext = React.createContext(&#123;<span class="attr">count</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在组件中使用</span></span><br><span class="line"><span class="keyword">import</span> &#123; MyContext &#125; <span class="keyword">from</span> <span class="string">'./mycontext'</span>;</span><br><span class="line"><span class="keyword">const</span> value = useContext(MyContext);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原来this.context.count;</span></span><br><span class="line"><span class="comment">// 相当于value.count</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer"></a>useReducer</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState, init);</span><br><span class="line"><span class="comment">// reducer： 形如(state，action) =&gt; newState;</span></span><br><span class="line"><span class="comment">// initialState：初始化的State</span></span><br><span class="line"><span class="comment">// init：惰性创建 state</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="基础例子"><a href="#基础例子" class="headerlink" title="基础例子"></a>基础例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params">initialCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">count</span>: initialCount&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'increment'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'decrement'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'reset'</span>:</span><br><span class="line">      <span class="keyword">return</span> init(action.payload);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialCount, init);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button</span><br><span class="line">        onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'reset'</span>, <span class="attr">payload</span>: initialCount&#125;)&#125;&gt;</span><br><span class="line"></span><br><span class="line">        Reset</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;type: 'increment'&#125;)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'decrement'</span>&#125;)&#125;&gt;-&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="useRef"><a href="#useRef" class="headerlink" title="useRef"></a>useRef</h2><p>useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。</p>
+<p>返回的 ref 对象在组件的整个生命周期内保持不变。</p>
+<p>useRef不仅可以取代原来的<code>ref</code>属性，还可以用于保存<code>Hook</code>属性的实例变量。</p>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于普通ref</span></span><br><span class="line"><span class="keyword">const</span> domRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    domRef.current.focus();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render()&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">            &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于保存一个实例变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> staticRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> id = setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里staticRef就是用于保存变量的</span></span><br><span class="line">    staticRef.current = id;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      clearInterval(staticRef.current);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="自定义Hook"><a href="#自定义Hook" class="headerlink" title="自定义Hook"></a>自定义Hook</h2><p>自定义Hook是一个函数，其名称以<code>use</code>开头，函数内部可以调用其他Hook。</p>
+<ul>
+<li>两个组件中使用相同的Hook不会共享state，因为自定义 Hook 是一种重用状态逻辑的机制(例如设置为订阅并存储当前值)，所以每次使用自定义 Hook 时，其中的所有<code>state</code> 和<code>effect</code>都是完全隔离的。</li>
+</ul>
+<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(count + <span class="number">1</span>)&#125;&gt;+&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>一入React深似海</category>
+      </categories>
+      <tags>
+        <tag>React基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Redis基础入门</title>
     <url>/2019/07/15/Redis%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8/</url>
     <content><![CDATA[<h1 id="Redis基础教程"><a href="#Redis基础教程" class="headerlink" title="Redis基础教程"></a>Redis基础教程</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Redis是一个高性能key-value数据库</p>
@@ -483,204 +756,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Proxy和defineProperty</title>
-    <url>/2020/12/23/Proxy%E5%92%8CdefineProperty/</url>
-    <content><![CDATA[<p> <code>Vue3.0</code>中双向绑定的实现从<code>Object.defineProperty</code>变为<code>ES6</code>中的<code>Proxy</code>。其实<code>Proxy</code>和<code>definePrototype</code>在平常业务场景中还是挺少用到，但是作为前端工程师这一块是一个主流框架的底层原理。所以还是必须要了解这两种方法。</p>
-<a id="more"></a>
-
-<h2 id="一、Proxy"><a href="#一、Proxy" class="headerlink" title="一、Proxy"></a>一、Proxy</h2><h3 id="1-什么是Proxy"><a href="#1-什么是Proxy" class="headerlink" title="1. 什么是Proxy"></a>1. 什么是Proxy</h3><ul>
-<li>MDN中定义：Proxy对象用于创建一个对象的代理，从而实现基本的拦截和自定义（如属性查找、赋值、枚举、函数调用等）</li>
-<li>ES6入门中定义：Proxy用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”，即对编程语言进行编程。</li>
-</ul>
-<p><code>Proxy</code>可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问都必须通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。<code>Proxy</code>原意就是代理，可以理解为代理某些操作。</p>
-<h3 id="2-语法"><a href="#2-语法" class="headerlink" title="2. 语法"></a>2. 语法</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>target</code>：就是你要是用<code>Proxy</code>包装的目标对象（可以是任何类型的对象，包括函数、数组，甚至是另一个代理）。</li>
-<li><code>handler</code>：是一个对象，里面有各种你代理的方法。</li>
-</ul>
-<h3 id="3-一个例子"><a href="#3-一个例子" class="headerlink" title="3. 一个例子"></a>3. 一个例子</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">    age: <span class="number">10</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> handler = &#123;</span><br><span class="line">    <span class="keyword">get</span>: (target, propKey, receiver)=&gt;&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(target, propKey, receiver);</span><br><span class="line">        <span class="keyword">return</span> target[propKey]</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">set</span>: (target, propKey, value, receiver)=&gt;&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(target, propKey, value, receiver);</span><br><span class="line">        target[propKey] = value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy_obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, handler);</span><br><span class="line">proxy_obj.age = <span class="number">11</span>;</span><br><span class="line"><span class="built_in">console</span>.log(proxy_obj.age);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>输出结果<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/WX20201223-150230%402x.png" alt="输出结果"></li>
-<li>target：就是你代理的对象。</li>
-<li>propKey：要读取的属性名。</li>
-<li>value：要设置的新value。</li>
-<li>receiver：Proxy或者继承Proxy的对象。</li>
-</ul>
-<h3 id="4-Proxy的支持的拦截操作"><a href="#4-Proxy的支持的拦截操作" class="headerlink" title="4. Proxy的支持的拦截操作"></a>4. Proxy的支持的拦截操作</h3><ul>
-<li><code>get(target, propKey, receiver)</code>：拦截对象属性的读取，如<ul>
-<li><code>proxy.foo</code></li>
-<li><code>proxy[&#39;foo&#39;]</code></li>
-</ul>
-</li>
-<li><code>set(target, propKey, value, receiver)</code>：返回一个布尔值。拦截对象属性的设置，如<ul>
-<li><code>proxu.foo = v</code></li>
-<li><code>proxy[&#39;foo&#39;] = v</code>，</li>
-</ul>
-</li>
-<li><code>has(target, propKey)</code>：拦截<code>propKey in proxy</code>的操作，返回一个布尔值。</li>
-<li><code>deleteProperty(target, propKey)</code>：返回一个布尔值,拦截以下方法<ul>
-<li><code>delete proxy[propKey]</code></li>
-</ul>
-</li>
-<li><code>ownKeys(target)</code>：返回一个数组，该方法返回目标对象所有的属性的属性名，而<code>Obejct.keys()</code>的返回结果仅包括目标对象自身的可属性。拦截以下方法<ul>
-<li><code>Object.getOwnPropertyNames(proxy)</code></li>
-<li><code>Object.getOwnPropertySymbols(proxy)</code></li>
-<li><code>Object.keys(proxy)</code></li>
-<li><code>for...in</code>循环</li>
-</ul>
-</li>
-<li><code>getOwnPropertyDescriptor(target, propKey)</code>：返回属性的<strong>描述对象</strong>，拦截以下方法<ul>
-<li><code>Object.getOwnPropertyDescriptor(proxy, propKey)</code></li>
-</ul>
-</li>
-<li><code>defineProperty(target, propKey, propDesc)</code>：返回一个布尔值，拦截以下方法<ul>
-<li><code>Object.defineProperty(proxy, propKey, propDesc)</code>、</li>
-<li><code>Object.defineProperties(proxy, propDescs)</code></li>
-</ul>
-</li>
-<li><code>preventExtensions(target)</code>：返回一个布尔值，拦截以下方法<ul>
-<li><code>Object.preventExtensions(proxy)</code></li>
-</ul>
-</li>
-<li><code>getPrototypeOf(target)</code>：返回一个布尔值，拦截以下方法<ul>
-<li><code>Object.getPrototypeOf(proxy)</code></li>
-</ul>
-</li>
-<li><code>isExtensible(target)</code>：返回一个布尔值，拦截以下方法<ul>
-<li><code>Object.isExtensible(proxy)</code></li>
-</ul>
-</li>
-<li><code>setPrototypeOf(target, proto)</code>返回一个布尔值，拦截以下方法<br>  -<code>Object.setPrototypeOf(proxy, proto)</code>，</li>
-<li><code>apply(target, object, args)</code>：拦截Proxy<strong>实例</strong>作为<strong>函数调用</strong>的操作，比如<ul>
-<li><code>proxy(...args)</code></li>
-<li><code>proxy,call(object, ...args)</code></li>
-<li><code>proxy.apply(...)</code>。</li>
-</ul>
-</li>
-<li><code>construct(target, args)</code>：拦截Proxy实例作为<strong>构造函数调用</strong>的操作，比如<ul>
-<li><code>new proxy(...args)</code>。</li>
-</ul>
-</li>
-</ul>
-<p>注：描述对象指<code>value</code>、<code>writable</code>、<code>enumerable</code>、<code>configurable</code>、<code>get</code>、<code>set</code>这六个描述对象。</p>
-<h2 id="二、Reflect"><a href="#二、Reflect" class="headerlink" title="二、Reflect"></a>二、Reflect</h2><p>说来惭愧，笔者在很长一段时间里，都没有意识到前端还有<code>Reflect</code>这一模块，用模块来形容<code>Reflect</code>是因为，它长得是一个对象的样子，也很像一个<code>函数对象</code>，但很抱歉的是，他没有<code>new</code>方法，他就是一个普普通通的<code>对象</code>。</p>
-<h3 id="1-什么是Reflect"><a href="#1-什么是Reflect" class="headerlink" title="1. 什么是Reflect"></a>1. 什么是Reflect</h3><ul>
-<li>MDN 中的定义<code>：Reflect</code>是一个内置的对象，它提供拦截 <code>JavaScript</code> 操作的方法。这些方法与<code>proxy handlers</code>的方法相同。<code>Reflect</code>不是一个函数对象，因此它是不可构造的。</li>
-<li>ES6 中的定义<code>：Reflect</code>对象与<code>Proxy</code>很相似，都是<code>ES6</code>为了操作对象而提供的新的API。</li>
-</ul>
-<h3 id="2-如何使用"><a href="#2-如何使用" class="headerlink" title="2. 如何使用"></a>2. 如何使用</h3><p>首先，我们要了解，为什么要创造出<code>Reflect</code>。ES6中列出了<code>Reflect</code>对象设计的意义。</p>
-<ol>
-<li>将<code>Object</code>中明显属于语言内部的方法如<code>Object.defineProperty</code>放到<code>Reflect</code>对象中来。现阶段，某些方法同时在<code>Object</code>和<code>Reflect</code>对象上部署，未来新方法指将部署在<code>Reflect</code>对象上，可以说<code>Reflect</code>上可以找到语言内部的方法。</li>
-<li>修改某些<code>Object</code>方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回false。</li>
-<li>让<code>Object</code>操作都变成函数行为。某些<code>Object</code>操作是命令式，比如<code>name in obj</code>和<code>delete obj[name]</code>，而<code>Reflect.has(obj, name)</code>和<code>Reflect.deleteProperty(obj, name)</code>让它们变成了函数行为。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="string">'assign'</span> <span class="keyword">in</span> <span class="built_in">Object</span>      <span class="comment">// true;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新写法</span></span><br><span class="line"><span class="built_in">Reflect</span>.has(<span class="built_in">Object</span>, <span class="string">'assign'</span>);      <span class="comment">// true;</span></span><br></pre></td></tr></table></figure>
-
-<ol start="4">
-<li><code>Reflect</code>对象的方法<code>Proxy</code>对象的方法，只要是<code>Proxy</code>对象的方法，就能在<code>Reflect</code>对象上找到对应的方法。这就让<code>Proxy</code>对象可以方便地调用对应的<code>Reflect</code>方法，完成默认行为，作为修改行为的基础。也就是说，不管<code>Proxy</code>怎么修改默认行为，你总可以在<code>Reflect</code>上获取默认行为。</li>
-</ol>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> loggedObj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line">  <span class="keyword">get</span>(target, name) &#123;</span><br><span class="line">  <span class="comment">// proxy修改默认行为</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'get'</span>, target, name);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回默认行为</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  deleteProperty(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'delete'</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.deleteProperty(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  has(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'has'</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.has(target, name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-Reflect的支持的拦截操作"><a href="#3-Reflect的支持的拦截操作" class="headerlink" title="3. Reflect的支持的拦截操作"></a>3. Reflect的支持的拦截操作</h3><p> 与<code>Proxy</code>支持的操作完全相同</p>
-<h2 id="三、Object-defineProperty"><a href="#三、Object-defineProperty" class="headerlink" title="三、Object.defineProperty"></a>三、Object.defineProperty</h2><h3 id="1-什么是Object-defineProperty"><a href="#1-什么是Object-defineProperty" class="headerlink" title="1. 什么是Object.defineProperty"></a>1. 什么是Object.defineProperty</h3><ul>
-<li>MDN中的定义<code>：Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。</li>
-</ul>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> object1 = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(object1, <span class="string">'property1'</span>, &#123;</span><br><span class="line">  value: <span class="number">42</span>,</span><br><span class="line">  writable: <span class="literal">false</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">object1.property1 = <span class="number">77</span>;</span><br><span class="line"><span class="comment">// throws an error in strict mode</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(object1.property1);</span><br><span class="line"><span class="comment">// expected output: 42</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-使用"><a href="#2-使用" class="headerlink" title="2. 使用"></a>2. 使用</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">Object</span>.defineProperty(obj, prop, descriptor);</span><br></pre></td></tr></table></figure>
-<ul>
-<li>obj：要定义属性的对象</li>
-<li>prop：要定义或修改的属性的名称或<code>Symbol</code></li>
-<li>descriptor：要定义或修改的属性描述符。</li>
-</ul>
-]]></content>
-      <tags>
-        <tag>JS基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>TCP和UDP</title>
-    <url>/2019/09/12/TCP%E5%92%8CUDP/</url>
-    <content><![CDATA[<p>TCP/IP协议是一个协议簇，里面包括许多协议，UDP只是其中一个。</p>
-<p>TCP/IP协议集包括应用层、传输层、网络层和网络访问层。</p>
-<h3 id="应用层协议包括"><a href="#应用层协议包括" class="headerlink" title="应用层协议包括"></a>应用层协议包括</h3><ol>
-<li>超文本传输协议（HTTP）万维网基本协议</li>
-<li>文件传输协议（TFTP简单文件传输协议）</li>
-<li>远程登录（Telnet）提供远程访问其它主机功能, 它允许用户登录internet主机，并在这台主机上执行命令；</li>
-<li>网络管理（SNMP简单网络管理协议），该协议提供了监控网络设备的方法， 以及配置管理,统计信息收集,性能管理及安全管理等；</li>
-<li>域名系统（DNS），该系统用于在internet中将域名及其公共广播的网络节点转换成IP地址。</li>
-</ol>
-<a id="more"></a>
-
-<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><ol>
-<li>Internet协议（IP）；</li>
-<li>Internet控制信息协议（ICMP）；</li>
-<li>地址解析协议（ARP）；</li>
-<li>反向地址解析协议（RARP）。</li>
-</ol>
-<h2 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h2><p>传输控制协议，是面向连接的协议，也就是说，在收发数据前，必须和对方建立可靠的连接。</p>
-<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p>指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包</p>
-<ul>
-<li>第一次握手(SYN=1, seq=x):<br>客户端发送一个 TCP 的 SYN 标志位置1的包，指明客户端打算连接的服务器的端口，以及初始序号 X,保存在包头的序列号(Sequence Number)字段里。</li>
-</ul>
-<p>发送完毕后，客户端进入 <code>SYN_SEND</code> 状态。</p>
-<ul>
-<li>第二次握手(SYN=1,ACK=1,seq=y,ACKnum = x+1)<br>服务器发回确认包(ACK)应答。即 SYN 标志位和 ACK 标志位均为1。服务器端选择自己 ISN 序列号，放到 Seq 域里，同时将确认序号(Acknowledgement Number)设置为客户的 ISN (包头序列号）加1，即X+1。</li>
-</ul>
-<p>发送完毕后，服务器端进入 <code>SYN_RCVD</code>状态。</p>
-<ul>
-<li>第三次握手(ACK=1，ACKnum=y+1)<br>客户端再次发送确认包(ACK)，SYN 标志位为0，ACK 标志位为1，并且把服务器发来 ACK 的序号字段+1，放在确定字段中发送给对方，并且在数据段放写ISN的+1</li>
-</ul>
-<p>发送完毕后，客户端进入 <code>ESTABLISHED</code> 状态，当服务器端接收到这个包时，也进入 <code>ESTABLISHED</code> 状态，TCP 握手结束。</p>
-<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-made-three-way-handshake.png" alt="三次握手图解"></p>
-<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p>TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way handshake)，也叫做改进的三次握手。客户端或服务器均可主动发起挥手动作，在 socket 编程中，任何一方执行 close() 操作即可产生挥手操作。</p>
-<ul>
-<li>第一次挥手(FIN=1，seq=x)</li>
-</ul>
-<p>假设客户端想要关闭连接，客户端发送一个 FIN 标志位置为1的包，表示自己已经没有数据可以发送了，但是仍然可以接受数据。</p>
-<p>发送完毕后，客户端进入 <code>FIN_WAIT_1</code> 状态。</p>
-<ul>
-<li>第二次挥手(ACK=1，ACKnum=x+1)</li>
-</ul>
-<p>服务器端确认客户端的 FIN 包，发送一个确认包，表明自己接受到了客户端关闭连接的请求，但还没有准备好关闭连接。</p>
-<p>发送完毕后，服务器端进入 <code>CLOSE_WAIT</code> 状态，客户端接收到这个确认包之后，进入 <code>FIN_WAIT_2</code> 状态，等待服务器端关闭连接。</p>
-<ul>
-<li>第三次挥手(FIN=1，seq=y)</li>
-</ul>
-<p>服务器端准备好关闭连接时，向客户端发送结束连接请求，FIN 置为1。</p>
-<p>发送完毕后，服务器端进入 <code>LAST_ACK</code> 状态，等待来自客户端的最后一个ACK。</p>
-<p>第四次挥手(ACK=1，ACKnum=y+1)</p>
-<p>客户端接收到来自服务器端的关闭请求，发送一个确认包，并进入 TIME_WAIT状态，等待可能出现的要求重传的 ACK 包。</p>
-<p>服务器端接收到这个确认包之后，关闭连接，进入 <code>CLOSED</code> 状态。</p>
-<p>客户端等待了某个固定时间（两个最大段生命周期，2MSL，2 Maximum Segment Lifetime）之后，没有收到服务器端的 ACK ，认为服务器端已经正常关闭连接，于是自己也关闭连接，进入 CLOSED 状态。</p>
-<p><img src="https://raw.githubusercontent.com/HIT-Alibaba/interview/master/img/tcp-connection-closed-four-way-handshake.png" alt="四次挥手图解"></p>
-<h2 id="SYN攻击"><a href="#SYN攻击" class="headerlink" title="SYN攻击"></a>SYN攻击</h2><p>在三次握手中，第二次握手结束之后，即客户端接收到（ACK=1，ACKnum=x+1）后，服务端进入<code>（半连接）SYN_RCVD</code>状态。</p>
-<p>SYN攻击是指，攻击客户端在短时间内伪造大量的不存在IP地址，不断向服务端发送SYN包（第一次握手）后，服务端返回，进入半连接状态。由于源地址是不存在的，服务器需要不断的重发直至超时，这些伪造的SYN包将长时间占用未连接队列，正常的SYN请求被丢弃，导致目标系统运行缓慢，严重者会引起网络堵塞甚至系统瘫痪。</p>
-<h3 id="检测SYN攻击"><a href="#检测SYN攻击" class="headerlink" title="检测SYN攻击"></a>检测SYN攻击</h3><p>当服务端看到大量半连接状态，特别是源IP地址是随机的，就基本可判断为遭受到SYN攻击。</p>
-<h3 id="防御SYN攻击"><a href="#防御SYN攻击" class="headerlink" title="防御SYN攻击"></a>防御SYN攻击</h3><p>SYN攻击是无法阻止的，因为TCP三次握手就是这样的逻辑。但有以下方法可以防御SYN攻击。</p>
-<ul>
-<li>缩短超时（SYN Timeout）时间</li>
-<li>增加最大半连接数</li>
-<li>过滤网关防护</li>
-<li>SYN cookies技术</li>
-</ul>
-<h3 id="TCP-KeepAlive"><a href="#TCP-KeepAlive" class="headerlink" title="TCP KeepAlive"></a>TCP KeepAlive</h3><p>TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探测包，如果收到对方回应的 ACK，则认为连接还是存活的，在超过一定重试次数之后还是没有收到对方的回应，则丢弃该 TCP 连接。</p>
-<h2 id="UDP协议"><a href="#UDP协议" class="headerlink" title="UDP协议"></a>UDP协议</h2><p>UDP 是一个简单的传输层协议。和 TCP 相比，UDP 有下面几个显著特性：</p>
-<ul>
-<li>UDP 缺乏可靠性。UDP 本身不提供确认，序列号，超时重传等机制。UDP 数据报可能在网络中被复制，被重新排序。即 UDP 不保证数据报会到达其最终目的地，也不保证各个数据报的先后顺序，也不保证每个数据报只到达一次</li>
-<li>UDP 数据报是有长度的。每个 UDP 数据报都有长度，如果一个数据报正确地到达目的地，那么该数据报的长度将随数据一起传递给接收方。而 TCP 是一个字节流协议，没有任何（协议上的）记录边界。</li>
-<li>UDP 是无连接的。UDP 客户和服务器之前不必存在长期的关系。UDP 发送数据报之前也不需要经过握手创建连接的过程。</li>
-<li>UDP 支持多播和广播。（TCP不支持）</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>event-loop 宏任务 微任务</title>
     <url>/2021/01/04/event-loop-%E5%AE%8F%E4%BB%BB%E5%8A%A1-%E5%BE%AE%E4%BB%BB%E5%8A%A1/</url>
     <content><![CDATA[<p>从一道执行顺序的面试题，到最终搞懂这一块，记录下来，这是一些自己的见解，可能不是那么准确，但是确实能让我自己理解这一块内容了。</p>
@@ -764,81 +839,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Cookie 和 Session比较</title>
-    <url>/2018/10/28/cookie%E5%92%8Csession/</url>
-    <content><![CDATA[<h2 id="关于Cookie"><a href="#关于Cookie" class="headerlink" title="关于Cookie"></a>关于Cookie</h2><p><strong>cookie是在res中设置的,req中读取的</strong>。第一次访问没有cookie</p>
-<a id="more"></a>
-
-<p>cookie的存储大小有限，kv对儿。对用户可见，用户可以禁用，清除cookie。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">var</span> cookieParser = <span class="built_in">require</span>(<span class="string">'cookie-parser'</span>);</span><br><span class="line"><span class="keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//使用cookie必须要使用cookie-parse中间件</span></span><br><span class="line">app.use(cookieParser());</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//maxAge以毫秒为单位</span></span><br><span class="line"><span class="comment">//发送cookie</span></span><br><span class="line">    res.cookie(<span class="string">'xihao'</span>,<span class="string">'tfboys'</span>,&#123;<span class="attr">maxAge</span>:<span class="number">10000</span>,<span class="attr">httpOnly</span>:<span class="literal">true</span>&#125;);</span><br><span class="line"><span class="comment">//返回cookie    </span></span><br><span class="line">    res.send(req.cookies);</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br><span class="line">app.listen(<span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="关于session"><a href="#关于session" class="headerlink" title="关于session"></a>关于session</h2><p>Session就是利用cookie,实现的“会话”，就是第一次访问的时候，可以在服务器上为这个用户缓存一些信息</p>
-<p>别的用户不能看见，服务器会下发一个密钥（cookie），客户端每次访问都携带这个密钥。</p>
-<p><strong>express中读取还是设置都是在req中</strong>。</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">var</span> app();</span><br><span class="line"><span class="keyword">var</span> session = <span class="built_in">require</span>(<span class="string">"express-session"</span>);</span><br><span class="line">app.use(session(&#123;</span><br><span class="line">    secret:<span class="string">'keyborad cat'</span>,</span><br><span class="line">    resave:<span class="literal">false</span>,</span><br><span class="line">    saveUniniy\tialized:<span class="literal">true</span>;</span><br><span class="line">&#125;))</span><br><span class="line">app.get(<span class="string">"/"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(req.session.login)&#123;</span><br><span class="line">        res.send(<span class="string">"成功登陆"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        res.send(<span class="string">"尚未登陆"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//登陆页面</span></span><br><span class="line">app.get(<span class="string">"/login"</span>,<span class="function"><span class="keyword">function</span>(<span class="params">req,res</span>)</span>&#123;</span><br><span class="line"><span class="comment">//给浏览器发送session;</span></span><br><span class="line">    req.session.login = <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>react hook</title>
-    <url>/2019/09/09/hook/</url>
-    <content><![CDATA[<h1 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h1><p>可以让你在不编写class的情况下使用state以及其他React特性</p>
-<p>Hook的作用就是让你的函数组件中可以使用class中的一些生命周期和state等。</p>
-<a id="more"></a>
-
-<h2 id="Hook规则"><a href="#Hook规则" class="headerlink" title="Hook规则"></a>Hook规则</h2><p>Hook就是JavaScript函数，但是使用它们会有两个额外的规则</p>
-<ul>
-<li>只能在<strong>函数最外层</strong>调用Hook，不要在循环、条件判断或子函数中调用</li>
-<li>只能在<strong>React的函数组件</strong>中调用Hook。（除了自定义Hook外）</li>
-</ul>
-<h2 id="useState方法"><a href="#useState方法" class="headerlink" title="useState方法"></a>useState方法</h2><h3 id="基本例子"><a href="#基本例子" class="headerlink" title="基本例子"></a>基本例子</h3><ul>
-<li>useState会返回一对值：<code>当前状态</code>和一个让你<code>更新它的函数</code>。<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 声明一个叫 “count” 的 state 变量。</span></span><br><span class="line">  <span class="comment">// 这个变量的初始值是0, 即useState里的初始值</span></span><br><span class="line">  <span class="comment">// 更新这个变量的函数就是setCount</span></span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h2><h3 id="基本例子-1"><a href="#基本例子-1" class="headerlink" title="基本例子"></a>基本例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; useState, useEffect &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Example</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Similar to componentDidMount and componentDidUpdate:</span></span><br><span class="line">  useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// Update the document title using the browser API</span></span><br><span class="line">    <span class="built_in">document</span>.title = <span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span>;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="regexp">/p&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(count + 1)&#125;&gt;</span></span><br><span class="line"><span class="regexp">        Click me</span></span><br><span class="line"><span class="regexp">      &lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>useEffect</code>默认在第一次渲染后和每次更新之后都会执行。 React保证了每次渲染effect的同时DOM都已经更新完毕。</li>
-<li>与<code>componentDidMount</code>和<code>componentDidUpdate</code>不同的是，使用<code>useEffect</code>调度的<code>effect</code>不会阻塞浏览器更新屏幕，这让你的应用看起来响应更快。</li>
-</ul>
-<h3 id="清除effect"><a href="#清除effect" class="headerlink" title="清除effect"></a>清除effect</h3><p>当<code>useEffect</code>返回一个函数时，react将会在执行清除操作时调用它。</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">...</span><br><span class="line"></span><br><span class="line"> useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">      setIsOnline(status.isOnline);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个函数，清除时调用。</span></span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<h3 id="仅在state更改是更新。"><a href="#仅在state更改是更新。" class="headerlink" title="仅在state更改是更新。"></a>仅在state更改是更新。</h3><p>使<code>Hook</code>在<code>count</code>更改时更新</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">document</span>.title=<span class="string">`You clicked <span class="subst">$&#123;count&#125;</span> times`</span></span><br><span class="line">&#125;,[count])</span><br></pre></td></tr></table></figure>
-
-<p>仅在 props.friend.id 发生变化时，重新订阅</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">handleStatusChange</span>(<span class="params">status</span>) </span>&#123;</span><br><span class="line">    setIsOnline(status.isOnline);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.friend.id]);</span><br></pre></td></tr></table></figure>
-
-<h2 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// ./mycontext;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> MyContext = React.createContext(&#123;<span class="attr">count</span>: <span class="number">0</span>&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 在组件中使用</span></span><br><span class="line"><span class="keyword">import</span> &#123; MyContext &#125; <span class="keyword">from</span> <span class="string">'./mycontext'</span>;</span><br><span class="line"><span class="keyword">const</span> value = useContext(MyContext);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 原来this.context.count;</span></span><br><span class="line"><span class="comment">// 相当于value.count</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer"></a>useReducer</h2><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState, init);</span><br><span class="line"><span class="comment">// reducer： 形如(state，action) =&gt; newState;</span></span><br><span class="line"><span class="comment">// initialState：初始化的State</span></span><br><span class="line"><span class="comment">// init：惰性创建 state</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="基础例子"><a href="#基础例子" class="headerlink" title="基础例子"></a>基础例子</h3><figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params">initialCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;<span class="attr">count</span>: initialCount&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'increment'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count + <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'decrement'</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123;<span class="attr">count</span>: state.count - <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">'reset'</span>:</span><br><span class="line">      <span class="keyword">return</span> init(action.payload);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialCount, init);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button</span><br><span class="line">        onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'reset'</span>, <span class="attr">payload</span>: initialCount&#125;)&#125;&gt;</span><br><span class="line"></span><br><span class="line">        Reset</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;type: 'increment'&#125;)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123;<span class="attr">type</span>: <span class="string">'decrement'</span>&#125;)&#125;&gt;-&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="useRef"><a href="#useRef" class="headerlink" title="useRef"></a>useRef</h2><p>useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。</p>
-<p>返回的 ref 对象在组件的整个生命周期内保持不变。</p>
-<p>useRef不仅可以取代原来的<code>ref</code>属性，还可以用于保存<code>Hook</code>属性的实例变量。</p>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 用于普通ref</span></span><br><span class="line"><span class="keyword">const</span> domRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    domRef.current.focus();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">render()&#123;</span><br><span class="line">    <span class="keyword">return</span>(</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">            &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">        &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于保存一个实例变量</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> staticRef = useRef(<span class="literal">null</span>);</span><br><span class="line"></span><br><span class="line">useEffect(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">const</span> id = setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 这里staticRef就是用于保存变量的</span></span><br><span class="line">    staticRef.current = id;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      clearInterval(staticRef.current);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h2 id="自定义Hook"><a href="#自定义Hook" class="headerlink" title="自定义Hook"></a>自定义Hook</h2><p>自定义Hook是一个函数，其名称以<code>use</code>开头，函数内部可以调用其他Hook。</p>
-<ul>
-<li>两个组件中使用相同的Hook不会共享state，因为自定义 Hook 是一种重用状态逻辑的机制(例如设置为订阅并存储当前值)，所以每次使用自定义 Hook 时，其中的所有<code>state</code> 和<code>effect</code>都是完全隔离的。</li>
-</ul>
-<figure class="highlight jsx"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123;initialCount&#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(count + <span class="number">1</span>)&#125;&gt;+&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>一入React深似海</category>
-      </categories>
-      <tags>
-        <tag>React基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>http和https</title>
     <url>/2019/09/12/http%E5%92%8Chttps/</url>
     <content><![CDATA[<h1 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h1><p>影响HTTP网络请求的两个因素：带宽和延迟</p>
@@ -901,106 +901,6 @@
       </categories>
       <tags>
         <tag>计算机网络</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>width\height\top\left辨析</title>
-    <url>/2019/12/20/widthheighttopleft%E8%BE%A8%E6%9E%90/</url>
-    <content><![CDATA[<p>笔者最近在重构组件库的时候，学习大佬们的代码，表示很迷茫，主要是感觉这个XXHeight才在这里见到，然后又出现了另一个XXHeight。感觉有点混淆，所以简单的辨析一下这个几个Height和Width顺便再辨析一下Top和Left。</p>
-<a id="more"></a>
-
-<table>
-<thead>
-<tr>
-<th><code>offset</code></th>
-<th><code>client</code></th>
-<th><code>scroll</code></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>offsetWidth</code></td>
-<td><code>clientWidth</code></td>
-<td><code>scrollWidth</code></td>
-</tr>
-<tr>
-<td><code>offsetHeight</code></td>
-<td><code>clientHeight</code></td>
-<td><code>scrollHeight</code></td>
-</tr>
-<tr>
-<td><code>offsetLeft</code></td>
-<td><code>clientLeft</code></td>
-<td><code>scrollLeft</code></td>
-</tr>
-<tr>
-<td><code>offsetTop</code></td>
-<td><code>clientTop</code></td>
-<td><code>scrollTop</code></td>
-</tr>
-</tbody></table>
-<h2 id="Offset相关"><a href="#Offset相关" class="headerlink" title="Offset相关"></a><code>Offset相关</code></h2><ul>
-<li><code>offsetTop</code>：子元素距离已定位的父容器的上边距离，不包括子元素与父元素的border</li>
-<li><code>offsetLeft</code>：子元素距离已定位的父容器的左边距离，不包括子元素与父元素的border</li>
-<li><code>offsetWidth</code>：元素外尺寸的宽度，是元素内容宽度+内边距+边框，不包括外边距与滚动条</li>
-<li><code>offsetHeight</code>：元素外尺寸的高度，是元素内容高度+内边距边框，不包括外边距与滚动条。</li>
-</ul>
-<h2 id="Client相关"><a href="#Client相关" class="headerlink" title="Client相关"></a><code>Client相关</code></h2><ul>
-<li><code>clientTop</code>：元素的内边距外边缘和边框外边缘的距离，实际就是上边框的厚度。</li>
-<li><code>clientLeft</code>：元素的内边距外边缘和边框外边缘的距离，实际上是左边框的厚度。</li>
-<li><code>clientWidth</code>：元素尺寸宽度，仅仅表示元素内容宽度，包括内边距，不包括边框。</li>
-<li><code>clientHeight</code>：元素尺寸高度，仅仅表示元素内容高度，包括内边距，不包括边框。</li>
-</ul>
-<h2 id="Scroll相关"><a href="#Scroll相关" class="headerlink" title="Scroll相关"></a><code>Scroll相关</code></h2><ul>
-<li><code>scrollTop</code>：元素滚动条上边已经滚动的高度</li>
-<li><code>scrollLeft</code>：元素滚动条左边已经滚动的乱度</li>
-<li><code>scrollWidth</code>：内容区域加内边距加上溢出的尺寸</li>
-<li><code>scrollHeight</code>：内容区域加内边距加上溢出的尺寸</li>
-</ul>
-]]></content>
-      <categories>
-        <category>CSS大乱炖</category>
-      </categories>
-      <tags>
-        <tag>CSS基础</tag>
-        <tag>朝花夕拾</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>你不知道的JSON.stringify</title>
-    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
-    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
-<a id="more"></a>
-<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
-<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
-<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
-</ul>
-<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
-<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
-
-<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
-<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
-<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
-<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
-<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
-]]></content>
-      <categories>
-        <category>JS基础</category>
-      </categories>
-      <tags>
-        <tag>JS基础</tag>
-        <tag>朝花夕拾</tag>
       </tags>
   </entry>
   <entry>
@@ -1156,6 +1056,106 @@
       </tags>
   </entry>
   <entry>
+    <title>width\height\top\left辨析</title>
+    <url>/2019/12/20/widthheighttopleft%E8%BE%A8%E6%9E%90/</url>
+    <content><![CDATA[<p>笔者最近在重构组件库的时候，学习大佬们的代码，表示很迷茫，主要是感觉这个XXHeight才在这里见到，然后又出现了另一个XXHeight。感觉有点混淆，所以简单的辨析一下这个几个Height和Width顺便再辨析一下Top和Left。</p>
+<a id="more"></a>
+
+<table>
+<thead>
+<tr>
+<th><code>offset</code></th>
+<th><code>client</code></th>
+<th><code>scroll</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>offsetWidth</code></td>
+<td><code>clientWidth</code></td>
+<td><code>scrollWidth</code></td>
+</tr>
+<tr>
+<td><code>offsetHeight</code></td>
+<td><code>clientHeight</code></td>
+<td><code>scrollHeight</code></td>
+</tr>
+<tr>
+<td><code>offsetLeft</code></td>
+<td><code>clientLeft</code></td>
+<td><code>scrollLeft</code></td>
+</tr>
+<tr>
+<td><code>offsetTop</code></td>
+<td><code>clientTop</code></td>
+<td><code>scrollTop</code></td>
+</tr>
+</tbody></table>
+<h2 id="Offset相关"><a href="#Offset相关" class="headerlink" title="Offset相关"></a><code>Offset相关</code></h2><ul>
+<li><code>offsetTop</code>：子元素距离已定位的父容器的上边距离，不包括子元素与父元素的border</li>
+<li><code>offsetLeft</code>：子元素距离已定位的父容器的左边距离，不包括子元素与父元素的border</li>
+<li><code>offsetWidth</code>：元素外尺寸的宽度，是元素内容宽度+内边距+边框，不包括外边距与滚动条</li>
+<li><code>offsetHeight</code>：元素外尺寸的高度，是元素内容高度+内边距边框，不包括外边距与滚动条。</li>
+</ul>
+<h2 id="Client相关"><a href="#Client相关" class="headerlink" title="Client相关"></a><code>Client相关</code></h2><ul>
+<li><code>clientTop</code>：元素的内边距外边缘和边框外边缘的距离，实际就是上边框的厚度。</li>
+<li><code>clientLeft</code>：元素的内边距外边缘和边框外边缘的距离，实际上是左边框的厚度。</li>
+<li><code>clientWidth</code>：元素尺寸宽度，仅仅表示元素内容宽度，包括内边距，不包括边框。</li>
+<li><code>clientHeight</code>：元素尺寸高度，仅仅表示元素内容高度，包括内边距，不包括边框。</li>
+</ul>
+<h2 id="Scroll相关"><a href="#Scroll相关" class="headerlink" title="Scroll相关"></a><code>Scroll相关</code></h2><ul>
+<li><code>scrollTop</code>：元素滚动条上边已经滚动的高度</li>
+<li><code>scrollLeft</code>：元素滚动条左边已经滚动的乱度</li>
+<li><code>scrollWidth</code>：内容区域加内边距加上溢出的尺寸</li>
+<li><code>scrollHeight</code>：内容区域加内边距加上溢出的尺寸</li>
+</ul>
+]]></content>
+      <categories>
+        <category>CSS大乱炖</category>
+      </categories>
+      <tags>
+        <tag>CSS基础</tag>
+        <tag>朝花夕拾</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你不知道的JSON.stringify</title>
+    <url>/2019/12/20/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84JSON-stringify/</url>
+    <content><![CDATA[<p>写在前面：原谅我这个菜鸡在学了两三年前端对js基础还是很多盲区（哭唧唧）。在写这篇文章的时候真的超级庆幸还好当初面试官没问到这种问题。</p>
+<a id="more"></a>
+<p><code>JSON.stringify(value[, replacer [, space]])</code></p>
+<h2 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a><code>JSON.stringify()</code></h2><h3 id="一"><a href="#一" class="headerlink" title="一"></a>一</h3><ul>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为对象属性被JSON序列化时，会跳过对他们的序列化</li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code>作为数组元素被JSON序列化时，会被转化为<code>null</code></li>
+<li><code>undefined</code>、<code>Symbol</code>、<code>任意函数</code> 直接被JSON序列化时，会被转化为<code>undefined</code></li>
+</ul>
+<h3 id="二"><a href="#二" class="headerlink" title="二"></a>二</h3><p>由于第一条特性，所以JSON在序列化对象时，不能保证对象属性是按顺序输出的（因为有的属性会被跳过）</p>
+<h3 id="三"><a href="#三" class="headerlink" title="三"></a>三</h3><p><code>JSON.stringify()</code>序列化含<code>toJSON</code>属性的对象,将会返回<code>toJSON()</code>的返回值</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">const obj &#x3D; &#123;</span><br><span class="line">    say: &quot;this is a demo&quot;,</span><br><span class="line">    toJSON: function()&#123;</span><br><span class="line">        return &#39;json results&#39;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">console.log(JSON.stringify(obj));       &#x2F;&#x2F; json results</span><br></pre></td></tr></table></figure>
+
+<h3 id="四"><a href="#四" class="headerlink" title="四"></a>四</h3><p><code>JSON.stringify()</code>会正常序列化<code>Date</code>的值，因为<code>Date</code>对象内置有<code>toJSON()</code>方法。</p>
+<h3 id="五"><a href="#五" class="headerlink" title="五"></a>五</h3><p><code>NaN</code>和<code>Infinity</code>格式的数值及<code>null</code>都会被当作<code>null</code></p>
+<h3 id="六"><a href="#六" class="headerlink" title="六"></a>六</h3><p>基本包装类型会被序列化为最原始的基本类型</p>
+<h3 id="七"><a href="#七" class="headerlink" title="七"></a>七</h3><p>其他类型的对象被，如（Map/Set等）仅会序列化可枚举的属性(enumerable)</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="built_in">JSON</span>.stringify(</span><br><span class="line">    <span class="built_in">Object</span>.create(</span><br><span class="line">        <span class="literal">null</span>,&#123;</span><br><span class="line">            x:&#123;<span class="attr">value</span>:<span class="string">"12345"</span>, <span class="attr">enumberable</span>:<span class="literal">false</span>&#125;,</span><br><span class="line">            y:&#123;<span class="attr">value</span>:<span class="string">"fighting"</span>, <span class="attr">enumberable</span>:<span class="literal">true</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    )</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// "&#123;"y":&#123;"value":"fighting"&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="JSON-stringify-的第二个参数replacer"><a href="#JSON-stringify-的第二个参数replacer" class="headerlink" title="JSON.stringify()的第二个参数replacer"></a><code>JSON.stringify()</code>的第二个参数<code>replacer</code></h2><h3 id="replacer作为函数"><a href="#replacer作为函数" class="headerlink" title="replacer作为函数"></a><code>replacer</code>作为函数</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,(key,value)=&gt;&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value);</span><br><span class="line">    <span class="keyword">return</span> value</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这里可以看出，第二个参数是函数时，打印出了value，而value并不是每个对象的属性value，第一个value是原对象的键值对</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;a: 1, b: 2, c: 3, d: 4&#125;</span></span><br><span class="line"><span class="comment">//  1</span></span><br><span class="line"><span class="comment">//  2</span></span><br><span class="line"><span class="comment">//  3</span></span><br><span class="line"><span class="comment">//  4</span></span><br><span class="line"><span class="string">"&#123;"</span>a<span class="string">":1,"</span>b<span class="string">":2,"</span>c<span class="string">":3,"</span>d<span class="string">":4&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="replacer作为数组"><a href="#replacer作为数组" class="headerlink" title="replacer作为数组"></a><code>replacer</code>作为数组</h3><p>数组的值就代表了被序列化曾JSON字符串的属性名</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">    a: <span class="number">1</span>,</span><br><span class="line">    b: <span class="number">2</span>,</span><br><span class="line">    c: <span class="number">3</span>,</span><br><span class="line">    d: <span class="number">4</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">JSON</span>.stringify(data,[<span class="string">'a'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="comment">// "&#123;"a":1,"c":3&#125;"</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="space"><a href="#space" class="headerlink" title="space"></a><code>space</code></h2><p>用来控制序列化之后字符串的间距</p>
+]]></content>
+      <categories>
+        <category>JS基础</category>
+      </categories>
+      <tags>
+        <tag>JS基础</tag>
+        <tag>朝花夕拾</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>再读React官方文档</title>
     <url>/2019/09/09/%E5%86%8D%E8%AF%BBReact%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3/</url>
     <content><![CDATA[<h1 id="再读React"><a href="#再读React" class="headerlink" title="再读React"></a>再读React</h1><p>笔者最近空闲时间比较多，这也可能是笔者这未来人生中时间最自由的一个月。所以想抓紧时间巩固和学习一下新知识，在公司实习期间一直在写业务，所以自己学习的时间很少，为了追上同事的步伐，一定要抓紧这一个月又一个质的突破。</p>
@@ -1244,6 +1244,59 @@
       </tags>
   </entry>
   <entry>
+    <title>常见状态码</title>
+    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
+<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
+<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
+<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
+<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
+<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
+<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
+<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
+<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
+<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
+<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
+<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
+<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
+<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
+<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
+<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
+</ul>
+<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
+<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
+<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
+<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
+<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
+<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
+<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
+<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
+<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
+<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
+<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
+<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
+<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
+<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
+<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
+<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
+</ul>
+<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
+<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
+<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
+<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
+<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
+<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
+<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>知识盲区（一）</title>
     <url>/2020/04/20/%E7%9F%A5%E8%AF%86%E7%9B%B2%E5%8C%BA%EF%BC%88%E4%B8%80%EF%BC%89/</url>
     <content><![CDATA[<p>工作闲暇的期间，会读一些博文，更多的是刷面筋，虽然已经工作稳定。但还是偶尔需要有危机感，去看看现在企业喜欢问什么问题。其实大部分面筋问题都还不是很会。会把知识盲区记录下来，然后整理成博文</p>
@@ -1309,59 +1362,6 @@
       </categories>
       <tags>
         <tag>行业常识</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>常见状态码</title>
-    <url>/2019/02/26/%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81/</url>
-    <content><![CDATA[<h1 id="常见的HTTP状态码"><a href="#常见的HTTP状态码" class="headerlink" title="常见的HTTP状态码"></a>常见的HTTP状态码</h1><h2 id="2开头（请求成功）"><a href="#2开头（请求成功）" class="headerlink" title="2开头（请求成功）"></a>2开头（请求成功）</h2><ul>
-<li><strong>200</strong> （成功）服务器已经成功处理了请求。同城这表示服务器提供了请求的网页</li>
-<li><strong>201</strong> （已创建）请求成功并且服务器创建了新的资源</li>
-<li><strong>202</strong> （已接受）服务器已经接受了请求，但尚未处理</li>
-<li><strong>203</strong> （非授权信息）服务器已经处理了请求，但返回的信息可能来自另一来源</li>
-<li><strong>204</strong> （无内容）服务器已经成功处理了请求，但不需要返回任何实体内容</li>
-<li><strong>205</strong> (重置) 服务器已经成功处理了请求，但与204不同此状态码的响应要求重置文档的视图</li>
-<li><strong>206</strong> (部分处理) 服务器已经成功处理了部分GET请求。<a id="more"></a>
-<h2 id="3开头（请求被重定向）要完成请求需要进一步操作"><a href="#3开头（请求被重定向）要完成请求需要进一步操作" class="headerlink" title="3开头（请求被重定向）要完成请求需要进一步操作"></a>3开头（请求被重定向）要完成请求需要进一步操作</h2></li>
-<li><strong>300</strong> （多种选择）针对请求，服务器可以执行多种操作。可根据请求者（user agent）选择一项操作或提供操作列表供请求者选择</li>
-<li><strong>301</strong> （永久移动）服务器返回此响应时，会自动将请求者转到新的位置</li>
-<li><strong>302</strong> （临时移动）服务器从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</li>
-<li><strong>303</strong> （查看其他位置）请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</li>
-<li><strong>304</strong> （未修改）自从上次请求后，请求的网页未修改过。</li>
-<li><strong>305</strong> （使用代理）请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理</li>
-<li><strong>307</strong> （临时重定向）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</li>
-</ul>
-<h2 id="4开头（请求错误）这些状态的代码请求可能错误"><a href="#4开头（请求错误）这些状态的代码请求可能错误" class="headerlink" title="4开头（请求错误）这些状态的代码请求可能错误"></a>4开头（请求错误）这些状态的代码请求可能错误</h2><ul>
-<li><strong>400</strong> （错误请求） 服务器不理解请求的语法，即语法错误</li>
-<li><strong>401</strong> （未授权）请求要求身份验证。对于需要登陆的网页，服务器可能返回此请求</li>
-<li><strong>403</strong> (禁止) 服务器拒绝请求</li>
-<li><strong>404</strong> (未找到) 服务器找不到所请求的资源</li>
-<li><strong>405</strong> (方法禁用) 禁用请求中指定的方法</li>
-<li><strong>407</strong> (需求代理授权) 此状态代码与401(未授权)类似，但请求者应当授权使用代理</li>
-<li><strong>408</strong> (请求超时)服务器等候请求时发生超时</li>
-<li><strong>409</strong> （冲突） 服务器在完成请求时发生冲突，服务器必须在响应中包含相关冲突的信息</li>
-<li><strong>410</strong> (已删除)如果请求资源已经永久删除，服务器就会返回此响应</li>
-<li><strong>411</strong> (需要有效长度)服务器不接受不含有效内容长度镖头字段的顶球</li>
-<li><strong>412</strong> (为满足前提条件)服务器未满足请求者在请求中设置的前提条件</li>
-<li><strong>413</strong> （请求实体过大）服务器无法处理请求，因为请求实体过大超出服务器处理的能力</li>
-<li><strong>415</strong> (不支持媒体类型)请求的格式不受请求页面的支持</li>
-<li><strong>416</strong>（请求范围不符要求）如果页面无法提供请求范围，则服务器会返回此状态代码</li>
-<li><strong>417</strong> （为满足期望值）服务器为满足“期望”请求的标头字段</li>
-</ul>
-<h2 id="5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。"><a href="#5开头（服务器错误）-表示服务器在尝试处理请求时发生内部错误。" class="headerlink" title="5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。"></a>5开头（服务器错误） 表示服务器在尝试处理请求时发生内部错误。</h2><ul>
-<li><strong>500</strong> （服务器内部错误）服务器遇到错误，无法完成请求</li>
-<li><strong>501</strong> （尚未实施）服务器不具备完成请求的功能</li>
-<li><strong>502</strong> （错误网关）服务器作为网关或代理，从上游服务器收到无效响应</li>
-<li><strong>503</strong> (服务不可用)服务器目前无法使用</li>
-<li><strong>504</strong> (网关超时) 服务器作为网关或代理，但是没有及时从上游服务器收到请求</li>
-<li><strong>505</strong> (HTTP版本不受支持) 服务器不支持请求中所用的HTTP协议版本。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>计算机网络</category>
-      </categories>
-      <tags>
-        <tag>计算机网络</tag>
       </tags>
   </entry>
   <entry>
