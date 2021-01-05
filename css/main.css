@@ -1043,7 +1043,6 @@ pre .javascript .function {
   cursor: pointer;
   text-align: center;
   -webkit-transform: translateZ(0);
-  margin-top: 60px;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
   transition-delay: 0s;
@@ -1746,8 +1745,9 @@ pre .javascript .function {
 .site-description {
   margin-top: 5px;
   text-align: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #999;
+  font-size: 12px;
 }
 .site-state {
   overflow: hidden;
@@ -1820,7 +1820,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #f54dab;
+  background: #5317db;
 }
 .links-of-blogroll {
   font-size: 13px;
