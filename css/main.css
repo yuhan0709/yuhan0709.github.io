@@ -1230,6 +1230,12 @@ pre .javascript .function {
   -o-transform: rotate(30deg);
   transform: rotate(30deg);
 }
+.post-body p {
+  margin: 0px;
+}
+.post-body ul {
+  margin: 4px 0px;
+}
 .posts-expand {
   padding-top: 40px;
 }
@@ -1815,7 +1821,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff12ff;
+  background: #39d1f2;
 }
 .links-of-blogroll {
   font-size: 13px;
