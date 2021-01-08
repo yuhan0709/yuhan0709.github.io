@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="JS基础," />
+  <meta name="keywords" content="JS基础,朝花夕拾," />
 
 
 
@@ -102,9 +102,10 @@
 <meta property="og:description" content="Vue3.0中双向绑定的实现从Object.defineProperty变为ES6中的Proxy。其实Proxy和definePrototype在平常业务场景中还是挺少用到，但是作为前端工程师这一块是一个主流框架的底层原理。所以还是必须要了解这两种方法。">
 <meta property="og:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/WX20201223-150230%402x.png">
 <meta property="article:published_time" content="2020-12-23T09:13:57.000Z">
-<meta property="article:modified_time" content="2020-12-23T09:26:26.109Z">
+<meta property="article:modified_time" content="2021-01-08T08:17:37.854Z">
 <meta property="article:author" content="Zora Yang">
 <meta property="article:tag" content="JS基础">
+<meta property="article:tag" content="朝花夕拾">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/WX20201223-150230%402x.png">
 
@@ -421,28 +422,30 @@
       
 
       
-        <p> <code>Vue3.0</code>中双向绑定的实现从<code>Object.defineProperty</code>变为<code>ES6</code>中的<code>Proxy</code>。其实<code>Proxy</code>和<code>definePrototype</code>在平常业务场景中还是挺少用到，但是作为前端工程师这一块是一个主流框架的底层原理。所以还是必须要了解这两种方法。</p>
+        <p><code>Vue3.0</code>中双向绑定的实现从<code>Object.defineProperty</code>变为<code>ES6</code>中的<code>Proxy</code>。其实<code>Proxy</code>和<code>definePrototype</code>在平常业务场景中还是挺少用到，但是作为前端工程师这一块是一个主流框架的底层原理。所以还是必须要了解这两种方法。</p>
 <a id="more"></a>
 
-<h2 id="一、Proxy"><a href="#一、Proxy" class="headerlink" title="一、Proxy"></a>一、Proxy</h2><h3 id="1-什么是Proxy"><a href="#1-什么是Proxy" class="headerlink" title="1. 什么是Proxy"></a>1. 什么是Proxy</h3><ul>
-<li>MDN中定义：Proxy对象用于创建一个对象的代理，从而实现基本的拦截和自定义（如属性查找、赋值、枚举、函数调用等）</li>
-<li>ES6入门中定义：Proxy用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”，即对编程语言进行编程。</li>
+<h2 id="一、Proxy"><a href="#一、Proxy" class="headerlink" title="一、Proxy"></a>一、Proxy</h2><h3 id="1-什么是-Proxy"><a href="#1-什么是-Proxy" class="headerlink" title="1. 什么是 Proxy"></a>1. 什么是 Proxy</h3><ul>
+<li>MDN 中定义：Proxy 对象用于创建一个对象的代理，从而实现基本的拦截和自定义（如属性查找、赋值、枚举、函数调用等）</li>
+<li>ES6 入门中定义：Proxy 用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”，即对编程语言进行编程。</li>
 </ul>
 <p><code>Proxy</code>可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问都必须通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。<code>Proxy</code>原意就是代理，可以理解为代理某些操作。</p>
 <h3 id="2-语法"><a href="#2-语法" class="headerlink" title="2. 语法"></a>2. 语法</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li><code>target</code>：就是你要是用<code>Proxy</code>包装的目标对象（可以是任何类型的对象，包括函数、数组，甚至是另一个代理）。</li>
 <li><code>handler</code>：是一个对象，里面有各种你代理的方法。</li>
 </ul>
-<h3 id="3-一个例子"><a href="#3-一个例子" class="headerlink" title="3. 一个例子"></a>3. 一个例子</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">    age: <span class="number">10</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> handler = &#123;</span><br><span class="line">    <span class="keyword">get</span>: (target, propKey, receiver)=&gt;&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(target, propKey, receiver);</span><br><span class="line">        <span class="keyword">return</span> target[propKey]</span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">set</span>: (target, propKey, value, receiver)=&gt;&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(target, propKey, value, receiver);</span><br><span class="line">        target[propKey] = value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy_obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, handler);</span><br><span class="line">proxy_obj.age = <span class="number">11</span>;</span><br><span class="line"><span class="built_in">console</span>.log(proxy_obj.age);</span><br></pre></td></tr></table></figure>
+<h3 id="3-一个例子"><a href="#3-一个例子" class="headerlink" title="3. 一个例子"></a>3. 一个例子</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;</span><br><span class="line">  age: <span class="number">10</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> handler = &#123;</span><br><span class="line">  <span class="keyword">get</span>: (target, propKey, receiver) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(target, propKey, receiver);</span><br><span class="line">    <span class="keyword">return</span> target[propKey];</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="keyword">set</span>: (target, propKey, value, receiver) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(target, propKey, value, receiver);</span><br><span class="line">    target[propKey] = value;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> proxy_obj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, handler);</span><br><span class="line">proxy_obj.age = <span class="number">11</span>;</span><br><span class="line"><span class="built_in">console</span>.log(proxy_obj.age);</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>输出结果<br><img src="https://blog-picture-zora.oss-cn-beijing.aliyuncs.com/WX20201223-150230%402x.png" alt="输出结果"></li>
 <li>target：就是你代理的对象。</li>
 <li>propKey：要读取的属性名。</li>
-<li>value：要设置的新value。</li>
-<li>receiver：Proxy或者继承Proxy的对象。</li>
+<li>value：要设置的新 value。</li>
+<li>receiver：Proxy 或者继承 Proxy 的对象。</li>
 </ul>
-<h3 id="4-Proxy的支持的拦截操作"><a href="#4-Proxy的支持的拦截操作" class="headerlink" title="4. Proxy的支持的拦截操作"></a>4. Proxy的支持的拦截操作</h3><ul>
+<h3 id="4-Proxy-的支持的拦截操作"><a href="#4-Proxy-的支持的拦截操作" class="headerlink" title="4. Proxy 的支持的拦截操作"></a>4. Proxy 的支持的拦截操作</h3><ul>
 <li><code>get(target, propKey, receiver)</code>：拦截对象属性的读取，如<ul>
 <li><code>proxy.foo</code></li>
 <li><code>proxy[&#39;foo&#39;]</code></li>
@@ -486,44 +489,45 @@
 <li><code>Object.isExtensible(proxy)</code></li>
 </ul>
 </li>
-<li><code>setPrototypeOf(target, proto)</code>返回一个布尔值，拦截以下方法<br>  -<code>Object.setPrototypeOf(proxy, proto)</code>，</li>
-<li><code>apply(target, object, args)</code>：拦截Proxy<strong>实例</strong>作为<strong>函数调用</strong>的操作，比如<ul>
+<li><code>setPrototypeOf(target, proto)</code>返回一个布尔值，拦截以下方法 -<code>Object.setPrototypeOf(proxy, proto)</code>，</li>
+<li><code>apply(target, object, args)</code>：拦截 Proxy<strong>实例</strong>作为<strong>函数调用</strong>的操作，比如<ul>
 <li><code>proxy(...args)</code></li>
 <li><code>proxy,call(object, ...args)</code></li>
 <li><code>proxy.apply(...)</code>。</li>
 </ul>
 </li>
-<li><code>construct(target, args)</code>：拦截Proxy实例作为<strong>构造函数调用</strong>的操作，比如<ul>
+<li><code>construct(target, args)</code>：拦截 Proxy 实例作为<strong>构造函数调用</strong>的操作，比如<ul>
 <li><code>new proxy(...args)</code>。</li>
 </ul>
 </li>
 </ul>
 <p>注：描述对象指<code>value</code>、<code>writable</code>、<code>enumerable</code>、<code>configurable</code>、<code>get</code>、<code>set</code>这六个描述对象。</p>
 <h2 id="二、Reflect"><a href="#二、Reflect" class="headerlink" title="二、Reflect"></a>二、Reflect</h2><p>说来惭愧，笔者在很长一段时间里，都没有意识到前端还有<code>Reflect</code>这一模块，用模块来形容<code>Reflect</code>是因为，它长得是一个对象的样子，也很像一个<code>函数对象</code>，但很抱歉的是，他没有<code>new</code>方法，他就是一个普普通通的<code>对象</code>。</p>
-<h3 id="1-什么是Reflect"><a href="#1-什么是Reflect" class="headerlink" title="1. 什么是Reflect"></a>1. 什么是Reflect</h3><ul>
+<h3 id="1-什么是-Reflect"><a href="#1-什么是-Reflect" class="headerlink" title="1. 什么是 Reflect"></a>1. 什么是 Reflect</h3><ul>
 <li>MDN 中的定义<code>：Reflect</code>是一个内置的对象，它提供拦截 <code>JavaScript</code> 操作的方法。这些方法与<code>proxy handlers</code>的方法相同。<code>Reflect</code>不是一个函数对象，因此它是不可构造的。</li>
-<li>ES6 中的定义<code>：Reflect</code>对象与<code>Proxy</code>很相似，都是<code>ES6</code>为了操作对象而提供的新的API。</li>
+<li>ES6 中的定义<code>：Reflect</code>对象与<code>Proxy</code>很相似，都是<code>ES6</code>为了操作对象而提供的新的 API。</li>
 </ul>
-<h3 id="2-如何使用"><a href="#2-如何使用" class="headerlink" title="2. 如何使用"></a>2. 如何使用</h3><p>首先，我们要了解，为什么要创造出<code>Reflect</code>。ES6中列出了<code>Reflect</code>对象设计的意义。</p>
+<h3 id="2-如何使用"><a href="#2-如何使用" class="headerlink" title="2. 如何使用"></a>2. 如何使用</h3><p>首先，我们要了解，为什么要创造出<code>Reflect</code>。ES6 中列出了<code>Reflect</code>对象设计的意义。</p>
 <ol>
 <li>将<code>Object</code>中明显属于语言内部的方法如<code>Object.defineProperty</code>放到<code>Reflect</code>对象中来。现阶段，某些方法同时在<code>Object</code>和<code>Reflect</code>对象上部署，未来新方法指将部署在<code>Reflect</code>对象上，可以说<code>Reflect</code>上可以找到语言内部的方法。</li>
-<li>修改某些<code>Object</code>方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回false。</li>
+<li>修改某些<code>Object</code>方法的返回结果，让其变得更合理。比如，<code>Object.defineProperty(obj, name, desc)</code>在无法定义属性时，会抛出一个错误，而<code>Reflect.defineProperty(obj, name, desc)</code>则会返回 false。</li>
 <li>让<code>Object</code>操作都变成函数行为。某些<code>Object</code>操作是命令式，比如<code>name in obj</code>和<code>delete obj[name]</code>，而<code>Reflect.has(obj, name)</code>和<code>Reflect.deleteProperty(obj, name)</code>让它们变成了函数行为。</li>
 </ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'assign'</span> <span class="keyword">in</span> <span class="built_in">Object</span>      <span class="comment">// true;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新写法</span></span><br><span class="line"><span class="built_in">Reflect</span>.has(<span class="built_in">Object</span>, <span class="string">'assign'</span>);      <span class="comment">// true;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"assign"</span> <span class="keyword">in</span> <span class="built_in">Object</span>; <span class="comment">// true;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 新写法</span></span><br><span class="line"><span class="built_in">Reflect</span>.has(<span class="built_in">Object</span>, <span class="string">"assign"</span>); <span class="comment">// true;</span></span><br></pre></td></tr></table></figure>
 
 <ol start="4">
 <li><code>Reflect</code>对象的方法<code>Proxy</code>对象的方法，只要是<code>Proxy</code>对象的方法，就能在<code>Reflect</code>对象上找到对应的方法。这就让<code>Proxy</code>对象可以方便地调用对应的<code>Reflect</code>方法，完成默认行为，作为修改行为的基础。也就是说，不管<code>Proxy</code>怎么修改默认行为，你总可以在<code>Reflect</code>上获取默认行为。</li>
 </ol>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> loggedObj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line">  <span class="keyword">get</span>(target, name) &#123;</span><br><span class="line">  <span class="comment">// proxy修改默认行为</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'get'</span>, target, name);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回默认行为</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  deleteProperty(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'delete'</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.deleteProperty(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  has(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'has'</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.has(target, name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> loggedObj = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line">  <span class="keyword">get</span>(target, name) &#123;</span><br><span class="line">    <span class="comment">// proxy修改默认行为</span></span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"get"</span>, target, name);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回默认行为</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.get(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  deleteProperty(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"delete"</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.deleteProperty(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">  has(target, name) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"has"</span> + name);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Reflect</span>.has(target, name);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
-<h3 id="3-Reflect的支持的拦截操作"><a href="#3-Reflect的支持的拦截操作" class="headerlink" title="3. Reflect的支持的拦截操作"></a>3. Reflect的支持的拦截操作</h3><p> 与<code>Proxy</code>支持的操作完全相同</p>
-<h2 id="三、Object-defineProperty"><a href="#三、Object-defineProperty" class="headerlink" title="三、Object.defineProperty"></a>三、Object.defineProperty</h2><h3 id="1-什么是Object-defineProperty"><a href="#1-什么是Object-defineProperty" class="headerlink" title="1. 什么是Object.defineProperty"></a>1. 什么是Object.defineProperty</h3><ul>
-<li>MDN中的定义<code>：Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。</li>
+<h3 id="3-Reflect-的支持的拦截操作"><a href="#3-Reflect-的支持的拦截操作" class="headerlink" title="3. Reflect 的支持的拦截操作"></a>3. Reflect 的支持的拦截操作</h3><p>与<code>Proxy</code>支持的操作完全相同</p>
+<h2 id="三、Object-defineProperty"><a href="#三、Object-defineProperty" class="headerlink" title="三、Object.defineProperty"></a>三、Object.defineProperty</h2><h3 id="1-什么是-Object-defineProperty"><a href="#1-什么是-Object-defineProperty" class="headerlink" title="1. 什么是 Object.defineProperty"></a>1. 什么是 Object.defineProperty</h3><ul>
+<li>MDN 中的定义<code>：Object.defineProperty()</code> 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象。</li>
 </ul>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> object1 = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(object1, <span class="string">'property1'</span>, &#123;</span><br><span class="line">  value: <span class="number">42</span>,</span><br><span class="line">  writable: <span class="literal">false</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">object1.property1 = <span class="number">77</span>;</span><br><span class="line"><span class="comment">// throws an error in strict mode</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(object1.property1);</span><br><span class="line"><span class="comment">// expected output: 42</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> object1 = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.defineProperty(object1, <span class="string">"property1"</span>, &#123;</span><br><span class="line">  value: <span class="number">42</span>,</span><br><span class="line">  writable: <span class="literal">false</span>,</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">object1.property1 = <span class="number">77</span>;</span><br><span class="line"><span class="comment">// throws an error in strict mode</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(object1.property1);</span><br><span class="line"><span class="comment">// expected output: 42</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="2-使用"><a href="#2-使用" class="headerlink" title="2. 使用"></a>2. 使用</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.defineProperty(obj, prop, descriptor);</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>obj：要定义属性的对象</li>
 <li>prop：要定义或修改的属性的名称或<code>Symbol</code></li>
@@ -573,6 +577,8 @@
         <div class="post-tags">
           
             <a href="/tags/JS%E5%9F%BA%E7%A1%80/" rel="tag"><i class="fa fa-tag"></i> JS基础</a>
+          
+            <a href="/tags/%E6%9C%9D%E8%8A%B1%E5%A4%95%E6%8B%BE/" rel="tag"><i class="fa fa-tag"></i> 朝花夕拾</a>
           
         </div>
       
@@ -676,7 +682,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -687,7 +693,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -768,7 +774,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Proxy"><span class="nav-number">1.</span> <span class="nav-text">一、Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是Proxy"><span class="nav-number">1.1.</span> <span class="nav-text">1. 什么是Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-语法"><span class="nav-number">1.2.</span> <span class="nav-text">2. 语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-一个例子"><span class="nav-number">1.3.</span> <span class="nav-text">3. 一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Proxy的支持的拦截操作"><span class="nav-number">1.4.</span> <span class="nav-text">4. Proxy的支持的拦截操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Reflect"><span class="nav-number">2.</span> <span class="nav-text">二、Reflect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是Reflect"><span class="nav-number">2.1.</span> <span class="nav-text">1. 什么是Reflect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-如何使用"><span class="nav-number">2.2.</span> <span class="nav-text">2. 如何使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Reflect的支持的拦截操作"><span class="nav-number">2.3.</span> <span class="nav-text">3. Reflect的支持的拦截操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Object-defineProperty"><span class="nav-number">3.</span> <span class="nav-text">三、Object.defineProperty</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是Object-defineProperty"><span class="nav-number">3.1.</span> <span class="nav-text">1. 什么是Object.defineProperty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用"><span class="nav-number">3.2.</span> <span class="nav-text">2. 使用</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Proxy"><span class="nav-number">1.</span> <span class="nav-text">一、Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是-Proxy"><span class="nav-number">1.1.</span> <span class="nav-text">1. 什么是 Proxy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-语法"><span class="nav-number">1.2.</span> <span class="nav-text">2. 语法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-一个例子"><span class="nav-number">1.3.</span> <span class="nav-text">3. 一个例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Proxy-的支持的拦截操作"><span class="nav-number">1.4.</span> <span class="nav-text">4. Proxy 的支持的拦截操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Reflect"><span class="nav-number">2.</span> <span class="nav-text">二、Reflect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是-Reflect"><span class="nav-number">2.1.</span> <span class="nav-text">1. 什么是 Reflect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-如何使用"><span class="nav-number">2.2.</span> <span class="nav-text">2. 如何使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Reflect-的支持的拦截操作"><span class="nav-number">2.3.</span> <span class="nav-text">3. Reflect 的支持的拦截操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Object-defineProperty"><span class="nav-number">3.</span> <span class="nav-text">三、Object.defineProperty</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-什么是-Object-defineProperty"><span class="nav-number">3.1.</span> <span class="nav-text">1. 什么是 Object.defineProperty</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-使用"><span class="nav-number">3.2.</span> <span class="nav-text">2. 使用</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -819,7 +825,7 @@
 	
 	<!-- 添加博客全站总字数统计-->
 	<i class="fa fa-pencil"></i>
-	<span class="post-count">博客全站共 25.3k 字</span>
+	<span class="post-count">博客全站共 26.5k 字</span>
 </div>
 	
 <!-- <div class="theme-info">
